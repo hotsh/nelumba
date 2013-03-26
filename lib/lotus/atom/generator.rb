@@ -27,11 +27,11 @@ module Lotus
       end
 
       def to_canonical
-        OStatus::Generator.new(:base    => self.xml_base,
-                               :lang    => self.xml_lang,
-                               :version => self.version,
-                               :name    => self.name,
-                               :uri     => self.uri)
+        Lotus::Generator.new(:base    => self.xml_base,
+                             :lang    => self.xml_lang,
+                             :version => self.version,
+                             :name    => self.name,
+                             :uri     => self.uri)
       end
     end
   end
