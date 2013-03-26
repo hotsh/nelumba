@@ -1,6 +1,6 @@
-require 'ostatus/generator'
+require 'lotus/generator'
 
-module OStatus
+module Lotus
   require 'atom'
 
   module Atom

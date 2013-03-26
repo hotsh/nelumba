@@ -1,4 +1,4 @@
-module OStatus
+module Lotus
   require 'atom'
 
   module Atom

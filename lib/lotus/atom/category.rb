@@ -1,10 +1,10 @@
-require 'ostatus/category'
+require 'lotus/category'
 
-module OStatus
+module Lotus
   require 'atom'
 
   module Atom
-    # This class represents an OStatus Category object.
+    # This class represents an Lotus Category object.
     class Category < ::Atom::Category
       require 'open-uri'
 
@@ -28,11 +28,11 @@ module OStatus
       end
 
       def to_canonical
-        OStatus::Category.new(:base   => self.xml_base,
-                              :lang   => self.xml_lang,
-                              :scheme => self.scheme,
-                              :lable  => self.label,
-                              :term   => self.term)
+        Lotus::Category.new(:base   => self.xml_base,
+                            :lang   => self.xml_lang,
+                            :scheme => self.scheme,
+                            :lable  => self.label,
+                            :term   => self.term)
       end
     end
   end

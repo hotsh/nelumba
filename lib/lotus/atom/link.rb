@@ -1,4 +1,4 @@
-module OStatus
+module Lotus
   require 'atom'
 
   module Atom
@@ -72,7 +72,7 @@ module OStatus
 
       # :nodoc:
       def inspect
-        "<OStatus::Link href:'#{href}' type:'#{type}'>"
+        "<Lotus::Link href:'#{href}' type:'#{type}'>"
       end
     end
   end

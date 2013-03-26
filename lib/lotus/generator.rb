@@ -1,4 +1,4 @@
-module OStatus
+module Lotus
   # The generator element identifies the agent used to generate the feed.
   class Generator
     # Holds the base URI for relative URIs contained in uri.

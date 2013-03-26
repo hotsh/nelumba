@@ -1,6 +1,6 @@
-require 'ostatus/activity'
+require 'lotus/activity'
 
-module OStatus
+module Lotus
   require 'atom'
 
   # Holds information about the author of the Feed.

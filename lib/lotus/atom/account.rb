@@ -1,9 +1,9 @@
-module OStatus
+module Lotus
   require 'atom'
 
   module Atom
-    # This class represents an OStatus PortableContacts Organization object.
-    class Organization
+    # This class represents an PortableContacts Account object.
+    class Account
       include ::Atom::Xml::Parseable
 
       # The XML namespace the specifies this content.
@@ -11,14 +11,9 @@ module OStatus
 
       namespace POCO_NAMESPACE
 
-      element :name
-      element :department
-      element :title
-      element :type
-      element :startDate, :class => Date, :content_only => true
-      element :endDate,   :class => Date, :content_only => true
-      element :location
-      element :description
+      element :domain
+      element :username
+      element :userid
 
       def initialize(o = {})
         case o
@@ -41,14 +36,9 @@ module OStatus
 
       def to_hash
         {
-          :name => self.name,
-          :department => self.department,
-          :title => self.title,
-          :type => self.type,
-          :start_date => self.startDate,
-          :end_date => self.endDate,
-          :location => self.location,
-          :description => self.description
+          :domain => self.domain,
+          :username => self.username,
+          :userid => self.userid
         }
       end
 
@@ -58,5 +48,3 @@ module OStatus
     end
   end
 end
-
-

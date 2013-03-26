@@ -1,51 +1,56 @@
-require 'ostatus/author'
-require 'ostatus/category'
-require 'ostatus/generator'
+require 'lotus/activity'
+require 'lotus/author'
+require 'lotus/category'
+require 'lotus/generator'
 
-require 'ostatus/atom/generator'
-require 'ostatus/atom/category'
-require 'ostatus/atom/author'
-require 'ostatus/atom/link'
+require 'lotus/atom/entry'
+require 'lotus/atom/generator'
+require 'lotus/atom/category'
+require 'lotus/atom/author'
+require 'lotus/atom/link'
 
-module OStatus
+module Lotus
   require 'atom'
 
   module Atom
     # This class represents an OStatus Feed object.
-    class Source < ::Atom::Source
+    class Feed < ::Atom::Feed
       require 'open-uri'
 
       include ::Atom::SimpleExtensions
 
-      # The XML namespace that identifies the conforming specification.
-      ACTIVITY_NAMESPACE = 'http://activitystrea.ms/spec/1.0/'
-
       # The XML namespace the specifies this content.
       POCO_NAMESPACE = 'http://portablecontacts.net/spec/1.0'
+
+      # The XML namespace that identifies the conforming specification.
+      ACTIVITY_NAMESPACE = 'http://activitystrea.ms/spec/1.0/'
 
       namespace ::Atom::NAMESPACE
 
       add_extension_namespace :poco, POCO_NAMESPACE
       add_extension_namespace :activity, ACTIVITY_NAMESPACE
       element :id, :rights, :icon, :logo
-      element :generator, :class => OStatus::Atom::Generator
+      element :generator, :class => Lotus::Atom::Generator
       element :title, :class => ::Atom::Content
       element :subtitle, :class => ::Atom::Content
       element :published, :class => Time, :content_only => true
       element :updated, :class => Time, :content_only => true
       elements :links, :class => ::Atom::Link
-      elements :authors, :class => OStatus::Atom::Author
-      elements :contributors, :class => OStatus::Atom::Author
-      elements :categories, :class => OStatus::Atom::Category
+      elements :authors, :class => Lotus::Atom::Author
+      elements :contributors, :class => Lotus::Atom::Author
+      elements :categories, :class => Lotus::Atom::Category
+      elements :entries, :class => Lotus::Atom::Entry
 
-      # Creates an Atom generator for the given OStatus::Feed.
+      # Creates an Atom generator for the given Lotus::Feed.
       def self.from_canonical(obj)
         hash = obj.to_hash
-        hash.delete :entries
+        hash[:entries].map! {|e|
+          Lotus::Atom::Entry.from_canonical(e)
+        }
 
         # Ensure that the generator is encoded.
         if hash[:generator]
-          hash[:generator] = OStatus::Atom::Generator.from_canonical(hash[:generator])
+          hash[:generator] = Lotus::Atom::Generator.from_canonical(hash[:generator])
         end
 
         hash[:links] ||= []
@@ -66,15 +71,15 @@ module OStatus
         hash.delete :hubs
 
         hash[:authors].map! {|a|
-          OStatus::Atom::Author.from_canonical(a)
+          Lotus::Atom::Author.from_canonical(a)
         }
 
         hash[:contributors].map! {|a|
-          OStatus::Atom::Author.from_canonical(a)
+          Lotus::Atom::Author.from_canonical(a)
         }
 
         hash[:categories].map! {|c|
-          OStatus::Atom::Category.from_canonical(c)
+          Lotus::Atom::Category.from_canonical(c)
         }
 
         # title/subtitle content type
@@ -116,23 +121,24 @@ module OStatus
 
         categories = self.categories.map(&:to_canonical)
 
-        OStatus::Feed.new(:title         => self.title,
-                          :title_type    => self.title ? self.title.type : nil,
-                          :subtitle      => self.subtitle,
-                          :subtitle_type => self.subtitle ? self.subtitle.type : nil,
-                          :id            => self.id,
-                          :url           => url,
-                          :categories    => categories,
-                          :icon          => self.icon,
-                          :logo          => self.logo,
-                          :rights        => self.rights,
-                          :published     => self.published,
-                          :updated       => self.updated,
-                          :authors       => self.authors.map(&:to_canonical),
-                          :contributors  => self.contributors.map(&:to_canonical),
-                          :hubs          => self.hubs,
-                          :salmon_url    => salmon_url,
-                          :generator     => generator)
+        Lotus::Feed.new(:title         => self.title,
+                        :title_type    => self.title ? self.title.type : nil,
+                        :subtitle      => self.subtitle,
+                        :subtitle_type => self.subtitle ? self.subtitle.type : nil,
+                        :id            => self.id,
+                        :url           => url,
+                        :categories    => categories,
+                        :icon          => self.icon,
+                        :logo          => self.logo,
+                        :rights        => self.rights,
+                        :published     => self.published,
+                        :updated       => self.updated,
+                        :entries       => self.entries.map(&:to_canonical),
+                        :authors       => self.authors.map(&:to_canonical),
+                        :contributors  => self.contributors.map(&:to_canonical),
+                        :hubs          => self.hubs,
+                        :salmon_url    => salmon_url,
+                        :generator     => generator)
       end
 
       # Returns an array of ::Atom::Link instances for all link tags

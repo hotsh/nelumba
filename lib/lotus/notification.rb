@@ -1,4 +1,4 @@
-module OStatus
+module Lotus
   # This represents a notification that can be sent to a server when you wish
   # to send information to a server that has not yet subscribed to you. Since
   # this implies a lack of trust, a notification adds a layer so that the
@@ -10,7 +10,7 @@ module OStatus
 
     attr_accessor :entry
 
-    # Create an instance for a particular OStatus::Entry.
+    # Create an instance for a particular Lotus::Activity.
     def initialize entry, signature = nil, plaintext = nil
       @entry = entry
       @signature = signature
@@ -19,7 +19,7 @@ module OStatus
 
     # Creates an entry for following a particular Author.
     def self.from_follow(user_author, followed_author)
-      entry = OStatus::Activity.new(
+      entry = Lotus::Activity.new(
         :verb => :follow,
         :object => followed_author,
         :actor    => user_author,
@@ -33,7 +33,7 @@ module OStatus
 
     # Creates an entry for unfollowing a particular Author.
     def self.from_unfollow(user_author, followed_author)
-      entry = OStatus::Activity.new(
+      entry = Lotus::Activity.new(
         :verb => "http://ostatus.org/schema/1.0/unfollow",
         :object => followed_author,
         :actor    => user_author,
@@ -47,7 +47,7 @@ module OStatus
 
     # Creates an entry for a profile update.
     def self.from_profile_update(user_author)
-      entry = OStatus::Activity.new(
+      entry = Lotus::Activity.new(
         :verb => "http://ostatus.org/schema/1.0/update-profile",
         :actor    => user_author,
         :title => "#{user_author.name} changed their profile information.",
@@ -58,7 +58,7 @@ module OStatus
       self.new(entry)
     end
 
-    # Will pull a OStatus::Entry from a magic envelope described by the xml.
+    # Will pull a Lotus::Activity from a magic envelope described by the xml.
     def self.from_xml source
       if source.is_a?(String)
         if source.length == 0
@@ -150,7 +150,7 @@ module OStatus
 
       # Interpret data payload
       payload = XML::Reader.string(data)
-      self.new OStatus::Entry.new(payload), signature, plaintext
+      self.new Lotus::Activity.new(payload), signature, plaintext
     end
 
     # Generate the xml for this notice and sign with the given private

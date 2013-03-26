@@ -1,9 +1,9 @@
-module OStatus
+module Lotus
   module Atom
     # Holds information about the extended contact information
     # in the Feed given in the Portable Contacts specification.
     class PortableContacts
-      # Instantiates a OStatus::PortableContacts object from either
+      # Instantiates a Lotus::PortableContacts object from either
       # a given root that contains all <poco:*> tags as an ratom Person
       #  or a Hash containing the properties.
       def initialize(parent)
@@ -95,22 +95,22 @@ module OStatus
       end
 
       def to_canonical
-        OStatus::PortableContacts.new(:id => self.id,
-                                      :name => self.name,
-                                      :gender => self.gender,
-                                      :note => self.note,
-                                      :nickname => self.nickname,
-                                      :display_name => self.display_name,
-                                      :preferred_username => self.preferred_username,
-                                      :updated => self.updated,
-                                      :published => self.published,
-                                      :birthday => self.birthday,
-                                      :anniversary => self.anniversary,
+        Lotus::PortableContacts.new(:id => self.id,
+                                    :name => self.name,
+                                    :gender => self.gender,
+                                    :note => self.note,
+                                    :nickname => self.nickname,
+                                    :display_name => self.display_name,
+                                    :preferred_username => self.preferred_username,
+                                    :updated => self.updated,
+                                    :published => self.published,
+                                    :birthday => self.birthday,
+                                    :anniversary => self.anniversary,
 
-                                      :name => self.name,
-                                      :organization => self.organization,
-                                      :account => self.account,
-                                      :address => self.address)
+                                    :name => self.name,
+                                    :organization => self.organization,
+                                    :account => self.account,
+                                    :address => self.address)
       end
     end
   end

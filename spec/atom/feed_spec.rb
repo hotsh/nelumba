@@ -1,98 +1,98 @@
 require_relative '../helper'
-require_relative '../../lib/ostatus/feed.rb'
-require_relative '../../lib/ostatus/atom/feed.rb'
+require_relative '../../lib/lotus/feed.rb'
+require_relative '../../lib/lotus/atom/feed.rb'
 
 # Sanity checks on atom generation because I don't trust ratom completely.
 #
 # Since I can't be completely sure how to test the implementations since they
 # are patchy inheritance, I'll just do big acceptance tests and overtest.
 # Somehow, these are still really fast.
-describe OStatus::Atom do
+describe Lotus::Atom do
   before do
-    author = OStatus::Author.new(:uri               => "http://example.com/users/1",
-                                 :email             => "user@example.com",
-                                 :name              => "wilkie",
-                                 :id => "1",
-                                 :nickname    => "wilkie",
-                                 :extended_name     => {:formatted => "Dave Wilkinson",
-                                   :family_name => "Wilkinson",
-                                   :given_name => "Dave",
-                                   :middle_name => "William",
-                                   :honorific_prefix => "Mr.",
-                                   :honorific_suffix => "II"},
-                                 :address => {:formatted => "123 Cherry Lane\nFoobar, PA, USA\n15206",
-                                   :street_address => "123 Cherry Lane",
-                                   :locality => "Foobar",
-                                   :region => "PA",
-                                   :postal_code => "15206",
-                                   :country => "USA"},
-                                 :organization => {:name => "Hackers of the Severed Hand",
-                                   :department => "Making Shit",
-                                   :title => "Founder",
-                                   :type => "open source",
-                                   :start_date => Date.today,
-                                   :end_date => Date.today,
-                                   :location => "everywhere",
-                                   :description => "I make ostatus work"},
-                                 :account     => {:domain => "example.com",
-                                   :username => "wilkie",
-                                   :userid => "1"},
-                                   :gender      => "androgynous",
-                                   :note        => "cool dude",
-                                   :display_name => "Dave Wilkinson",
-                                   :preferred_username => "wilkie",
-                                   :updated     => Time.now,
-                                   :published   => Time.now,
-                                   :birthday    => Date.today,
-                                   :anniversary => Date.today)
+    author = Lotus::Author.new(:uri               => "http://example.com/users/1",
+                               :email             => "user@example.com",
+                               :name              => "wilkie",
+                               :id => "1",
+                               :nickname    => "wilkie",
+                               :extended_name     => {:formatted => "Dave Wilkinson",
+                                 :family_name => "Wilkinson",
+                                 :given_name => "Dave",
+                                 :middle_name => "William",
+                                 :honorific_prefix => "Mr.",
+                                 :honorific_suffix => "II"},
+                               :address => {:formatted => "123 Cherry Lane\nFoobar, PA, USA\n15206",
+                                 :street_address => "123 Cherry Lane",
+                                 :locality => "Foobar",
+                                 :region => "PA",
+                                 :postal_code => "15206",
+                                 :country => "USA"},
+                               :organization => {:name => "Hackers of the Severed Hand",
+                                 :department => "Making Shit",
+                                 :title => "Founder",
+                                 :type => "open source",
+                                 :start_date => Date.today,
+                                 :end_date => Date.today,
+                                 :location => "everywhere",
+                                 :description => "I make ostatus work"},
+                               :account     => {:domain => "example.com",
+                                 :username => "wilkie",
+                                 :userid => "1"},
+                                 :gender      => "androgynous",
+                                 :note        => "cool dude",
+                                 :display_name => "Dave Wilkinson",
+                                 :preferred_username => "wilkie",
+                                 :updated     => Time.now,
+                                 :published   => Time.now,
+                                 :birthday    => Date.today,
+                                 :anniversary => Date.today)
 
-    source_feed = OStatus::Feed.new(:title => "moo",
-                                    :authors => [author],
-                                    :rights => "CC")
+    source_feed = Lotus::Feed.new(:title => "moo",
+                                  :authors => [author],
+                                  :rights => "CC")
 
-    reply_to = OStatus::Activity.new(:title => "My First Entry",
-                                     :type  => :note,
-                                     :actor => author,
-                                     :content => "Hello",
-                                     :content_type => "html",
-                                     :id => "54321",
-                                     :url => "http://example.com/entries/1",
-                                     :published => Time.now,
-                                     :updated => Time.now)
+    reply_to = Lotus::Activity.new(:title => "My First Entry",
+                                   :type  => :note,
+                                   :actor => author,
+                                   :content => "Hello",
+                                   :content_type => "html",
+                                   :id => "54321",
+                                   :url => "http://example.com/entries/1",
+                                   :published => Time.now,
+                                   :updated => Time.now)
 
-    entry = OStatus::Activity.new(:title => "My Entry",
-                                  :actor => author,
-                                  :type => :note,
-                                  :content => "Hello",
-                                  :content_type => "html",
-                                  :source => source_feed,
-                                  :id => "54321",
-                                  :url => "http://example.com/entries/1",
-                                  :published => Time.now,
-                                  :in_reply_to => reply_to,
-                                  :updated => Time.now)
-
-    @master = OStatus::Feed.new(:title => "My Feed",
-                                :title_type => "html",
-                                :subtitle => "Subtitle",
-                                :subtitle_type => "html",
-                                :url => "http://example.com/feeds/1",
-                                :rights => "CC0",
-                                :icon => "http://example.com/icon.png",
-                                :logo => "http://example.com/logo.png",
-                                :hubs => ["http://hub.example.com",
-                                          "http://hub2.example.com"],
+    entry = Lotus::Activity.new(:title => "My Entry",
+                                :actor => author,
+                                :type => :note,
+                                :content => "Hello",
+                                :content_type => "html",
+                                :source => source_feed,
+                                :id => "54321",
+                                :url => "http://example.com/entries/1",
                                 :published => Time.now,
-                                :updated => Time.now,
-                                :authors => [author],
-                                :entries => [entry],
-                                :id => "12345")
+                                :in_reply_to => reply_to,
+                                :updated => Time.now)
+
+    @master = Lotus::Feed.new(:title => "My Feed",
+                              :title_type => "html",
+                              :subtitle => "Subtitle",
+                              :subtitle_type => "html",
+                              :url => "http://example.com/feeds/1",
+                              :rights => "CC0",
+                              :icon => "http://example.com/icon.png",
+                              :logo => "http://example.com/logo.png",
+                              :hubs => ["http://hub.example.com",
+                                        "http://hub2.example.com"],
+                              :published => Time.now,
+                              :updated => Time.now,
+                              :authors => [author],
+                              :entries => [entry],
+                              :id => "12345")
   end
 
   it "should be able to reform canonical structure using Atom" do
-    xml = OStatus::Atom::Feed.from_canonical(@master).to_xml
+    xml = Lotus::Atom::Feed.from_canonical(@master).to_xml
     puts xml
-    new_feed = OStatus::Atom::Feed.new(XML::Reader.string(xml)).to_canonical
+    new_feed = Lotus::Atom::Feed.new(XML::Reader.string(xml)).to_canonical
 
     old_hash = @master.to_hash
     new_hash = new_feed.to_hash
@@ -150,7 +150,7 @@ describe OStatus::Atom do
 
   describe "<xml>" do
     before do
-      @xml_str = OStatus::Atom::Feed.from_canonical(@master).to_xml
+      @xml_str = Lotus::Atom::Feed.from_canonical(@master).to_xml
       @xml = XML::Parser.string(@xml_str).parse
     end
 
@@ -183,35 +183,35 @@ describe OStatus::Atom do
       end
 
       describe "<id>" do
-        it "should contain the id from OStatus::Feed" do
+        it "should contain the id from Lotus::Feed" do
           @feed.find_first('xmlns:id', 'xmlns:http://www.w3.org/2005/Atom')
             .content.must_equal @master.id
         end
       end
 
       describe "<rights>" do
-        it "should contain the rights from OStatus::Feed" do
+        it "should contain the rights from Lotus::Feed" do
           @feed.find_first('xmlns:rights', 'xmlns:http://www.w3.org/2005/Atom')
             .content.must_equal @master.rights
         end
       end
 
       describe "<logo>" do
-        it "should contain the logo from OStatus::Feed" do
+        it "should contain the logo from Lotus::Feed" do
           @feed.find_first('xmlns:logo', 'xmlns:http://www.w3.org/2005/Atom')
             .content.must_equal @master.logo
         end
       end
 
       describe "<icon>" do
-        it "should contain the icon from OStatus::Feed" do
+        it "should contain the icon from Lotus::Feed" do
           @feed.find_first('xmlns:icon', 'xmlns:http://www.w3.org/2005/Atom')
             .content.must_equal @master.icon
         end
       end
 
       describe "<published>" do
-        it "should contain the time in the published field in OStatus::Feed" do
+        it "should contain the time in the published field in Lotus::Feed" do
           time = @feed.find_first('xmlns:published',
                                   'xmlns:http://www.w3.org/2005/Atom').content
           DateTime::rfc3339(time).to_s.must_equal @master.published.to_datetime.to_s
@@ -219,7 +219,7 @@ describe OStatus::Atom do
       end
 
       describe "<updated>" do
-        it "should contain the time in the updated field in OStatus::Feed" do
+        it "should contain the time in the updated field in Lotus::Feed" do
           time = @feed.find_first('xmlns:updated',
                                   'xmlns:http://www.w3.org/2005/Atom').content
           DateTime::rfc3339(time).to_s.must_equal @master.updated.to_datetime.to_s
@@ -251,11 +251,11 @@ describe OStatus::Atom do
           @title = @feed.find_first('xmlns:title', 'xmlns:http://www.w3.org/2005/Atom')
         end
 
-        it "should contain the title from OStatus::Feed" do
+        it "should contain the title from Lotus::Feed" do
           @title.content.must_equal @master.title
         end
 
-        it "should contain the type attribute from OStatus::Feed" do
+        it "should contain the type attribute from Lotus::Feed" do
           @title.attributes.get_attribute('type').value.must_equal @master.title_type
         end
       end
@@ -265,11 +265,11 @@ describe OStatus::Atom do
           @subtitle = @feed.find_first('xmlns:subtitle', 'xmlns:http://www.w3.org/2005/Atom')
         end
 
-        it "should contain the subtitle from OStatus::Feed" do
+        it "should contain the subtitle from Lotus::Feed" do
           @subtitle.content.must_equal @master.subtitle
         end
 
-        it "should contain the type attribute from OStatus::Feed" do
+        it "should contain the type attribute from Lotus::Feed" do
           @subtitle.attributes.get_attribute('type').value.must_equal @master.subtitle_type
         end
       end

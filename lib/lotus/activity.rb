@@ -1,5 +1,5 @@
-module OStatus
-  # This class represents an Activity object for an OStatus::Entry.
+module Lotus
+  # This class represents an Activity object for an Lotus::Entry.
   class Activity
     # The object of this activity.
     attr_reader :object
@@ -25,7 +25,7 @@ module OStatus
     # Holds a String containing the title of the entry.
     attr_reader :title
 
-    # Holds an OStatus::Author.
+    # Holds an Lotus::Author.
     attr_reader :actor
 
     # Holds the content.
@@ -40,7 +40,7 @@ module OStatus
     # Holds the url that represents the entry.
     attr_reader :url
 
-    # Holds the source of this entry as an OStatus::Feed.
+    # Holds the source of this entry as an Lotus::Feed.
     attr_reader :source
 
     # Holds the DateTime of when the entry was published originally.
@@ -49,7 +49,7 @@ module OStatus
     # Holds the DateTime of when the entry was last modified.
     attr_reader :updated
 
-    # Holds an array of related OStatus::Entry's that this entry is a response
+    # Holds an array of related Lotus::Entry's that this entry is a response
     # to.
     attr_reader :in_reply_to
 
@@ -62,10 +62,10 @@ module OStatus
     #   :verb        => The action of the activity.
     #
     #   :title        => The title of the entry. Defaults: "Untitled"
-    #   :actor        => An OStatus::Author responsible for generating this entry.
+    #   :actor        => An Lotus::Author responsible for generating this entry.
     #   :content      => The content of the entry. Defaults: ""
     #   :content_type => The MIME type of the content.
-    #   :source       => An OStatus::Feed where this Entry originated. This
+    #   :source       => An Lotus::Feed where this Entry originated. This
     #                    should be used when an Entry is copied into this feed
     #                    from another.
     #   :published    => The DateTime depicting when the entry was originally
@@ -75,10 +75,10 @@ module OStatus
     #   :id           => The unique id that identifies this entry.
     #   :activity     => The activity this entry represents. Either a single string
     #                    denoting what type of object this entry represents, or an
-    #                    entire OStatus::Activity when a more detailed description is
+    #                    entire Lotus::Activity when a more detailed description is
     #                    appropriate.
-    #   :in_reply_to  => An OStatus::Entry for which this entry is a response.
-    #                    Or an array of OStatus::Entry's that this entry is a
+    #   :in_reply_to  => An Lotus::Entry for which this entry is a response.
+    #                    Or an array of Lotus::Entry's that this entry is a
     #                    response to. Use this when this Entry is a reply
     #                    to an existing Entry.
     def initialize(options = {})

@@ -1,9 +1,9 @@
-module OStatus
+module Lotus
   require 'atom'
 
   module Atom
-    # This class represents an OStatus PortableContacts Account object.
-    class Account
+    # This class represents an PortableContacts Name object.
+    class Name
       include ::Atom::Xml::Parseable
 
       # The XML namespace the specifies this content.
@@ -11,15 +11,17 @@ module OStatus
 
       namespace POCO_NAMESPACE
 
-      element :domain
-      element :username
-      element :userid
+      element :formatted
+      element :familyName
+      element :givenName
+      element :middleName
+      element :honorificPrefix
+      element :honorificSuffix
 
       def initialize(o = {})
         case o
         when XML::Reader
-          o.read
-          parse(o)
+          parse(o, :test => true)
         when Hash
           o.each do |k, v|
             if k.to_s.include? '_'
@@ -36,9 +38,12 @@ module OStatus
 
       def to_hash
         {
-          :domain => self.domain,
-          :username => self.username,
-          :userid => self.userid
+          :formatted => self.formatted,
+          :family_name => self.familyName,
+          :given_name => self.givenName,
+          :middle_name => self.middleName,
+          :honorific_prefix => self.honorificPrefix,
+          :honorific_suffix => self.honorificSuffix
         }
       end
 
@@ -48,3 +53,5 @@ module OStatus
     end
   end
 end
+
+

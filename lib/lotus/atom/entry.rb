@@ -1,16 +1,16 @@
-module OStatus
+module Lotus
   module Atom
     require 'atom'
 
     class Entry < ::Atom::Entry
-      require 'ostatus/activity'
-      require 'ostatus/author'
-      require 'ostatus/link'
+      require 'lotus/activity'
+      require 'lotus/author'
+      require 'lotus/link'
 
-      require 'ostatus/atom/author'
-      require 'ostatus/atom/thread'
-      require 'ostatus/atom/link'
-      require 'ostatus/atom/source'
+      require 'lotus/atom/author'
+      require 'lotus/atom/thread'
+      require 'lotus/atom/link'
+      require 'lotus/atom/source'
 
       require 'libxml'
 
@@ -28,28 +28,28 @@ module OStatus
 
       add_extension_namespace :activity, ACTIVITY_NAMESPACE
       element 'activity:object-type'
-      element 'activity:object', :class => OStatus::Atom::Author
+      element 'activity:object', :class => Lotus::Atom::Author
       element 'activity:verb'
       element 'activity:target'
 
       add_extension_namespace :thr, THREAD_NAMESPACE
-      elements 'thr:in-reply-to', :class => OStatus::Atom::Thread
+      elements 'thr:in-reply-to', :class => Lotus::Atom::Thread
 
       # This is for backwards compatibility with some implementations of Activity
       # Streams. It should not be generated for Atom representation of Activity
       # Streams (although it is used in JSON)
-      element 'activity:actor', :class => OStatus::Atom::Author
+      element 'activity:actor', :class => Lotus::Atom::Author
 
-      element :source, :class => OStatus::Atom::Source
+      element :source, :class => Lotus::Atom::Source
 
       namespace ::Atom::NAMESPACE
       element :title, :id, :summary
       element :updated, :published, :class => DateTime, :content_only => true
-      elements :links, :class => OStatus::Atom::Link
+      elements :links, :class => Lotus::Atom::Link
 
       elements :categories, :class => ::Atom::Category
       element :content, :class => ::Atom::Content
-      element :author, :class => OStatus::Atom::Author
+      element :author, :class => Lotus::Atom::Author
 
       def url
         if links.alternate
@@ -85,17 +85,17 @@ module OStatus
         entry_hash.delete :content_type
 
         if entry_hash[:source]
-          entry_hash[:source] = OStatus::Atom::Source.from_canonical(entry_hash[:source])
+          entry_hash[:source] = Lotus::Atom::Source.from_canonical(entry_hash[:source])
         end
 
         if entry_hash[:actor]
-          entry_hash[:author] = OStatus::Atom::Author.from_canonical(entry_hash[:actor])
+          entry_hash[:author] = Lotus::Atom::Author.from_canonical(entry_hash[:actor])
         end
         entry_hash.delete :actor
 
         # Encode in-reply-to fields
         entry_hash[:thr_in_reply_to] = entry_hash[:in_reply_to].map do |t|
-          OStatus::Atom::Thread.new(:href => t.url,
+          Lotus::Atom::Thread.new(:href => t.url,
                                     :ref  => t.id)
         end
         entry_hash.delete :in_reply_to
@@ -138,21 +138,21 @@ module OStatus
 
         source = self.source
         source = source.to_canonical if source
-        OStatus::Activity.new(:actor        => self.author ? self.author.to_canonical : nil,
-                              :id           => self.id,
-                              :url          => self.url,
-                              :title        => self.title,
-                              :source       => source,
-                              :in_reply_to  => self.thr_in_reply_to.map(&:to_canonical),
-                              :content      => self.content,
-                              :content_type => self.content.type,
-                              :link         => self.link,
-                              :object       => object,
-                              :type         => object_type,
-                              :verb         => self.activity_verb,
-                              :target       => self.activity_target,
-                              :published    => self.published,
-                              :updated      => self.updated)
+        Lotus::Activity.new(:actor        => self.author ? self.author.to_canonical : nil,
+                            :id           => self.id,
+                            :url          => self.url,
+                            :title        => self.title,
+                            :source       => source,
+                            :in_reply_to  => self.thr_in_reply_to.map(&:to_canonical),
+                            :content      => self.content,
+                            :content_type => self.content.type,
+                            :link         => self.link,
+                            :object       => object,
+                            :type         => object_type,
+                            :verb         => self.activity_verb,
+                            :target       => self.activity_target,
+                            :published    => self.published,
+                            :updated      => self.updated)
       end
     end
   end

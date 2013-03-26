@@ -1,10 +1,10 @@
-require 'ostatus/activity'
-require 'ostatus/author'
+require 'lotus/activity'
+require 'lotus/author'
 
-module OStatus
+module Lotus
   require 'atom'
 
-  # This class represents an OStatus Feed object.
+  # This class represents a Lotus::Feed object.
   class Feed
     require 'open-uri'
     require 'date'
@@ -15,7 +15,7 @@ module OStatus
     # Holds the url that represents this feed.
     attr_reader :url
 
-    # Holds the list of categories for this feed as OStatus::Category.
+    # Holds the list of categories for this feed as Lotus::Category.
     attr_reader :categories
 
     # Holds human-readable information about the content rights of the entries
@@ -41,11 +41,11 @@ module OStatus
     # Holds the URL for the logo representing this feed.
     attr_reader :logo
 
-    # Holds the generator for this content as an OStatus::Generator.
+    # Holds the generator for this content as an Lotus::Generator.
     attr_reader :generator
 
     # Holds the list of contributors, if any, that are involved in this feed
-    # as OStatus::Author.
+    # as Lotus::Author.
     attr_reader :contributors
 
     # Holds the DateTime when this feed was originally created.
@@ -54,10 +54,10 @@ module OStatus
     # Holds the DateTime when this feed was last modified.
     attr_reader :updated
 
-    # Holds the list of authors as OStatus::Author responsible for this feed.
+    # Holds the list of authors as Lotus::Author responsible for this feed.
     attr_reader :authors
 
-    # Holds the list of entries as OStatus::Activity contained within this feed.
+    # Holds the list of entries as Lotus::Activity contained within this feed.
     attr_reader :entries
 
     # Holds the list of hubs that are available to manage subscriptions to this
@@ -67,7 +67,7 @@ module OStatus
     # Holds the salmon url that handles notifications for this feed.
     attr_reader :salmon_url
 
-    # Holds links to other resources as an array of OStatus::Link
+    # Holds links to other resources as an array of Lotus::Link
     attr_reader :links
 
     # Creates a new representation of a feed.
@@ -79,11 +79,11 @@ module OStatus
     #   title_type    => The content type for the title.
     #   subtitle      => The subtitle for this feed.
     #   subtitle_type => The content type for the subtitle.
-    #   authors       => The list of OStatus::Author's for this feed.
+    #   authors       => The list of Lotus::Author's for this feed.
     #                    Defaults: []
-    #   contributors  => The list of OStatus::Author's that contributed to this
+    #   contributors  => The list of Lotus::Author's that contributed to this
     #                    feed. Defaults: []
-    #   entries       => The list of OStatus::Activity's for this feed.
+    #   entries       => The list of Lotus::Activity's for this feed.
     #                    Defaults: []
     #   icon          => The url of the icon that represents this feed. It
     #                    should have an aspect ratio of 1 horizontal to 1
@@ -92,7 +92,7 @@ module OStatus
     #   logo          => The url of the logo that represents this feed. It
     #                    should have an aspect ratio of 2 horizontal to 1
     #                    vertical.
-    #   categories    => An array of OStatus::Category's that describe how to
+    #   categories    => An array of Lotus::Category's that describe how to
     #                    categorize and describe the content of the feed.
     #                    Defaults: []
     #   rights        => A String depicting the rights of entries without
@@ -104,16 +104,16 @@ module OStatus
     #                    published.
     #   salmon_url    => The url of the salmon endpoint, if one exists, for this
     #                    feed.
-    #   links         => An array of OStatus::Link that adds relations to other
+    #   links         => An array of Lotus::Link that adds relations to other
     #                    resources.
-    #   generator     => An OStatus::Generator representing the agent
+    #   generator     => A Lotus::Generator representing the agent
     #                    responsible for generating this feed.
     #
     # Usage:
     #
-    #   author = OStatus::Author.new(:name => "Kelly")
+    #   author = Lotus::Author.new(:name => "Kelly")
     #
-    #   feed = OStatus::Feed.new(:title   => "My Feed",
+    #   feed = Lotus::Feed.new(:title   => "My Feed",
     #                            :id      => "1",
     #                            :url     => "http://example.com/feeds/1",
     #                            :authors => [author])
@@ -138,22 +138,22 @@ module OStatus
       @generator = options[:generator]
     end
 
-    # Yields a OStatus::Link to this feed.
+    # Yields a Lotus::Link to this feed.
     #
-    # options: Can override OStatus::Link properties, such as rel.
+    # options: Can override Lotus::Link properties, such as rel.
     #
     # Usage:
     #
-    #   feed = OStatus::Feed.new(:title => "Foo", :url => "http://example.com")
+    #   feed = Lotus::Feed.new(:title => "Foo", :url => "http://example.com")
     #   feed.to_link(:rel => "alternate", :title => "Foo's Feed")
     #
     # Generates a link with:
-    #   <OStatus::Link rel="alternate" title="Foo's Feed" url="http://example.com">
+    #   <Lotus::Link rel="alternate" title="Foo's Feed" url="http://example.com">
     def to_link(options = {})
       options = { :title => self.title,
                   :href  => self.url }.merge(options)
 
-      OStatus::Link.new(options)
+      Lotus::Link.new(options)
     end
 
     # Returns a hash of the properties of the feed.
@@ -182,9 +182,9 @@ module OStatus
 
     # Returns a string containing an Atom representation of the feed.
     def to_atom
-      require 'ostatus/atom/feed'
+      require 'lotus/atom/feed'
 
-      OStatus::Atom::Feed.from_canonical(self).to_xml
+      Lotus::Atom::Feed.from_canonical(self).to_xml
     end
   end
 end

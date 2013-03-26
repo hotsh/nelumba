@@ -1,10 +1,10 @@
-require 'ostatus/activity'
-require 'ostatus/atom/name'
-require 'ostatus/atom/address'
-require 'ostatus/atom/account'
-require 'ostatus/atom/organization'
+require 'lotus/activity'
+require 'lotus/atom/name'
+require 'lotus/atom/address'
+require 'lotus/atom/account'
+require 'lotus/atom/organization'
 
-module OStatus
+module Lotus
   require 'atom'
 
   module Atom
@@ -31,9 +31,9 @@ module OStatus
 
       add_extension_namespace :poco, POCO_NAMESPACE
       element 'poco:id'
-      element 'poco:organization', :class => OStatus::Atom::Organization
-      element 'poco:address',      :class => OStatus::Atom::Address
-      element 'poco:account',      :class => OStatus::Atom::Account
+      element 'poco:organization', :class => Lotus::Atom::Organization
+      element 'poco:address',      :class => Lotus::Atom::Address
+      element 'poco:account',      :class => Lotus::Atom::Account
       element 'poco:displayName'
       element 'poco:nickname'
       element 'poco:updated',     :class => DateTime, :content_only => true
@@ -60,7 +60,7 @@ module OStatus
           reader = XML::Reader.string(name)
           reader.read
           reader.read
-          OStatus::Atom::Name.new(reader)
+          Lotus::Atom::Name.new(reader)
         else
           nil
         end
@@ -87,10 +87,10 @@ module OStatus
         super(*args)
       end
 
-      # Gives an instance of an OStatus::Activity that parses the fields
+      # Gives an instance of an Lotus::Activity that parses the fields
       # having an activity prefix.
       def activity
-        OStatus::Activity.new(self)
+        Lotus::Activity.new(self)
       end
 
       def self.from_canonical(obj)
@@ -105,22 +105,22 @@ module OStatus
 
           if k == :extended_name
             if hash[:extended_name]
-              hash[:"poco_name"] = OStatus::Atom::Name.new(hash[:extended_name])
+              hash[:"poco_name"] = Lotus::Atom::Name.new(hash[:extended_name])
             end
             hash.delete :extended_name
           elsif k == :organization
             if hash[:organization]
-              hash[:"poco_organization"] = OStatus::Atom::Organization.new(hash[:organization])
+              hash[:"poco_organization"] = Lotus::Atom::Organization.new(hash[:organization])
             end
             hash.delete :organization
           elsif k == :address
             if hash[:address]
-              hash[:"poco_address"] = OStatus::Atom::Address.new(hash[:address])
+              hash[:"poco_address"] = Lotus::Atom::Address.new(hash[:address])
             end
             hash.delete :address
           elsif k == :account
             if hash[:account]
-              hash[:"poco_account"] = OStatus::Atom::Account.new(hash[:account])
+              hash[:"poco_account"] = Lotus::Atom::Account.new(hash[:account])
             end
             hash.delete :account
           elsif (k != :uri) && (k != :name) && (k != :email)
@@ -144,23 +144,23 @@ module OStatus
 
         ext_name = self.poco_name
         ext_name = ext_name.to_canonical if ext_name
-        OStatus::Author.new(:id => self.poco_id,
-                            :extended_name => ext_name,
-                            :organization => organization,
-                            :address => address,
-                            :account => account,
-                            :gender => self.poco_gender,
-                            :note => self.poco_note,
-                            :nickname => self.poco_nickname,
-                            :display_name => self.poco_displayName,
-                            :preferred_username => self.poco_preferredUsername,
-                            :updated => self.poco_updated,
-                            :published => self.poco_published,
-                            :birthday => self.poco_birthday,
-                            :anniversary => self.poco_anniversary,
-                            :uri => self.uri,
-                            :email => self.email,
-                            :name => self.name)
+        Lotus::Author.new(:id => self.poco_id,
+                          :extended_name => ext_name,
+                          :organization => organization,
+                          :address => address,
+                          :account => account,
+                          :gender => self.poco_gender,
+                          :note => self.poco_note,
+                          :nickname => self.poco_nickname,
+                          :display_name => self.poco_displayName,
+                          :preferred_username => self.poco_preferredUsername,
+                          :updated => self.poco_updated,
+                          :published => self.poco_published,
+                          :birthday => self.poco_birthday,
+                          :anniversary => self.poco_anniversary,
+                          :uri => self.uri,
+                          :email => self.email,
+                          :name => self.name)
       end
     end
   end

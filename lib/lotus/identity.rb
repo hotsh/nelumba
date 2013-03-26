@@ -1,4 +1,4 @@
-module OStatus
+module Lotus
   # Holds information about an Identity. This is more specific to identifying
   # an Author than that structure. It is generally hosted in one place and
   # not replicated. It holds identifying information that allow you to

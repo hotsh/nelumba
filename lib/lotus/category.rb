@@ -1,4 +1,4 @@
-module OStatus
+module Lotus
   # This element conveys information about a category associated with an entry
   # or feed. There is no defined meaning to the content according to the Atom
   # specification.
