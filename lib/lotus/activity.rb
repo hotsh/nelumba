@@ -123,5 +123,12 @@ module Lotus
         :type => self.type
       }
     end
+
+    # Returns a string containing the Atom representation of this Activity.
+    def to_atom
+      require 'lotus/atom/entry'
+
+      Lotus::Atom::Entry.from_canonical(self).to_xml
+    end
   end
 end
