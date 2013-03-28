@@ -5,6 +5,9 @@ require 'lotus/identity'
 require 'lotus/notification'
 require 'lotus/link'
 
+require 'lotus/subscription'
+require 'lotus/publisher'
+
 # This module contains elements that allow federated interaction. It also
 # contains methods to construct these objects from external sources.
 module Lotus
