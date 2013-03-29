@@ -83,6 +83,10 @@ module Lotus
   #   i = Lotus.discover_user("wilkieii@rstat.us")
   #   feed = Lotus.discover_feed(i)
   def self.discover_feed(url_or_identity, content_type = "application/atom+xml")
+    if url_or_identity =~ /^(?:acct:)?[^@]+@[^@]+\.[^@]+$/
+      url_or_identity = Lotus::discover_user(url_or_identity)
+    end
+
     if url_or_identity.is_a? Lotus::Identity
       return self.discover_feed(url_or_identity.profile_page)
     end
@@ -92,7 +96,7 @@ module Lotus
 
     url = url_or_identity
 
-    if url =~ /^\d:\/\//
+    if url =~ /^http[s]?:\/\//
       # Url is an internet resource
       response = Lotus::pull_url(url, content_type)
 
