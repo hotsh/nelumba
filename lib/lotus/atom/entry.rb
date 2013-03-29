@@ -144,7 +144,7 @@ module Lotus
                             :title        => self.title,
                             :source       => source,
                             :in_reply_to  => self.thr_in_reply_to.map(&:to_canonical),
-                            :content      => self.content,
+                            :content      => self.content.to_s,
                             :content_type => self.content.type,
                             :link         => self.link,
                             :object       => object,

@@ -121,9 +121,9 @@ module Lotus
 
         categories = self.categories.map(&:to_canonical)
 
-        Lotus::Feed.new(:title         => self.title,
+        Lotus::Feed.new(:title         => self.title.to_s,
                         :title_type    => self.title ? self.title.type : nil,
-                        :subtitle      => self.subtitle,
+                        :subtitle      => self.subtitle.to_s,
                         :subtitle_type => self.subtitle ? self.subtitle.type : nil,
                         :id            => self.id,
                         :url           => url,
