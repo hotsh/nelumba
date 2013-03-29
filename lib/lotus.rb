@@ -113,7 +113,7 @@ module Lotus
          'xml', 'atom', 'rss', 'atom+xml', 'rss+xml'
       xml_str = str
 
-      Lotus::Atom::Feed.new(XML::Reader.string(xml_str)).to_canonical
+      self.feed_from_string(xml_str, content_type)
     when 'text/html'
       html_str = str
 
@@ -152,8 +152,19 @@ module Lotus
     end
   end
 
-  # Yield an Lotus::Entry from the given url.
-  def self.entry_from_url(url, content_type = nil)
+  # Yield a Lotus::Feed from the given string content.
+  def self.feed_from_string(string, content_type = nil)
+    # Atom is default type to attempt to retrieve
+    content_type ||= "application/atom+xml"
+
+    case content_type
+    when 'application/atom+xml', 'application/rss+xml', 'application/xml'
+      Lotus::Atom::Feed.new(XML::Reader.string(string)).to_canonical
+    end
+  end
+
+  # Yield a Lotus::Activity from the given url.
+  def self.activty_from_url(url, content_type = nil)
     # Atom is default type to attempt to retrieve
     content_type ||= "application/atom+xml"
 
@@ -161,10 +172,22 @@ module Lotus
 
     return nil unless response.is_a?(Net::HTTPSuccess)
 
-    case response.content_type
+    content_type = response.content_type
+
+    case content_type
     when 'application/atom+xml', 'application/rss+xml', 'application/xml'
       xml_str = response.body
-      Lotus::Atom::Entry.new(XML::Reader.string(xml_str)).to_canonical
+      self.entry_from_string(xml_str, response.content_type)
+    end
+  end
+
+  # Yield a Lotus::Activity from the given string content.
+  def self.activity_from_string(string, content_type = "application/atom+xml")
+    content_type ||= "application/atom+xml"
+
+    case content_type
+    when 'application/atom+xml', 'application/rss+xml', 'application/xml'
+      Lotus::Atom::Entry.new(XML::Reader.string(string)).to_canonical
     end
   end
 
