@@ -35,6 +35,7 @@ module Lotus
 
       @callback_url = options[:callback_url]
       @topic_url    = options[:topic_url]
+      @tokens << options[:token] if options[:token]
 
       @hubs = options[:hubs] || []
 
