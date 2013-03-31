@@ -27,7 +27,7 @@ module Lotus
 
   # Will yield an OStatus::Identity for the given fully qualified name
   # (i.e. "user@domain.tld")
-  def self.discover_user(name)
+  def self.discover_identity(name)
     xrd = Redfinger.finger(name)
 
     # magic-envelope public key
@@ -61,7 +61,7 @@ module Lotus
   # "user@domain.tld") or a previously resolved Lotus::Identity.
   def self.discover_author(identity)
     if identity.is_a? String
-      identity = self.discover_user(identity)
+      identity = self.discover_identity(identity)
     end
 
     return nil if identity.nil? || identity.profile_page.nil?
@@ -80,7 +80,7 @@ module Lotus
   # Usage:
   #   feed = Lotus.discover_feed("https://rstat.us/users/wilkieii/feed")
   #
-  #   i = Lotus.discover_user("wilkieii@rstat.us")
+  #   i = Lotus.discover_identity("wilkieii@rstat.us")
   #   feed = Lotus.discover_feed(i)
   def self.discover_feed(url_or_identity, content_type = "application/atom+xml")
     if url_or_identity =~ /^(?:acct:)?[^@]+@[^@]+\.[^@]+$/
@@ -163,8 +163,12 @@ module Lotus
     end
   end
 
+  def self.discover_activity(url)
+    self.activity_from_url(url)
+  end
+
   # Yield a Lotus::Activity from the given url.
-  def self.activty_from_url(url, content_type = nil)
+  def self.activity_from_url(url, content_type = nil)
     # Atom is default type to attempt to retrieve
     content_type ||= "application/atom+xml"
 
