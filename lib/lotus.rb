@@ -84,7 +84,7 @@ module Lotus
   #   feed = Lotus.discover_feed(i)
   def self.discover_feed(url_or_identity, content_type = "application/atom+xml")
     if url_or_identity =~ /^(?:acct:)?[^@]+@[^@]+\.[^@]+$/
-      url_or_identity = Lotus::discover_user(url_or_identity)
+      url_or_identity = Lotus::discover_identity(url_or_identity)
     end
 
     if url_or_identity.is_a? Lotus::Identity
