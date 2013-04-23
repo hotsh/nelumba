@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "ratom", "~> 0.7.2"
   s.add_dependency "ruby-hmac"
+  s.add_dependency "rsa"
   s.add_dependency "nokogiri"
 
   s.add_development_dependency "rspec", "~> 2.10.0"
