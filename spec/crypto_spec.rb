@@ -45,7 +45,8 @@ describe Lotus::Crypto do
     it "should return a string with the EMSA prefix" do
       keypair = Lotus::Crypto.new_keypair
 
-      matcher = /^\x00\x01\xff*\x00\x30\x31\x30\x0d\x06\x09\x60\x86\x48\x01\x65\x03\x04\x02\x01\x05\x00\x04\x20/
+      sequence = "^\x00\x01\x00\x30\x31\x30\x0d\x06\x09\x60\x86\x48\x01\x65\x03\x04\x02\x01\x05\x00\x04\x20"
+      matcher = Regexp.new(sequence, nil, 'n')
 
       RSA::KeyPair.new.expects(:decrypt).with(regexp_matches(matcher))
       Lotus::Crypto.emsa_sign "payload", keypair.private_key
@@ -78,6 +79,8 @@ describe Lotus::Crypto do
       valid_signature =
         "\x00\x01\x00\x30\x31\x30\x0d\x06\x09\x60\x86\x48\x01\x65\x03\x04\x02\x01\x05\x00\x04\x20SHA2"
 
+      valid_signature.force_encoding('binary')
+
       signature = Lotus::Crypto.emsa_sign("payload", keypair.private_key)
 
       RSA::KeyPair.new.expects(:encrypt)
@@ -93,6 +96,8 @@ describe Lotus::Crypto do
 
       bogus_signature =
         "\x00\x01\x00\x30\x31\x30\x0d\x06\x09\x60\x86\x48\x01\x65\x03\x04\x02\x01\x05\x00\x04\x20BOGUS"
+
+      bogus_signature.force_encoding('binary')
 
       signature = Lotus::Crypto.emsa_sign("payload", keypair.private_key)
 

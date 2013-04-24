@@ -118,7 +118,7 @@ module Lotus
         padding = padding + "\xff"
       end
 
-      "\x00\x01#{padding}\x00#{prefix}#{plaintext}"
+      "\x00\x01#{padding}\x00#{prefix}#{plaintext}".force_encoding('binary')
     end
 
     # :nodoc:
