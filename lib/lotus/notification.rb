@@ -5,21 +5,20 @@ module Lotus
   # recipiant can verify the message contents.
   class Notification
     require 'xml'
-    require 'atom'
     require 'digest/sha2'
 
-    attr_accessor :entry
+    attr_reader :activity
 
     # Create an instance for a particular Lotus::Activity.
-    def initialize entry, signature = nil, plaintext = nil
-      @entry = entry
+    def initialize activity, signature = nil, plaintext = nil
+      @activity = activity
       @signature = signature
       @plaintext = plaintext
     end
 
-    # Creates an entry for following a particular Author.
+    # Creates an activity for following a particular Author.
     def self.from_follow(user_author, followed_author)
-      entry = Lotus::Activity.new(
+      activity = Lotus::Activity.new(
         :verb => :follow,
         :object => followed_author,
         :actor    => user_author,
@@ -28,12 +27,12 @@ module Lotus
         :content_type => "html"
       )
 
-      self.new(entry)
+      self.new(activity)
     end
 
-    # Creates an entry for unfollowing a particular Author.
+    # Creates an activity for unfollowing a particular Author.
     def self.from_unfollow(user_author, followed_author)
-      entry = Lotus::Activity.new(
+      activity = Lotus::Activity.new(
         :verb => "http://ostatus.org/schema/1.0/unfollow",
         :object => followed_author,
         :actor    => user_author,
@@ -42,12 +41,12 @@ module Lotus
         :content_type => "html"
       )
 
-      self.new(entry)
+      self.new(activity)
     end
 
-    # Creates an entry for a profile update.
+    # Creates an activity for a profile update.
     def self.from_profile_update(user_author)
-      entry = Lotus::Activity.new(
+      activity = Lotus::Activity.new(
         :verb => "http://ostatus.org/schema/1.0/update-profile",
         :actor    => user_author,
         :title => "#{user_author.name} changed their profile information.",
@@ -55,11 +54,33 @@ module Lotus
         :content_type => "html"
       )
 
-      self.new(entry)
+      self.new(activity)
     end
 
-    # Will pull a Lotus::Activity from a magic envelope described by the xml.
-    def self.from_xml source
+    # Will pull a Lotus::Activity from the given payload and MIME type.
+    def self.from_data(content, content_type)
+      case content_type
+      when 'xml',
+           'magic-envelope+xml',
+           'application/xml',
+           'application/text+xml',
+           'application/magic-envelope+xml'
+        self.from_xml content
+      when 'json',
+           'magic-envelope+json',
+           'application/json',
+           'application/text+json',
+           'application/magic-envelope+json'
+        self.from_json content
+      end
+    end
+
+    # Will pull a Lotus::Activity from a magic envelope described by the JSON.
+    def self.from_json(source)
+    end
+
+    # Will pull a Lotus::Activity from a magic envelope described by the XML.
+    def self.from_xml(source)
       if source.is_a?(String)
         if source.length == 0
           return nil
@@ -67,21 +88,19 @@ module Lotus
 
         source = XML::Document.string(source,
                                       :options => XML::Parser::Options::NOENT)
+      else
+        return nil
       end
 
       # Retrieve the envelope
       envelope = source.find('/me:env',
                              'me:http://salmon-protocol.org/ns/magic-env').first
 
-      if envelope.nil?
-        return nil
-      end
+      return nil unless envelope
 
       data = envelope.find('me:data',
                            'me:http://salmon-protocol.org/ns/magic-env').first
-      if data.nil?
-        return nil
-      end
+      return nil unless data
 
       data_type = data.attributes["type"]
       if data_type.nil?
@@ -103,14 +122,12 @@ module Lotus
 
       # Parse fields
 
-      if signature.nil?
-        # Well, if we cannot verify, we don't accept
-        return nil
-      else
-        # XXX: Handle key_id attribute
-        signature = signature.content
-        signature = Base64::urlsafe_decode64(signature)
-      end
+      # Well, if we cannot verify, we don't accept
+      return nil unless signature
+
+      # XXX: Handle key_id attribute
+      signature = signature.content
+      signature = Base64::urlsafe_decode64(signature)
 
       if encoding.nil?
         # When the encoding is omitted, use base64url
@@ -150,12 +167,11 @@ module Lotus
 
       # Interpret data payload
       payload = XML::Reader.string(data)
-      self.new Lotus::Activity.new(payload), signature, plaintext
+      self.new Lotus::Atom::Entry.new(payload).to_canonical, signature, plaintext
     end
 
-    # Generate the xml for this notice and sign with the given private
-    # key.
-    def to_xml key
+    # Generate the xml for this notice and sign with the given private key.
+    def to_xml private_key
       # Generate magic envelope
       magic_envelope = XML::Document.new
 
@@ -167,7 +183,7 @@ module Lotus
       magic_envelope.root.namespaces.namespace = me_ns
 
       # Armored Data <me:data>
-      data = @entry.to_xml
+      data = @activity.to_atom
       @plaintext = data
       data_armored = Base64::urlsafe_encode64(data)
       elem = XML::Node.new 'data', data_armored, me_ns
@@ -184,10 +200,11 @@ module Lotus
       algorithm_armored = 'UlNBLVNIQTI1Ng=='
 
       # Signature <me:sig>
-      plaintext = "#{data_armored}.#{data_type_armored}.#{encoding_armored}.#{algorithm_armored}"
+      plaintext =
+        "#{data_armored}.#{data_type_armored}.#{encoding_armored}.#{algorithm_armored}"
 
       # Assign @signature to the signature generated from the plaintext
-      sign(plaintext, key)
+      @signature = Lotus::Crypto.emsa_sign(plaintext, private_key)
 
       signature_armored = Base64::urlsafe_encode64(@signature)
       magic_envelope.root << XML::Node.new('sig', signature_armored, me_ns)
@@ -195,53 +212,9 @@ module Lotus
       magic_envelope.to_s :indent => true, :encoding => XML::Encoding::UTF_8
     end
 
-    # Return the EMSA string for this instance given the size of the
-    # public key modulus.
-    def signature modulus_byte_length
-      plaintext = Digest::SHA2.new(256).digest(@plaintext)
-
-      prefix = "\x30\x31\x30\x0d\x06\x09\x60\x86\x48\x01\x65\x03\x04\x02\x01\x05\x00\x04\x20"
-      padding_count = modulus_byte_length - prefix.bytes.count - plaintext.bytes.count - 3
-
-      padding = ""
-      padding_count.times do
-        padding = padding + "\xff"
-      end
-
-      "\x00\x01#{padding}\x00#{prefix}#{plaintext}"
-    end
-
-    def sign message, key
-      @plaintext = message
-
-      modulus_byte_count = key.private_key.modulus.size
-
-      @signature = signature(modulus_byte_count)
-      @signature = key.decrypt(@signature)
-    end
-
-    # Use RSA to verify the signature
-    # key - RSA::KeyPair with the public key to use
+    # Check the origin of this notification.
     def verified? key
-      # RSA encryption is needed to compare the signatures
-
-      # Get signature to check
-      emsa = self.signature key.public_key.modulus.size
-
-      # Get signature in payload
-      emsa_signature = key.encrypt(@signature)
-
-      # RSA gem drops leading 0s since it does math upon an Integer
-      # As a workaround, I check for what I expect the second byte to be (\x01)
-      # This workaround will also handle seeing a \x00 first if the RSA gem is
-      # fixed.
-      if emsa_signature.getbyte(0) == 1
-        emsa_signature = "\x00#{emsa_signature}"
-      end
-
-      # Does the signature match?
-      # Return the result.
-      emsa_signature == emsa
+      Lotus::Crypto.emsa_verify(@plaintext, @signature, key)
     end
   end
 end
