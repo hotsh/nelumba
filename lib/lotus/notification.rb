@@ -7,13 +7,22 @@ module Lotus
     require 'xml'
     require 'digest/sha2'
 
+    # The Activity that is represented by this notification.
     attr_reader :activity
+
+    # The identity of the sender that can be used to discover the Identity
+    attr_reader :account
 
     # Create an instance for a particular Lotus::Activity.
     def initialize activity, signature = nil, plaintext = nil
       @activity = activity
       @signature = signature
       @plaintext = plaintext
+
+      account = activity.actor.uri
+
+      # XXX: Negotiate various weird uri schemes to find identity account
+      @account = account
     end
 
     # Creates an activity for following a particular Author.

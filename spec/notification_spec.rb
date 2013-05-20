@@ -74,4 +74,16 @@ describe Lotus::Notification do
       @salmon.activity.actor.must_equal @user
     end
   end
+
+  describe "account" do
+    before do
+      @user   = Lotus::Author.new(:name => "wilkie", :uri => "acct:wilkie@rstat.us")
+      @follow = Lotus::Author.new(:name => "wilkie")
+      @salmon = Lotus::Notification.from_follow(@user, @follow)
+    end
+
+    it "should provide the uri of the actor when the uri is an account" do
+      @salmon.account.must_equal @salmon.activity.actor.uri
+    end
+  end
 end
