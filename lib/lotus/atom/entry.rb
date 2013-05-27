@@ -47,6 +47,12 @@ module Lotus
       element :updated, :published, :class => DateTime, :content_only => true
       elements :links, :class => Lotus::Atom::Link
 
+      elements :replies, :class => Lotus::Atom::Entry
+
+      elements :shares, :class => Lotus::Atom::Author
+      elements :likes, :class => Lotus::Atom::Author
+      elements :mentions, :class => Lotus::Atom::Author
+
       elements :categories, :class => ::Atom::Category
       element :content, :class => ::Atom::Content
       element :author, :class => Lotus::Atom::Author

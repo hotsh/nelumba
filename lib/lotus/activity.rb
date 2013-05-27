@@ -53,6 +53,18 @@ module Lotus
     # to.
     attr_reader :in_reply_to
 
+    # Holds an array of related Lotus::Activity's that are replies to this one.
+    attr_reader :replies
+
+    # Holds an array of Lotus::Author's that have favorited this activity.
+    attr_reader :likes
+
+    # Holds an array of Lotus::Author's that have shared this activity.
+    attr_reader :shares
+
+    # Holds an array of Lotus::Author's that are mentioned in this activity.
+    attr_reader :mentions
+
     # Create a new entry with the given content.
     #
     # options:
@@ -100,7 +112,13 @@ module Lotus
       unless options[:in_reply_to].nil? or options[:in_reply_to].is_a?(Array)
         options[:in_reply_to] = [options[:in_reply_to]]
       end
+
       @in_reply_to  = options[:in_reply_to] || []
+      @replies      = options[:replies]     || []
+
+      @mentions     = options[:mentions]    || []
+      @likes        = options[:likes]       || []
+      @shares       = options[:shares]      || []
     end
 
     # Returns a hash of all relevant fields.
@@ -114,7 +132,13 @@ module Lotus
         :updated => self.updated,
         :url => self.url,
         :id => self.id,
+
         :in_reply_to => self.in_reply_to.dup,
+        :replies => self.replies.dup,
+
+        :mentions => self.mentions.dup,
+        :likes => self.likes.dup,
+        :shares => self.shares.dup,
 
         :object => self.object,
         :target => self.target,

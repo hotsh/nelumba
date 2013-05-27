@@ -73,6 +73,42 @@ describe Lotus::Activity do
       Lotus::Activity.new.in_reply_to.must_equal []
     end
 
+    it "should store an array of replies" do
+      thread = mock('entry')
+      Lotus::Activity.new(:replies => [thread]).replies.must_equal [thread]
+    end
+
+    it "should store an empty array of replies by default" do
+      Lotus::Activity.new.replies.must_equal []
+    end
+
+    it "should store an array of shares" do
+      thread = mock('entry')
+      Lotus::Activity.new(:shares => [thread]).shares.must_equal [thread]
+    end
+
+    it "should store an empty array of shares by default" do
+      Lotus::Activity.new.shares.must_equal []
+    end
+
+    it "should store an array of mentions" do
+      thread = mock('entry')
+      Lotus::Activity.new(:mentions => [thread]).mentions.must_equal [thread]
+    end
+
+    it "should store an empty array of mentions by default" do
+      Lotus::Activity.new.mentions.must_equal []
+    end
+
+    it "should store an array of likes" do
+      thread = mock('entry')
+      Lotus::Activity.new(:likes => [thread]).likes.must_equal [thread]
+    end
+
+    it "should store an empty array of likes by default" do
+      Lotus::Activity.new.likes.must_equal []
+    end
+
     it "should default the content to '' if not given" do
       Lotus::Activity.new.content.must_equal ''
     end
