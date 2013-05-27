@@ -49,7 +49,7 @@ module Lotus
     # Holds the DateTime of when the entry was last modified.
     attr_reader :updated
 
-    # Holds an array of related Lotus::Entry's that this entry is a response
+    # Holds an array of related Lotus::Activity's that this entry is a response
     # to.
     attr_reader :in_reply_to
 
