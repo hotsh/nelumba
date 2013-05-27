@@ -1,4 +1,4 @@
-require 'minitest/spec'
+require 'minitest/autorun'
 require 'turn/autorun'
 
 Turn.config do |c|
