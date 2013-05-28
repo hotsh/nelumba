@@ -173,5 +173,46 @@ module Lotus
         :address => self.address
       }
     end
+
+    # Creates an Activity where this author acts upon the given object.
+    def act(action, object)
+      type = "person"
+      type = object.type if object.is_a? Lotus::Activity
+
+      Lotus::Activity.new :verb   => action,
+                          :actor  => self,
+                          :object => object,
+                          :type   => type
+    end
+
+    # Creates an Activity where this author favorites the given activity.
+    def favorite(activity)
+      self.act(activity, :favorite)
+    end
+
+    # Creates an Activity where this author unfavorites the given activity.
+    def unfavorite(activity)
+      self.act(activity, :unfavorite)
+    end
+
+    # Creates an Activity where this author shares the given activity.
+    def share(activity)
+      self.act(activity, :share)
+    end
+
+    # Creates an Activity where this author unshares the given activity.
+    def unshare(activity)
+      self.act(activity, :unshare)
+    end
+
+    # Creates an Activity where this author follows the given author.
+    def follow(author)
+      self.act(author, :follow)
+    end
+
+    # Creates an Activity where this author stops following the given author.
+    def unfollow(author)
+      self.act(author, :"stop-following")
+    end
   end
 end
