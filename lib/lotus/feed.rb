@@ -10,7 +10,7 @@ module Lotus
     require 'date'
 
     # Holds the id that uniquely represents this feed.
-    attr_reader :id
+    attr_reader :uid
 
     # Holds the url that represents this feed.
     attr_reader :url
@@ -73,7 +73,7 @@ module Lotus
     # Creates a new representation of a feed.
     #
     # options:
-    #   id            => The unique identifier for this feed.
+    #   uid           => The unique identifier for this feed.
     #   url           => The url that represents this feed.
     #   title         => The title for this feed. Defaults: "Untitled"
     #   title_type    => The content type for the title.
@@ -113,12 +113,12 @@ module Lotus
     #
     #   author = Lotus::Author.new(:name => "Kelly")
     #
-    #   feed = Lotus::Feed.new(:title   => "My Feed",
-    #                            :id      => "1",
+    #   feed = Lotus::Feed.new(:title     => "My Feed",
+    #                            :uid     => "1",
     #                            :url     => "http://example.com/feeds/1",
     #                            :authors => [author])
     def initialize(options = {})
-      @id = options[:id]
+      @uid = options[:uid]
       @url = options[:url]
       @icon = options[:icon]
       @logo = options[:logo]
@@ -159,7 +159,7 @@ module Lotus
     # Returns a hash of the properties of the feed.
     def to_hash
       {
-        :id => self.id,
+        :uid => self.uid,
         :url => self.url,
         :hubs => self.hubs.dup,
         :icon => self.icon,

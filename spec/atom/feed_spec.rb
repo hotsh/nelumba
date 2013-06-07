@@ -12,7 +12,7 @@ describe Lotus::Atom do
     author = Lotus::Author.new(:uri               => "http://example.com/users/1",
                                :email             => "user@example.com",
                                :name              => "wilkie",
-                               :id => "1",
+                               :uid => "1",
                                :nickname    => "wilkie",
                                :extended_name     => {:formatted => "Dave Wilkinson",
                                  :family_name => "Wilkinson",
@@ -55,7 +55,7 @@ describe Lotus::Atom do
                                    :actor => author,
                                    :content => "Hello",
                                    :content_type => "html",
-                                   :id => "54321",
+                                   :uid => "54321",
                                    :url => "http://example.com/entries/1",
                                    :published => Time.now,
                                    :updated => Time.now)
@@ -66,7 +66,7 @@ describe Lotus::Atom do
                                 :content => "Hello",
                                 :content_type => "html",
                                 :source => source_feed,
-                                :id => "54321",
+                                :uid => "54321",
                                 :url => "http://example.com/entries/1",
                                 :published => Time.now,
                                 :in_reply_to => reply_to,
@@ -86,7 +86,7 @@ describe Lotus::Atom do
                               :updated => Time.now,
                               :authors => [author],
                               :entries => [entry],
-                              :id => "12345")
+                              :uid => "12345")
   end
 
   it "should be able to reform canonical structure using Atom" do
@@ -184,7 +184,7 @@ describe Lotus::Atom do
       describe "<id>" do
         it "should contain the id from Lotus::Feed" do
           @feed.find_first('xmlns:id', 'xmlns:http://www.w3.org/2005/Atom')
-            .content.must_equal @master.id
+            .content.must_equal @master.uid
         end
       end
 
@@ -309,7 +309,7 @@ describe Lotus::Atom do
         describe "<poco:id>" do
           it "should list the author's portable contact id" do
             @author.find_first('poco:id',
-                               'http://portablecontacts.net/spec/1.0').content.must_equal @master.authors.first.id
+                               'http://portablecontacts.net/spec/1.0').content.must_equal @master.authors.first.uid
           end
         end
 
@@ -629,7 +629,7 @@ describe Lotus::Atom do
         describe "<id>" do
           it "should contain the entry id" do
             @entry.find_first('xmlns:id', 'xmlns:http://www.w3.org/2005/Atom')
-              .content.must_equal @master.entries.first.id
+              .content.must_equal @master.entries.first.uid
           end
         end
 

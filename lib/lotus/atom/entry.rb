@@ -102,7 +102,7 @@ module Lotus
         # Encode in-reply-to fields
         entry_hash[:thr_in_reply_to] = entry_hash[:in_reply_to].map do |t|
           Lotus::Atom::Thread.new(:href => t.url,
-                                    :ref  => t.id)
+                                  :ref  => t.uid)
         end
         entry_hash.delete :in_reply_to
 
@@ -122,6 +122,9 @@ module Lotus
           entry_hash[:activity_verb] = SCHEMA_ROOT + entry_hash[:verb].to_s
         end
         entry_hash[:activity_target] = entry_hash[:target] if entry_hash[:target]
+
+        entry_hash[:id] = entry_hash[:uid]
+        entry_hash.delete :uid
 
         entry_hash.delete :object
         entry_hash.delete :verb
@@ -145,7 +148,7 @@ module Lotus
         source = self.source
         source = source.to_canonical if source
         Lotus::Activity.new(:actor        => self.author ? self.author.to_canonical : nil,
-                            :id           => self.id,
+                            :uid          => self.id,
                             :url          => self.url,
                             :title        => self.title,
                             :source       => source,

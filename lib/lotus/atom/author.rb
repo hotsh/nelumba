@@ -123,6 +123,11 @@ module Lotus
               hash[:"poco_account"] = Lotus::Atom::Account.new(hash[:account])
             end
             hash.delete :account
+          elsif k == :uid
+            if hash[:uid]
+              hash[:"poco_id"] = hash[:uid]
+            end
+            hash.delete :uid
           elsif (k != :uri) && (k != :name) && (k != :email)
             hash[:"poco_#{to_k}"] = hash[k]
             hash.delete k
@@ -144,7 +149,7 @@ module Lotus
 
         ext_name = self.poco_name
         ext_name = ext_name.to_canonical if ext_name
-        Lotus::Author.new(:id => self.poco_id,
+        Lotus::Author.new(:uid => self.poco_id,
                           :extended_name => ext_name,
                           :organization => organization,
                           :address => address,

@@ -92,6 +92,9 @@ module Lotus
         hash[:title] = ::Atom::Content.parse(xml)
         hash.delete :title_type
 
+        hash[:id] = hash[:uid]
+        hash.delete :uid
+
         if hash[:subtitle]
           node = XML::Node.new("subtitle")
           node['type'] = hash[:subtitle_type] if hash[:subtitle_type]
@@ -125,7 +128,7 @@ module Lotus
                         :title_type    => self.title ? self.title.type : nil,
                         :subtitle      => self.subtitle.to_s,
                         :subtitle_type => self.subtitle ? self.subtitle.type : nil,
-                        :id            => self.id,
+                        :uid           => self.id,
                         :url           => url,
                         :categories    => categories,
                         :icon          => self.icon,

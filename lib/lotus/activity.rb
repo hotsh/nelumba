@@ -35,7 +35,7 @@ module Lotus
     attr_reader :content_type
 
     # Holds the id that uniquely identifies this entry.
-    attr_reader :id
+    attr_reader :uid
 
     # Holds the url that represents the entry.
     attr_reader :url
@@ -84,7 +84,7 @@ module Lotus
     #                    published.
     #   :updated      => The DateTime depicting when the entry was modified.
     #   :url          => The canonical url of the entry.
-    #   :id           => The unique id that identifies this entry.
+    #   :uid          => The unique id that identifies this entry.
     #   :activity     => The activity this entry represents. Either a single string
     #                    denoting what type of object this entry represents, or an
     #                    entire Lotus::Activity when a more detailed description is
@@ -107,7 +107,7 @@ module Lotus
       @published    = options[:published]
       @updated      = options[:updated]
       @url          = options[:url]
-      @id           = options[:id]
+      @uid          = options[:uid]
 
       unless options[:in_reply_to].nil? or options[:in_reply_to].is_a?(Array)
         options[:in_reply_to] = [options[:in_reply_to]]
@@ -131,7 +131,7 @@ module Lotus
         :published => self.published,
         :updated => self.updated,
         :url => self.url,
-        :id => self.id,
+        :uid => self.uid,
 
         :in_reply_to => self.in_reply_to.dup,
         :replies => self.replies.dup,

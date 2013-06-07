@@ -45,7 +45,7 @@ describe Lotus::Feed do
     end
 
     it "should store the id of the feed" do
-      Lotus::Feed.new(:id => "id").id.must_equal "id"
+      Lotus::Feed.new(:uid => "id").uid.must_equal "id"
     end
 
     it "should store the icon for the feed" do
@@ -199,7 +199,7 @@ describe Lotus::Feed do
     end
 
     it "should return a Hash containing the id of the feed" do
-      Lotus::Feed.new(:id => "id").to_hash[:id].must_equal "id"
+      Lotus::Feed.new(:uid => "id").to_hash[:uid].must_equal "id"
     end
 
     it "should return a Hash containing the icon for the feed" do

@@ -8,7 +8,7 @@ module Lotus
     require 'date'
 
     # Holds the id that represents this contact.
-    attr_reader :id
+    attr_reader :uid
 
     # Holds the nickname of this contact.
     attr_reader :nickname
@@ -104,7 +104,7 @@ module Lotus
     #
     # options:
     #   name               => The name of the author. Defaults: "anonymous"
-    #   id                 => The identifier that uniquely identifies the
+    #   uid                => The identifier that uniquely identifies the
     #                         contact.
     #   nickname           => The nickname of the contact.
     #   gender             => The gender of the contact.
@@ -132,7 +132,7 @@ module Lotus
       @name = options[:name] || "anonymous"
       @email = options[:email]
 
-      @id = options[:id]
+      @uid = options[:uid]
       @name = options[:name]
       @gender = options[:gender]
       @note = options[:note]
@@ -156,7 +156,7 @@ module Lotus
         :email => self.email,
         :name => self.name,
 
-        :id => self.id,
+        :uid => self.uid,
         :gender => self.gender,
         :note => self.note,
         :nickname => self.nickname,

@@ -16,7 +16,7 @@ describe Lotus::Author do
     end
 
     it "should store a id" do
-      Lotus::Author.new(:id => "1").id.must_equal "1"
+      Lotus::Author.new(:uid => "1").uid.must_equal "1"
     end
 
     it "should store a gender" do
@@ -82,8 +82,8 @@ describe Lotus::Author do
   end
 
   describe "#to_hash" do
-    it "should return a Hash containing the id" do
-      Lotus::Author.new(:id => "1").to_hash[:id].must_equal "1"
+    it "should return a Hash containing the uid" do
+      Lotus::Author.new(:uid => "1").to_hash[:uid].must_equal "1"
     end
 
     it "should return a Hash containing the gender" do

@@ -56,7 +56,7 @@ describe Lotus::Activity do
     end
 
     it "should store an id" do
-      Lotus::Activity.new(:id => "id").id.must_equal "id"
+      Lotus::Activity.new(:uid => "id").uid.must_equal "id"
     end
 
     it "should store an array of threads" do
