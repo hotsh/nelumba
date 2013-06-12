@@ -161,7 +161,7 @@ module Lotus
       {
         :uid => self.uid,
         :url => self.url,
-        :hubs => self.hubs.dup,
+        :hubs => (self.hubs || []).dup,
         :icon => self.icon,
         :logo => self.logo,
         :rights => self.rights,
