@@ -1,6 +1,10 @@
 module Lotus
   # This class represents an Activity object for an Lotus::Entry.
   class Activity
+    require 'time-lord/units'
+    require 'time-lord/scale'
+    require 'time-lord/period'
+
     # The object of this activity.
     attr_reader :object
 
@@ -119,6 +123,14 @@ module Lotus
       @mentions     = options[:mentions]    || []
       @likes        = options[:likes]       || []
       @shares       = options[:shares]      || []
+    end
+
+    def published_ago_in_words
+      TimeLord::Period.new(self.published.to_time, Time.now).to_words
+    end
+
+    def updated_ago_in_words
+      TimeLord::Period.new(self.updated.to_time, Time.now).to_words
     end
 
     # Returns a hash of all relevant fields.
