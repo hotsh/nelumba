@@ -176,6 +176,8 @@ module Lotus
       hash.delete(:text)
       hash.delete(:html)
       hash.delete(:uid)
+      hash[:published] = hash[:published].to_date.rfc3339 + 'Z'
+      hash[:updated] = hash[:updated].to_date.rfc3339 + 'Z'
       hash.each {|k,v| hash.delete(k) if v.nil?}
       hash.to_json(args)
     end

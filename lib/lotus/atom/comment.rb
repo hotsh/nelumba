@@ -24,6 +24,7 @@ module Lotus
       element :content, :class => ::Atom::Content
       element :displayName
       element :id
+      element :url
       element :updated, :published, :class => DateTime, :content_only => true
 
       add_extension_namespace :thr, THREAD_NAMESPACE
