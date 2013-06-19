@@ -11,6 +11,7 @@ group :test do
   gem "mocha"             # stubs
 
   gem "awesome_print"
+  gem "debugger"
 end
 
 gem "redfinger", :git => "git://github.com/hotsh/redfinger.git"

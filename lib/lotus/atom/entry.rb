@@ -10,6 +10,7 @@ module Lotus
       require 'lotus/atom/author'
       require 'lotus/atom/thread'
       require 'lotus/atom/link'
+      require 'lotus/atom/comment'
       require 'lotus/atom/source'
 
       require 'libxml'
@@ -28,7 +29,7 @@ module Lotus
 
       add_extension_namespace :activity, ACTIVITY_NAMESPACE
       element 'activity:object-type'
-      element 'activity:object', :class => Lotus::Atom::Author
+      element 'activity:object'
       element 'activity:verb'
       element 'activity:target'
 
@@ -87,21 +88,31 @@ module Lotus
           content = object.content
           content_type = object.content_type
           title = object.title
-        else
-          content = ""
+        elsif object.is_a? Lotus::Comment
+          content = nil
           content_type = nil
-          title = ""
+          title = nil
+          object = Lotus::Atom::Comment.from_canonical(object.to_hash)
+          entry_hash[:activity_object] = object
+        else
+          content = nil
+          content_type = nil
+          title = nil
+          entry_hash[:activity_object] = object if object.is_a? Lotus::Author
         end
 
-        node = XML::Node.new("content")
-        node['type'] = content_type if content_type
-        node << content
+        if content
+          node = XML::Node.new("content")
+          node['type'] = content_type if content_type
+          node << content
 
-        xml = XML::Reader.string(node.to_s)
-        xml.read
-        entry_hash[:content] = ::Atom::Content.parse(xml)
-        entry_hash[:title] = title
-        entry_hash.delete :content_type
+          xml = XML::Reader.string(node.to_s)
+          xml.read
+          entry_hash[:content] = ::Atom::Content.parse(xml)
+          entry_hash.delete :content_type
+        end
+
+        entry_hash[:title] = title if title
 
         if entry_hash[:source]
           entry_hash[:source] = Lotus::Atom::Source.from_canonical(entry_hash[:source])
@@ -130,7 +141,6 @@ module Lotus
         if object_type
           entry_hash[:activity_object_type] = SCHEMA_ROOT + object_type.to_s
         end
-        entry_hash[:activity_object] = object if object.is_a? Lotus::Author
         if entry_hash[:verb]
           entry_hash[:activity_verb] = SCHEMA_ROOT + entry_hash[:verb].to_s
         end
@@ -173,7 +183,6 @@ module Lotus
         Lotus::Activity.new(:actor        => self.author ? self.author.to_canonical : nil,
                             :uid          => self.id,
                             :url          => self.url,
-                            :title        => self.title,
                             :source       => source,
                             :in_reply_to  => self.thr_in_reply_to.map(&:to_canonical),
                             :link         => self.link,
