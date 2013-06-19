@@ -54,8 +54,7 @@ describe Lotus::Atom do
                                    :actor => author,
                                    :object => Lotus::Note.new(
                                      :title => "My First Entry",
-                                     :content => "Hello",
-                                     :content_type => "html"),
+                                     :html => "Hello"),
                                    :uid => "54321",
                                    :url => "http://example.com/entries/1",
                                    :published => Time.now,
@@ -65,8 +64,7 @@ describe Lotus::Atom do
                                 :type => :note,
                                 :object => Lotus::Note.new(
                                   :title => "My Entry",
-                                  :content => "Hello",
-                                  :content_type => "html"),
+                                  :html => "Hello"),
                                 :source => source_feed,
                                 :uid => "54321",
                                 :url => "http://example.com/entries/1",
@@ -672,12 +670,12 @@ describe Lotus::Atom do
         describe "<content>" do
           it "should contain the entry content" do
             @entry.find_first('xmlns:content', 'xmlns:http://www.w3.org/2005/Atom')
-              .content.must_equal @master.entries.first.object.content
+              .content.must_equal @master.entries.first.object.html
           end
 
           it "should have the corresponding type attribute" do
             @entry.find_first('xmlns:content', 'xmlns:http://www.w3.org/2005/Atom')
-              .attributes.get_attribute('type').value.must_equal @master.entries.first.object.content_type
+              .attributes.get_attribute('type').value.must_equal "html"
           end
         end
       end

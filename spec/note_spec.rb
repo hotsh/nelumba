@@ -12,12 +12,12 @@ describe Lotus::Note do
       Lotus::Note.new(:author => author).author.must_equal author
     end
 
-    it "should store content" do
-      Lotus::Note.new(:content => "Hello").content.must_equal "Hello"
+    it "should store text" do
+      Lotus::Note.new(:text => "Hello").text.must_equal "Hello"
     end
 
-    it "should store the content type" do
-      Lotus::Note.new(:content_type => "txt").content_type.must_equal "txt"
+    it "should store html" do
+      Lotus::Note.new(:html => "txt").html.must_equal "txt"
     end
 
     it "should store the published date" do
@@ -38,8 +38,8 @@ describe Lotus::Note do
       Lotus::Note.new(:uid => "id").uid.must_equal "id"
     end
 
-    it "should default the content to '' if not given" do
-      Lotus::Note.new.content.must_equal ''
+    it "should default the text to '' if not given" do
+      Lotus::Note.new.text.must_equal ''
     end
 
     it "should default the title to 'Untitled' if not given" do

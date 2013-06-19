@@ -85,9 +85,13 @@ module Lotus
         object = obj.object
 
         if object.is_a? Lotus::Note
-          content = object.content
-          content_type = object.content_type
           title = object.title
+
+          content = object.text
+          content = object.html if object.html
+
+          content_type = nil
+          content_type = "html" if object.html
         elsif object.is_a? Lotus::Comment
           content = nil
           content_type = nil
@@ -172,9 +176,8 @@ module Lotus
         else
           case object_type
           when "note"
-            object = Lotus::Note.new(:content      => self.content.to_s,
-                                     :content_type => self.content.type,
-                                     :title        => self.title)
+            object = Lotus::Note.new(:html  => self.content.to_s,
+                                     :title => self.title)
           end
         end
 
