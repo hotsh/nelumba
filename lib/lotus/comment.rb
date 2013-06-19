@@ -1,7 +1,5 @@
 module Lotus
   class Comment
-    require 'json'
-
     include Lotus::Object
 
     # Holds a collection of Lotus::Activity's that this comment is in reply to.

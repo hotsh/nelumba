@@ -6,8 +6,6 @@ module Lotus
     require 'time-lord/scale'
     require 'time-lord/period'
 
-    require 'json'
-
     include Lotus::Object
 
     # The object of this activity.

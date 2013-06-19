@@ -1,7 +1,5 @@
 module Lotus
   class Note
-    require 'json'
-
     include Lotus::Object
 
     # Determines what constitutes a username inside an update text
