@@ -58,6 +58,9 @@ module Lotus
       element :content, :class => ::Atom::Content
       element :author, :class => Lotus::Atom::Author
 
+      # ActivityStreams
+      element :displayName
+
       def url
         if links.alternate
           links.alternate.href
@@ -158,6 +161,9 @@ module Lotus
         entry_hash.delete :target
         entry_hash.delete :type
 
+        entry_hash[:displayName] = entry_hash[:display_name]
+        entry_hash.delete :display_name
+
         self.new(entry_hash)
       end
 
@@ -187,6 +193,7 @@ module Lotus
                             :uid          => self.id,
                             :url          => self.url,
                             :source       => source,
+                            :display_name => self.displayName,
                             :in_reply_to  => self.thr_in_reply_to.map(&:to_canonical),
                             :link         => self.link,
                             :object       => object,

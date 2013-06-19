@@ -1,15 +1,15 @@
+# Activity Objects
+require 'lotus/object'
+require 'lotus/activity'
+require 'lotus/note'
+require 'lotus/comment'
+
 # Data Structures
 require 'lotus/feed'
 require 'lotus/author'
-require 'lotus/activity'
 require 'lotus/identity'
 require 'lotus/notification'
 require 'lotus/link'
-
-# Activity Objects
-require 'lotus/object'
-require 'lotus/note'
-require 'lotus/comment'
 
 # Crypto
 require 'lotus/crypto'

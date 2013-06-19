@@ -8,6 +8,8 @@ module Lotus
 
     require 'json'
 
+    include Lotus::Object
+
     # The object of this activity.
     attr_reader :object
 
@@ -32,20 +34,8 @@ module Lotus
     # Holds an Lotus::Author.
     attr_reader :actor
 
-    # Holds the id that uniquely identifies this entry.
-    attr_reader :uid
-
-    # Holds the url that represents the entry.
-    attr_reader :url
-
     # Holds the source of this entry as an Lotus::Feed.
     attr_reader :source
-
-    # Holds the DateTime of when the entry was published originally.
-    attr_reader :published
-
-    # Holds the DateTime of when the entry was last modified.
-    attr_reader :updated
 
     # Holds an array of related Lotus::Activity's that this entry is a response
     # to.
@@ -121,10 +111,6 @@ module Lotus
     def to_hash
       {
         :source => self.source,
-        :published => self.published,
-        :updated => self.updated,
-        :url => self.url,
-        :uid => self.uid,
 
         :in_reply_to => self.in_reply_to.dup,
         :replies => self.replies.dup,
@@ -138,7 +124,7 @@ module Lotus
         :actor => self.actor,
         :verb => self.verb,
         :type => self.type
-      }
+      }.merge(super)
     end
 
     # Returns a string containing the Atom representation of this Activity.
@@ -148,16 +134,21 @@ module Lotus
       Lotus::Atom::Entry.from_canonical(self).to_xml
     end
 
-    # Returns a string containing the JSON representation of this Activity.
-    def to_json(*args)
-      hash = to_hash.merge({:objectType => "activity"})
-
-      hash[:id] = hash[:uid]
-      hash.delete :uid
-
-      hash.each {|k,v| hash.delete(k) if v.nil?}
-
-      hash.to_json(args)
+    def to_json_hash
+      {
+        :objectType => "activity",
+        :object => @object,
+        :actor => @actor,
+        :target => @target,
+        :type => @type,
+        :verb => @verb,
+        :source => self.source,
+        :in_reply_to => self.in_reply_to.dup,
+        :replies => self.replies.dup,
+        :mentions => self.mentions.dup,
+        :likes => self.likes.dup,
+        :shares => self.shares.dup,
+      }.merge(super)
     end
   end
 end
