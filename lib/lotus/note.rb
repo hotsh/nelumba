@@ -51,7 +51,10 @@ module Lotus
     end
 
     # Produces an HTML string representing the note's content.
-    # TODO: A block for resolving usernames to urls
+    #
+    # Requires a block that is given two arguments: the username and the domain
+    # that should return a Lotus::Author that matches when a @username tag
+    # is found.
     def to_html(&blk)
       return @html if @html
 
@@ -82,6 +85,44 @@ module Lotus
       end
 
       out
+    end
+
+    # Returns a list of Lotus::Author's for those mentioned within the note.
+    #
+    # Requires a block that is given two arguments: the username and the domain
+    # that should return a Lotus::Author that matches when a @username tag
+    # is found.
+    #
+    # Usage:
+    #
+    # note = Lotus::Note.new(:text => "Hello @foo")
+    # note.mentions do |username, domain|
+    #   i = identities.select {|e| e.username == username && e.domain == domain }.first
+    #   i.author if i
+    # end
+    #
+    # With a persistence backend:
+    # note.mentions do |username, domain|
+    #   i = Identity.first(:username => /^#{Regexp.escape(username)}$/i
+    #   i.author if i
+    # end
+    def mentions(&blk)
+      out = CGI.escapeHTML(@text)
+
+      # Replace any absolute addresses with a link
+      # Note: Do this first! Otherwise it will add anchors inside anchors!
+      out.gsub!(/(http[s]?:\/\/\S+[a-zA-Z0-9\/}])/, "<a href='\\1'>\\1</a>")
+
+      # we let almost anything be in a username, except those that mess with urls.
+      # but you can't end in a .:;, or !
+      # also ignore container chars [] () "" '' {}
+      # XXX: the _correct_ solution will be to use an email validator
+      ret = []
+      out.scan(USERNAME_REGULAR_EXPRESSION) do |beginning, username, domain|
+        ret << blk.call(username, domain) if blk
+      end
+
+      ret
     end
 
     def to_hash
