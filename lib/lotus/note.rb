@@ -2,6 +2,8 @@ module Lotus
   class Note
     require 'json'
 
+    include Lotus::Object
+
     # Determines what constitutes a username inside an update text
     USERNAME_REGULAR_EXPRESSION = /(^|[ \t\n\r\f"'\(\[{]+)@([^ \t\n\r\f&?=@%\/\#]*[^ \t\n\r\f&?=@%\/\#.!:;,"'\]}\)])(?:@([^ \t\n\r\f&?=@%\/\#]*[^ \t\n\r\f&?=@%\/\#.!:;,"'\]}\)]))?/
 
@@ -13,21 +15,6 @@ module Lotus
 
     # Holds a String containing the title of the note.
     attr_reader :title
-
-    # The person responsible for writing this note.
-    attr_reader :author
-
-    # Unique id that identifies this note.
-    attr_reader :uid
-
-    # The date the note originally was published.
-    attr_reader :published
-
-    # The date the note was last updated.
-    attr_reader :updated
-
-    # The permanent location for an html representation of the note.
-    attr_reader :url
 
     # Create a new note.
     #
@@ -42,14 +29,12 @@ module Lotus
     #   :updated      => When the note was last updated.
     #   :uid          => The unique id that identifies this note.
     def initialize(options = {}, &blk)
-      @text      = options[:text] || ""
-      @html      = options[:html] || to_html(&blk)
-      @title     = options[:title] || "Untitled"
-      @author    = options[:author]
-      @url       = options[:url]
-      @published = options[:published]
-      @updated   = options[:updated]
-      @uid       = options[:uid]
+      super options
+
+      @text    = options[:text] || ""
+      @html    = options[:html] || to_html(&blk)
+      @title   = options[:title] || "Untitled"
+      @content = @html
     end
 
     # Produces an HTML string representing the note's content.
@@ -162,24 +147,14 @@ module Lotus
         :text      => @text,
         :html      => @html,
         :title     => @title,
-        :author    => @author,
-        :url       => @url,
-        :published => @published,
-        :updated   => @updated,
-        :uid       => @uid
-      }
+      }.merge(super)
     end
 
-    # Returns a string containing the JSON representation of this Note.
-    def to_json(*args)
-      hash = to_hash.merge({:id => self.uid, :objectType => "note", :content => self.html})
-      hash.delete(:text)
-      hash.delete(:html)
-      hash.delete(:uid)
-      hash[:published] = hash[:published].to_date.rfc3339 + 'Z'
-      hash[:updated] = hash[:updated].to_date.rfc3339 + 'Z'
-      hash.each {|k,v| hash.delete(k) if v.nil?}
-      hash.to_json(args)
+    def to_json_hash
+      {
+        :objectType => "note",
+        :title => @title
+      }.merge(super)
     end
   end
 end

@@ -2,49 +2,44 @@ module Lotus
   class Comment
     require 'json'
 
-    attr_reader :author
-    attr_reader :content
-    attr_reader :display_name
-    attr_reader :uid
-    attr_reader :url
-    attr_reader :published
-    attr_reader :updated
+    include Lotus::Object
+
+    # Holds a collection of Lotus::Activity's that this comment is in reply to.
     attr_reader :in_reply_to
 
+    # Create a new Comment activity object.
+    #
+    # options:
+    #   :content      => The body of the comment in HTML.
+    #   :author       => A Lotus::Author that created the object.
+    #   :display_name => A natural-language, human-readable and plain-text name
+    #                    for the comment.
+    #   :summary      => Natural-language summarization of the comment.
+    #   :url          => The canonical url of this comment.
+    #   :uid          => The unique id that identifies this comment.
+    #   :image        =>
+    #   :published    => The Time when this comment was originally published.
+    #   :updated      => The Time when this comment was last modified.
     def initialize(options = {})
-      @author       = options[:author]
-      @content      = options[:content]
-      @display_name = options[:display_name]
-      @uid          = options[:uid]
-      @url          = options[:url]
-      @published    = options[:published]
-      @updated      = options[:updated]
       @in_reply_to  = options[:in_reply_to] || []
+
+      super options
     end
 
+    # Returns a Hash representing this comment.
     def to_hash
       {
-        :author       => @author,
-        :content      => @content,
-        :display_name => @display_name,
-        :uid          => @uid,
-        :url          => @url,
-        :published    => @published,
-        :updated      => @updated,
         :in_reply_to  => @in_reply_to
-      }
+      }.merge(super)
     end
 
-    # Returns a string containing the JSON representation of this Comment.
-    def to_json(*args)
-      hash = to_hash.merge({:id => self.uid, :objectType => "comment"})
-      hash.delete :uid
-      hash[:published] = hash[:published].to_date.rfc3339 + 'Z'
-      hash[:updated] = hash[:updated].to_date.rfc3339 + 'Z'
-      hash[:displayName] = hash[:display_name]
-      hash.delete :display_name
-      hash.each {|k,v| hash.delete(k) if v.nil?}
-      hash.to_json(args)
+    # Returns a Hash representing this comment with JSON ActivityStreams
+    # conventions.
+    def to_json_hash
+      {
+        :objectType   => "comment",
+        :in_reply_to  => @in_reply_to
+      }.merge(super)
     end
   end
 end

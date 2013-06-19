@@ -7,6 +7,7 @@ require 'lotus/notification'
 require 'lotus/link'
 
 # Activity Objects
+require 'lotus/object'
 require 'lotus/note'
 require 'lotus/comment'
 
