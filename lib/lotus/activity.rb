@@ -14,7 +14,7 @@ module Lotus
     # The field can be a String for uncommon types. Several are standard:
     #   :article, :audio, :bookmark, :comment, :file, :folder, :group,
     #   :list, :note, :person, :photo, :"photo-album", :place, :playlist,
-    #   :product, :review, :service, :status, :video
+    #   :product, :review, :service, :video
     attr_reader :type
 
     # The action being invoked in this activity.

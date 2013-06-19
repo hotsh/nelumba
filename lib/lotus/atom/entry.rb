@@ -155,12 +155,17 @@ module Lotus
           object_type.gsub!(/^#{Regexp.escape(SCHEMA_ROOT)}/, "")
         end
 
+        object_type = "note" if object_type == "status"
+
         if self.activity_object
           object = self.activity_object.to_canonical
         else
-          object = Lotus::Note.new(:content      => self.content.to_s,
-                                   :content_type => self.content.type,
-                                   :title        => self.title)
+          case object_type
+          when "note"
+            object = Lotus::Note.new(:content      => self.content.to_s,
+                                     :content_type => self.content.type,
+                                     :title        => self.title)
+          end
         end
 
         source = self.source
@@ -171,7 +176,6 @@ module Lotus
                             :title        => self.title,
                             :source       => source,
                             :in_reply_to  => self.thr_in_reply_to.map(&:to_canonical),
-                            :object => object,
                             :link         => self.link,
                             :object       => object,
                             :type         => object_type,
