@@ -85,12 +85,13 @@ describe Lotus::Atom do
                               :published => Time.now,
                               :updated => Time.now,
                               :authors => [author],
-                              :entries => [entry],
+                              :items => [entry],
                               :uid => "12345")
   end
 
   it "should be able to reform canonical structure using Atom" do
     xml = Lotus::Atom::Feed.from_canonical(@master).to_xml
+    puts xml
     new_feed = Lotus::Atom::Feed.new(XML::Reader.string(xml)).to_canonical
 
     old_hash = @master.to_hash
@@ -99,23 +100,23 @@ describe Lotus::Atom do
     old_hash[:authors] = old_hash[:authors].map(&:to_hash)
     new_hash[:authors] = new_hash[:authors].map(&:to_hash)
 
-    old_hash[:entries] = old_hash[:entries].map(&:to_hash)
-    new_hash[:entries] = new_hash[:entries].map(&:to_hash)
+    old_hash[:items] = old_hash[:items].map(&:to_hash)
+    new_hash[:items] = new_hash[:items].map(&:to_hash)
 
-    old_hash[:entries][0][:in_reply_to] = []
-    new_hash[:entries][0][:in_reply_to] = []
+    old_hash[:items][0][:in_reply_to] = []
+    new_hash[:items][0][:in_reply_to] = []
 
-    old_hash[:entries][0][:actor] = old_hash[:entries][0][:actor].to_hash
-    new_hash[:entries][0][:actor] = new_hash[:entries][0][:actor].to_hash
+    old_hash[:items][0][:actor] = old_hash[:items][0][:actor].to_hash
+    new_hash[:items][0][:actor] = new_hash[:items][0][:actor].to_hash
 
-    old_hash[:entries][0][:source] = old_hash[:entries][0][:source].to_hash
-    new_hash[:entries][0][:source] = new_hash[:entries][0][:source].to_hash
+    old_hash[:items][0][:source] = old_hash[:items][0][:source].to_hash
+    new_hash[:items][0][:source] = new_hash[:items][0][:source].to_hash
 
-    old_hash[:entries][0][:object] = old_hash[:entries][0][:object].to_hash
-    new_hash[:entries][0][:object] = new_hash[:entries][0][:object].to_hash
+    old_hash[:items][0][:object] = old_hash[:items][0][:object].to_hash
+    new_hash[:items][0][:object] = new_hash[:items][0][:object].to_hash
 
-    old_hash[:entries][0][:source][:authors] = old_hash[:entries][0][:source][:authors].map(&:to_hash)
-    new_hash[:entries][0][:source][:authors] = new_hash[:entries][0][:source][:authors].map(&:to_hash)
+    old_hash[:items][0][:source][:authors] = old_hash[:items][0][:source][:authors].map(&:to_hash)
+    new_hash[:items][0][:source][:authors] = new_hash[:items][0][:source][:authors].map(&:to_hash)
 
     # Flatten all keys to their to_s
     # We want to compare the to_s for all keys
@@ -625,14 +626,14 @@ describe Lotus::Atom do
         describe "<title>" do
           it "should contain the entry title" do
             @entry.find_first('xmlns:title', 'xmlns:http://www.w3.org/2005/Atom')
-              .content.must_equal @master.entries.first.object.title
+              .content.must_equal @master.items.first.object.title
           end
         end
 
         describe "<id>" do
           it "should contain the entry id" do
             @entry.find_first('xmlns:id', 'xmlns:http://www.w3.org/2005/Atom')
-              .content.must_equal @master.entries.first.uid
+              .content.must_equal @master.items.first.uid
           end
         end
 
@@ -640,7 +641,7 @@ describe Lotus::Atom do
           it "should contain a link for self" do
             @entry.find_first('xmlns:link[@rel="self"]',
                               'xmlns:http://www.w3.org/2005/Atom').attributes
-               .get_attribute('href').value.must_equal(@master.entries.first.url)
+               .get_attribute('href').value.must_equal(@master.items.first.url)
           end
         end
 
@@ -648,7 +649,7 @@ describe Lotus::Atom do
           it "should contain the entry updated date" do
             time = @entry.find_first('xmlns:updated',
                                      'xmlns:http://www.w3.org/2005/Atom').content
-            DateTime.parse(time).to_s.must_equal @master.entries.first.updated.to_datetime.to_s
+            DateTime.parse(time).to_s.must_equal @master.items.first.updated.to_datetime.to_s
           end
         end
 
@@ -656,7 +657,7 @@ describe Lotus::Atom do
           it "should contain the entry published date" do
             time = @entry.find_first('xmlns:published',
                                      'xmlns:http://www.w3.org/2005/Atom').content
-            DateTime.parse(time).to_s.must_equal @master.entries.first.published.to_datetime.to_s
+            DateTime.parse(time).to_s.must_equal @master.items.first.published.to_datetime.to_s
           end
         end
 
@@ -670,7 +671,7 @@ describe Lotus::Atom do
         describe "<content>" do
           it "should contain the entry content" do
             @entry.find_first('xmlns:content', 'xmlns:http://www.w3.org/2005/Atom')
-              .content.must_equal @master.entries.first.object.html
+              .content.must_equal @master.items.first.object.html
           end
 
           it "should have the corresponding type attribute" do

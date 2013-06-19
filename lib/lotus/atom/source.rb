@@ -41,7 +41,12 @@ module Lotus
       # Creates an Atom generator for the given Lotus::Feed.
       def self.from_canonical(obj)
         hash = obj.to_hash
-        hash.delete :entries
+        hash.delete :items
+        hash.delete :author
+        hash.delete :total_items
+        hash.delete :display_name
+        hash.delete :content
+        hash.delete :summary
 
         # Ensure that the generator is encoded.
         if hash[:generator]

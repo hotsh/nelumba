@@ -3,6 +3,7 @@ require 'lotus/object'
 require 'lotus/activity'
 require 'lotus/note'
 require 'lotus/comment'
+require 'lotus/collection'
 
 # Data Structures
 require 'lotus/feed'

@@ -2,19 +2,10 @@ require 'lotus/activity'
 require 'lotus/author'
 
 module Lotus
-  require 'atom'
-  require 'json'
-
   # This class represents a Lotus::Feed object.
-  class Feed
+  class Feed < Lotus::Collection
     require 'open-uri'
     require 'date'
-
-    # Holds the id that uniquely represents this feed.
-    attr_reader :uid
-
-    # Holds the url that represents this feed.
-    attr_reader :url
 
     # Holds the list of categories for this feed as Lotus::Category.
     attr_reader :categories
@@ -49,17 +40,8 @@ module Lotus
     # as Lotus::Author.
     attr_reader :contributors
 
-    # Holds the DateTime when this feed was originally created.
-    attr_reader :published
-
-    # Holds the DateTime when this feed was last modified.
-    attr_reader :updated
-
     # Holds the list of authors as Lotus::Author responsible for this feed.
     attr_reader :authors
-
-    # Holds the list of entries as Lotus::Activity contained within this feed.
-    attr_reader :entries
 
     # Holds the list of hubs that are available to manage subscriptions to this
     # feed.
@@ -84,7 +66,7 @@ module Lotus
     #                    Defaults: []
     #   contributors  => The list of Lotus::Author's that contributed to this
     #                    feed. Defaults: []
-    #   entries       => The list of Lotus::Activity's for this feed.
+    #   items         => The list of Lotus::Activity's for this feed.
     #                    Defaults: []
     #   icon          => The url of the icon that represents this feed. It
     #                    should have an aspect ratio of 1 horizontal to 1
@@ -96,7 +78,7 @@ module Lotus
     #   categories    => An array of Lotus::Category's that describe how to
     #                    categorize and describe the content of the feed.
     #                    Defaults: []
-    #   rights        => A String depicting the rights of entries without
+    #   rights        => A String depicting the rights of items without
     #                    explicit rights of their own. SHOULD NOT be machine
     #                    interpreted.
     #   updated       => The DateTime representing when this feed was last
@@ -119,8 +101,8 @@ module Lotus
     #                            :url     => "http://example.com/feeds/1",
     #                            :authors => [author])
     def initialize(options = {})
-      @uid = options[:uid]
-      @url = options[:url]
+      super options
+
       @icon = options[:icon]
       @logo = options[:logo]
       @rights = options[:rights]
@@ -131,9 +113,6 @@ module Lotus
       @authors = options[:authors] || []
       @categories = options[:categories] || []
       @contributors = options[:contributors] || []
-      @entries = options[:entries] || []
-      @updated = options[:updated]
-      @published = options[:published]
       @salmon_url = options[:salmon_url]
       @hubs = options[:hubs] || []
       @generator = options[:generator]
@@ -160,8 +139,6 @@ module Lotus
     # Returns a hash of the properties of the feed.
     def to_hash
       {
-        :uid => self.uid,
-        :url => self.url,
         :hubs => (self.hubs || []).dup,
         :icon => self.icon,
         :logo => self.logo,
@@ -173,12 +150,16 @@ module Lotus
         :authors => self.authors.dup,
         :categories => self.categories.dup,
         :contributors => self.contributors.dup,
-        :entries => self.entries.dup,
         :updated => self.updated,
         :salmon_url => self.salmon_url,
         :published => self.published,
         :generator => self.generator
-      }
+      }.merge(super)
+    end
+
+    def to_json_hash
+      {
+      }.merge(super)
     end
 
     # Returns a string containing an Atom representation of the feed.
@@ -186,11 +167,6 @@ module Lotus
       require 'lotus/atom/feed'
 
       Lotus::Atom::Feed.from_canonical(self).to_xml
-    end
-
-    # Returns a string containing an JSON representation of the feed.
-    def to_json
-      {:items => @entries}.to_json
     end
   end
 end

@@ -19,8 +19,8 @@ module Lotus
       @display_name = options[:display_name]
       @uid          = options[:uid]
       @url          = options[:url]
-      @published    = options[:published]
-      @updated      = options[:updated]
+      @published    = options[:published] || Time.now
+      @updated      = options[:updated] || Time.now
     end
 
     def to_hash

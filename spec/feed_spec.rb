@@ -34,9 +34,9 @@ describe Lotus::Feed do
       Lotus::Feed.new(:contributors => [author]).contributors.must_equal [author]
     end
 
-    it "should store a list of entries" do
+    it "should store a list of items" do
       entry = mock('entry')
-      Lotus::Feed.new(:entries => [entry]).entries.must_equal [entry]
+      Lotus::Feed.new(:items => [entry]).items.must_equal [entry]
     end
 
     it "should store a list of hubs" do
@@ -94,8 +94,8 @@ describe Lotus::Feed do
       Lotus::Feed.new.contributors.must_equal []
     end
 
-    it "should yield an empty array for entries by default" do
-      Lotus::Feed.new.entries.must_equal []
+    it "should yield an empty array for items by default" do
+      Lotus::Feed.new.items.must_equal []
     end
 
     it "should yield an empty array for hubs by default" do
@@ -188,9 +188,9 @@ describe Lotus::Feed do
       Lotus::Feed.new(:contributors => [author]).to_hash[:contributors].must_equal [author]
     end
 
-    it "should return a Hash containing a list of entries" do
+    it "should return a Hash containing a list of items" do
       entry = mock('entry')
-      Lotus::Feed.new(:entries => [entry]).to_hash[:entries].must_equal [entry]
+      Lotus::Feed.new(:items => [entry]).to_hash[:items].must_equal [entry]
     end
 
     it "should return a Hash containing a list of hubs" do

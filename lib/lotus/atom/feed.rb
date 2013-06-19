@@ -41,10 +41,16 @@ module Lotus
       elements :categories, :class => Lotus::Atom::Category
       elements :entries, :class => Lotus::Atom::Entry
 
+      # Activity Streams
+      element :totalItems
+      element :displayName
+      element :content
+      element :summary
+
       # Creates an Atom generator for the given Lotus::Feed.
       def self.from_canonical(obj)
         hash = obj.to_hash
-        hash[:entries].map! {|e|
+        hash[:items].map! {|e|
           Lotus::Atom::Entry.from_canonical(e)
         }
 
@@ -81,6 +87,17 @@ module Lotus
         hash[:categories].map! {|c|
           Lotus::Atom::Category.from_canonical(c)
         }
+
+        hash.delete :author
+
+        hash[:displayName] = hash[:display_name]
+        hash.delete :display_name
+
+        hash[:entries] = hash[:items]
+        hash.delete :items
+
+        hash[:totalItems] = hash[:total_items]
+        hash.delete :total_items
 
         # title/subtitle content type
         node = XML::Node.new("title")
@@ -136,7 +153,7 @@ module Lotus
                         :rights        => self.rights,
                         :published     => self.published,
                         :updated       => self.updated,
-                        :entries       => self.entries.map(&:to_canonical),
+                        :items       => self.entries.map(&:to_canonical),
                         :authors       => self.authors.map(&:to_canonical),
                         :contributors  => self.contributors.map(&:to_canonical),
                         :hubs          => self.hubs,
