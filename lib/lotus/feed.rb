@@ -3,6 +3,7 @@ require 'lotus/author'
 
 module Lotus
   require 'atom'
+  require 'json'
 
   # This class represents a Lotus::Feed object.
   class Feed
@@ -185,6 +186,11 @@ module Lotus
       require 'lotus/atom/feed'
 
       Lotus::Atom::Feed.from_canonical(self).to_xml
+    end
+
+    # Returns a string containing an JSON representation of the feed.
+    def to_json
+      {:items => @entries}.to_json
     end
   end
 end
