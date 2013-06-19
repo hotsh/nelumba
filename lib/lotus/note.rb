@@ -109,16 +109,46 @@ module Lotus
     def mentions(&blk)
       out = CGI.escapeHTML(@text)
 
-      # Replace any absolute addresses with a link
-      # Note: Do this first! Otherwise it will add anchors inside anchors!
-      out.gsub!(/(http[s]?:\/\/\S+[a-zA-Z0-9\/}])/, "<a href='\\1'>\\1</a>")
-
       # we let almost anything be in a username, except those that mess with urls.
       # but you can't end in a .:;, or !
       # also ignore container chars [] () "" '' {}
       # XXX: the _correct_ solution will be to use an email validator
       ret = []
       out.scan(USERNAME_REGULAR_EXPRESSION) do |beginning, username, domain|
+        ret << blk.call(username, domain) if blk
+      end
+
+      ret
+    end
+
+    # Returns a list of Lotus::Author's for those replied by the note.
+    #
+    # Requires a block that is given two arguments: the username and the domain
+    # that should return a Lotus::Author that matches when a @username tag
+    # is found.
+    #
+    # Usage:
+    #
+    # note = Lotus::Note.new(:text => "Hello @foo")
+    # note.reply_to do |username, domain|
+    #   i = identities.select {|e| e.username == username && e.domain == domain }.first
+    #   i.author if i
+    # end
+    #
+    # With a persistence backend:
+    # note.reply_to do |username, domain|
+    #   i = Identity.first(:username => /^#{Regexp.escape(username)}$/i
+    #   i.author if i
+    # end
+    def reply_to(&blk)
+      out = CGI.escapeHTML(@text)
+
+      # we let almost anything be in a username, except those that mess with urls.
+      # but you can't end in a .:;, or !
+      # also ignore container chars [] () "" '' {}
+      # XXX: the _correct_ solution will be to use an email validator
+      ret = []
+      out.match(/^#{USERNAME_REGULAR_EXPRESSION}/) do |beginning, username, domain|
         ret << blk.call(username, domain) if blk
       end
 
