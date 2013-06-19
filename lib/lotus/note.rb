@@ -39,9 +39,9 @@ module Lotus
     #   :published    => When the note was originally published.
     #   :updated      => When the note was last updated.
     #   :uid          => The unique id that identifies this note.
-    def initialize(options = {})
+    def initialize(options = {}, &blk)
       @text      = options[:text] || ""
-      @html      = options[:html] || to_html
+      @html      = options[:html] || to_html(&blk)
       @title     = options[:title] || "Untitled"
       @author    = options[:author]
       @url       = options[:url]
@@ -52,7 +52,7 @@ module Lotus
 
     # Produces an HTML string representing the note's content.
     # TODO: A block for resolving usernames to urls
-    def to_html
+    def to_html(&blk)
       return @html if @html
 
       out = CGI.escapeHTML(@text)
@@ -66,7 +66,15 @@ module Lotus
       # also ignore container chars [] () "" '' {}
       # XXX: the _correct_ solution will be to use an email validator
       out.gsub!(USERNAME_REGULAR_EXPRESSION) do |match|
-        "#{$1}<a href='#'>@#{$2}</a>"
+        if blk
+          author = blk.call($2, $3)
+        end
+
+        if author
+          "#{$1}<a href='#{author.uri}'>@#{$2}</a>"
+        else
+          "#{$1}<a href='#'>@#{$2}</a>"
+        end
       end
 
       out.gsub!( /(^|\s+)#(\p{Word}+)/ ) do |match|
