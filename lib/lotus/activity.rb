@@ -151,7 +151,12 @@ module Lotus
     # Returns a string containing the JSON representation of this Activity.
     def to_json(*args)
       hash = to_hash.merge({:objectType => "activity"})
+
+      hash[:id] = hash[:uid]
+      hash.delete :uid
+
       hash.each {|k,v| hash.delete(k) if v.nil?}
+
       hash.to_json(args)
     end
   end

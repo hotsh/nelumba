@@ -218,7 +218,12 @@ module Lotus
     # Returns a string containing the JSON representation of this Author.
     def to_json(*args)
       hash = to_hash.merge({:objectType => "person"})
+
+      hash[:id] = hash[:uid]
+      hash.delete :uid
+
       hash.each {|k,v| hash.delete(k) if v.nil?}
+
       hash.to_json(args)
     end
   end
