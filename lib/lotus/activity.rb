@@ -1,5 +1,6 @@
 module Lotus
-  # This class represents an Activity object for an Lotus::Entry.
+  # This class represents an Activity object that represents an action taken
+  # by a Person.
   class Activity
     require 'time-lord/units'
     require 'time-lord/scale'
@@ -26,17 +27,8 @@ module Lotus
     # The target of the action.
     attr_reader :target
 
-    # Holds a String containing the title of the entry.
-    attr_reader :title
-
     # Holds an Lotus::Author.
     attr_reader :actor
-
-    # Holds the content.
-    attr_reader :content
-
-    # Holds the MIME type of the content.
-    attr_reader :content_type
 
     # Holds the id that uniquely identifies this entry.
     attr_reader :uid
@@ -69,7 +61,7 @@ module Lotus
     # Holds an array of Lotus::Author's that are mentioned in this activity.
     attr_reader :mentions
 
-    # Create a new entry with the given content.
+    # Create a new entry with the given action and object.
     #
     # options:
     #   :object      => The object of this activity.
@@ -77,10 +69,7 @@ module Lotus
     #   :target      => The target of this activity.
     #   :verb        => The action of the activity.
     #
-    #   :title        => The title of the entry. Defaults: "Untitled"
     #   :actor        => An Lotus::Author responsible for generating this entry.
-    #   :content      => The content of the entry. Defaults: ""
-    #   :content_type => The MIME type of the content.
     #   :source       => An Lotus::Feed where this Entry originated. This
     #                    should be used when an Entry is copied into this feed
     #                    from another.
@@ -89,10 +78,6 @@ module Lotus
     #   :updated      => The DateTime depicting when the entry was modified.
     #   :url          => The canonical url of the entry.
     #   :uid          => The unique id that identifies this entry.
-    #   :activity     => The activity this entry represents. Either a single string
-    #                    denoting what type of object this entry represents, or an
-    #                    entire Lotus::Activity when a more detailed description is
-    #                    appropriate.
     #   :in_reply_to  => An Lotus::Entry for which this entry is a response.
     #                    Or an array of Lotus::Entry's that this entry is a
     #                    response to. Use this when this Entry is a reply
@@ -103,10 +88,7 @@ module Lotus
       @target      = options[:target]
       @verb        = options[:verb]
 
-      @title        = options[:title] || "Untitled"
       @actor        = options[:actor]
-      @content      = options[:content] || ""
-      @content_type = options[:content_type]
       @source       = options[:source]
       @published    = options[:published]
       @updated      = options[:updated]
@@ -137,9 +119,6 @@ module Lotus
     def to_hash
       {
         :source => self.source,
-        :title => self.title,
-        :content => self.content,
-        :content_type => self.content_type,
         :published => self.published,
         :updated => self.updated,
         :url => self.url,

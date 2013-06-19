@@ -6,3 +6,5 @@ Turn.config do |c|
 end
 
 require "mocha/setup"
+
+require 'lotus'

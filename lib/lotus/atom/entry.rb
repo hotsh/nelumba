@@ -81,13 +81,26 @@ module Lotus
         entry_hash = obj.to_hash
 
         # Ensure that the content type is encoded.
+        object = obj.object
+
+        if object.is_a? Lotus::Note
+          content = object.content
+          content_type = object.content_type
+          title = object.title
+        else
+          content = ""
+          content_type = nil
+          title = ""
+        end
+
         node = XML::Node.new("content")
-        node['type'] = entry_hash[:content_type] if entry_hash[:content_type]
-        node << entry_hash[:content]
+        node['type'] = content_type if content_type
+        node << content
 
         xml = XML::Reader.string(node.to_s)
         xml.read
         entry_hash[:content] = ::Atom::Content.parse(xml)
+        entry_hash[:title] = title
         entry_hash.delete :content_type
 
         if entry_hash[:source]
@@ -117,7 +130,7 @@ module Lotus
         if object_type
           entry_hash[:activity_object_type] = SCHEMA_ROOT + object_type.to_s
         end
-        entry_hash[:activity_object] = entry_hash[:object] if entry_hash[:object]
+        entry_hash[:activity_object] = object if object.is_a? Lotus::Author
         if entry_hash[:verb]
           entry_hash[:activity_verb] = SCHEMA_ROOT + entry_hash[:verb].to_s
         end
@@ -142,8 +155,13 @@ module Lotus
           object_type.gsub!(/^#{Regexp.escape(SCHEMA_ROOT)}/, "")
         end
 
-        object = nil
-        object = self.activity_object.to_canonical if self.activity_object
+        if self.activity_object
+          object = self.activity_object.to_canonical
+        else
+          object = Lotus::Note.new(:content      => self.content.to_s,
+                                   :content_type => self.content.type,
+                                   :title        => self.title)
+        end
 
         source = self.source
         source = source.to_canonical if source
@@ -153,8 +171,7 @@ module Lotus
                             :title        => self.title,
                             :source       => source,
                             :in_reply_to  => self.thr_in_reply_to.map(&:to_canonical),
-                            :content      => self.content.to_s,
-                            :content_type => self.content.type,
+                            :object => object,
                             :link         => self.link,
                             :object       => object,
                             :type         => object_type,

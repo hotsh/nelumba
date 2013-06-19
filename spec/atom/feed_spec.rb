@@ -50,21 +50,23 @@ describe Lotus::Atom do
                                   :authors => [author],
                                   :rights => "CC")
 
-    reply_to = Lotus::Activity.new(:title => "My First Entry",
-                                   :type  => :note,
+    reply_to = Lotus::Activity.new(:type  => :note,
                                    :actor => author,
-                                   :content => "Hello",
-                                   :content_type => "html",
+                                   :object => Lotus::Note.new(
+                                     :title => "My First Entry",
+                                     :content => "Hello",
+                                     :content_type => "html"),
                                    :uid => "54321",
                                    :url => "http://example.com/entries/1",
                                    :published => Time.now,
                                    :updated => Time.now)
 
-    entry = Lotus::Activity.new(:title => "My Entry",
-                                :actor => author,
+    entry = Lotus::Activity.new(:actor => author,
                                 :type => :note,
-                                :content => "Hello",
-                                :content_type => "html",
+                                :object => Lotus::Note.new(
+                                  :title => "My Entry",
+                                  :content => "Hello",
+                                  :content_type => "html"),
                                 :source => source_feed,
                                 :uid => "54321",
                                 :url => "http://example.com/entries/1",
@@ -110,6 +112,9 @@ describe Lotus::Atom do
 
     old_hash[:entries][0][:source] = old_hash[:entries][0][:source].to_hash
     new_hash[:entries][0][:source] = new_hash[:entries][0][:source].to_hash
+
+    old_hash[:entries][0][:object] = old_hash[:entries][0][:object].to_hash
+    new_hash[:entries][0][:object] = new_hash[:entries][0][:object].to_hash
 
     old_hash[:entries][0][:source][:authors] = old_hash[:entries][0][:source][:authors].map(&:to_hash)
     new_hash[:entries][0][:source][:authors] = new_hash[:entries][0][:source][:authors].map(&:to_hash)
@@ -622,7 +627,7 @@ describe Lotus::Atom do
         describe "<title>" do
           it "should contain the entry title" do
             @entry.find_first('xmlns:title', 'xmlns:http://www.w3.org/2005/Atom')
-              .content.must_equal @master.entries.first.title
+              .content.must_equal @master.entries.first.object.title
           end
         end
 
@@ -667,12 +672,12 @@ describe Lotus::Atom do
         describe "<content>" do
           it "should contain the entry content" do
             @entry.find_first('xmlns:content', 'xmlns:http://www.w3.org/2005/Atom')
-              .content.must_equal @master.entries.first.content
+              .content.must_equal @master.entries.first.object.content
           end
 
           it "should have the corresponding type attribute" do
             @entry.find_first('xmlns:content', 'xmlns:http://www.w3.org/2005/Atom')
-              .attributes.get_attribute('type').value.must_equal @master.entries.first.content_type
+              .attributes.get_attribute('type').value.must_equal @master.entries.first.object.content_type
           end
         end
       end

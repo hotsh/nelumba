@@ -5,6 +5,8 @@ require 'lotus/identity'
 require 'lotus/notification'
 require 'lotus/link'
 
+require 'lotus/note'
+
 require 'lotus/crypto'
 
 require 'lotus/subscription'

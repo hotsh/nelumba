@@ -19,21 +19,9 @@ describe Lotus::Activity do
       Lotus::Activity.new(:target => "target").target.must_equal "target"
     end
 
-    it "should store a title" do
-      Lotus::Activity.new(:title => "My Title").title.must_equal "My Title"
-    end
-
     it "should store an actor" do
       actor = mock('author')
       Lotus::Activity.new(:actor => actor).actor.must_equal actor
-    end
-
-    it "should store content" do
-      Lotus::Activity.new(:content => "Hello").content.must_equal "Hello"
-    end
-
-    it "should store the content type" do
-      Lotus::Activity.new(:content_type => "txt").content_type.must_equal "txt"
     end
 
     it "should store the published date" do
@@ -107,14 +95,6 @@ describe Lotus::Activity do
 
     it "should store an empty array of likes by default" do
       Lotus::Activity.new.likes.must_equal []
-    end
-
-    it "should default the content to '' if not given" do
-      Lotus::Activity.new.content.must_equal ''
-    end
-
-    it "should default the title to 'Untitled' if not given" do
-      Lotus::Activity.new.title.must_equal "Untitled"
     end
   end
 end
