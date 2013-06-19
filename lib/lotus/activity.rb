@@ -6,6 +6,8 @@ module Lotus
     require 'time-lord/scale'
     require 'time-lord/period'
 
+    require 'json'
+
     # The object of this activity.
     attr_reader :object
 
@@ -144,6 +146,13 @@ module Lotus
       require 'lotus/atom/entry'
 
       Lotus::Atom::Entry.from_canonical(self).to_xml
+    end
+
+    # Returns a string containing the JSON representation of this Activity.
+    def to_json(*args)
+      hash = to_hash.merge({:objectType => "activity"})
+      hash.each {|k,v| hash.delete(k) if v.nil?}
+      hash.to_json(args)
     end
   end
 end

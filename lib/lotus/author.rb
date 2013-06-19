@@ -214,5 +214,12 @@ module Lotus
     def unfollow(author)
       self.act(author, :"stop-following")
     end
+
+    # Returns a string containing the JSON representation of this Author.
+    def to_json(*args)
+      hash = to_hash.merge({:objectType => "person"})
+      hash.each {|k,v| hash.delete(k) if v.nil?}
+      hash.to_json(args)
+    end
   end
 end

@@ -1,5 +1,7 @@
 module Lotus
   class Note
+    require 'json'
+
     # Determines what constitutes a username inside an update text
     USERNAME_REGULAR_EXPRESSION = /(^|[ \t\n\r\f"'\(\[{]+)@([^ \t\n\r\f&?=@%\/\#]*[^ \t\n\r\f&?=@%\/\#.!:;,"'\]}\)])(?:@([^ \t\n\r\f&?=@%\/\#]*[^ \t\n\r\f&?=@%\/\#.!:;,"'\]}\)]))?/
 
@@ -166,6 +168,16 @@ module Lotus
         :updated   => @updated,
         :uid       => @uid
       }
+    end
+
+    # Returns a string containing the JSON representation of this Note.
+    def to_json(*args)
+      hash = to_hash.merge({:id => self.uid, :objectType => "note", :content => self.html})
+      hash.delete(:text)
+      hash.delete(:html)
+      hash.delete(:uid)
+      hash.each {|k,v| hash.delete(k) if v.nil?}
+      hash.to_json(args)
     end
   end
 end

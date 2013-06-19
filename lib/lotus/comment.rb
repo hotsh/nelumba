@@ -1,5 +1,7 @@
 module Lotus
   class Comment
+    require 'json'
+
     attr_reader :author
     attr_reader :content
     attr_reader :display_name
@@ -28,6 +30,11 @@ module Lotus
         :updated      => @updated,
         :in_reply_to  => @in_reply_to
       }
+    end
+
+    # Returns a string containing the JSON representation of this Comment.
+    def to_json(*args)
+      to_hash.merge({:objectType => "comment"}).to_json(args)
     end
   end
 end
