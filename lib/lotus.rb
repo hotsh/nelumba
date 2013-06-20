@@ -1,9 +1,26 @@
-# Activity Objects
+# Base Activity Objects
 require 'lotus/object'
 require 'lotus/activity'
-require 'lotus/note'
-require 'lotus/comment'
 require 'lotus/collection'
+
+# Activity Objects
+require 'lotus/article'
+require 'lotus/audio'
+require 'lotus/badge'
+require 'lotus/binary'
+require 'lotus/bookmark'
+require 'lotus/comment'
+require 'lotus/device'
+require 'lotus/event'
+require 'lotus/file'
+require 'lotus/group'
+require 'lotus/image'
+require 'lotus/note'
+require 'lotus/place'
+require 'lotus/question'
+require 'lotus/review'
+require 'lotus/service'
+require 'lotus/video'
 
 # Data Structures
 require 'lotus/feed'
