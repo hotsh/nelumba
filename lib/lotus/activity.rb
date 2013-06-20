@@ -132,6 +132,8 @@ module Lotus
       Lotus::Atom::Entry.from_canonical(self).to_xml
     end
 
+    # Returns a hash of all relevant fields with JSON activity streams
+    # conventions.
     def to_json_hash
       {
         :objectType => "activity",

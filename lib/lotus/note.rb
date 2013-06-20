@@ -140,6 +140,7 @@ module Lotus
       ret
     end
 
+    # Returns a hash of all relevant fields.
     def to_hash
       {
         :text      => @text,
@@ -148,6 +149,8 @@ module Lotus
       }.merge(super)
     end
 
+    # Returns a hash of all relevant fields with JSON activity streams
+    # conventions.
     def to_json_hash
       {
         :objectType => "note",

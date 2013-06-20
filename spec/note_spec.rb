@@ -30,6 +30,15 @@ describe Lotus::Note do
       Lotus::Note.new(:updated => time).updated.must_equal time
     end
 
+    it "should store a summary" do
+      Lotus::Note.new(:summary => "url").summary.must_equal "url"
+    end
+
+    it "should store a display name" do
+      Lotus::Note.new(:display_name => "url")
+                 .display_name.must_equal "url"
+    end
+
     it "should store a url" do
       Lotus::Note.new(:url => "url").url.must_equal "url"
     end
@@ -73,6 +82,16 @@ describe Lotus::Note do
       Lotus::Note.new(:url => "Hello").to_hash[:url].must_equal "Hello"
     end
 
+    it "should contain the summary" do
+      Lotus::Note.new(:summary => "Hello")
+                 .to_hash[:summary].must_equal "Hello"
+    end
+
+    it "should contain the display name" do
+      Lotus::Note.new(:display_name => "Hello")
+                 .to_hash[:display_name].must_equal "Hello"
+    end
+
     it "should contain the published date" do
       date = mock('Time')
       Lotus::Note.new(:published => date).to_hash[:published].must_equal date
@@ -87,13 +106,15 @@ describe Lotus::Note do
   describe "#to_json" do
     before do
       author = Lotus::Author.new :display_name => "wilkie"
-      @note = Lotus::Note.new :text      => "Hello",
-                              :author    => author,
-                              :uid       => "id",
-                              :url       => "url",
-                              :title     => "title",
-                              :published => Time.now,
-                              :updated   => Time.now
+      @note = Lotus::Note.new :text         => "Hello",
+                              :author       => author,
+                              :uid          => "id",
+                              :url          => "url",
+                              :title        => "title",
+                              :summary      => "foo",
+                              :display_name => "meh",
+                              :published   => Time.now,
+                              :updated     => Time.now
 
       @json = @note.to_json
       @data = JSON.parse(@json)
@@ -121,6 +142,14 @@ describe Lotus::Note do
 
     it "should contain the url" do
       @data["url"].must_equal @note.url
+    end
+
+    it "should contain the summary" do
+      @data["summary"].must_equal @note.summary
+    end
+
+    it "should contain the display_name" do
+      @data["displayName"].must_equal @note.display_name
     end
 
     it "should contain the published date as rfc3339" do

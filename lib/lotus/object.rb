@@ -19,6 +19,7 @@ module Lotus
       @display_name = options[:display_name]
       @uid          = options[:uid]
       @url          = options[:url]
+      @summary      = options[:summary]
       @published    = options[:published] || Time.now
       @updated      = options[:updated] || Time.now
     end
@@ -26,6 +27,7 @@ module Lotus
     def to_hash
       {
         :author       => @author,
+        :summary      => @summary,
         :content      => @content,
         :display_name => @display_name,
         :uid          => @uid,
@@ -39,11 +41,12 @@ module Lotus
       {
         :author      => @author,
         :content     => @content,
+        :summary     => @summary,
         :displayName => @display_name,
         :id          => @uid,
         :url         => @url,
-        :published   => @published.to_date.rfc3339 + 'Z',
-        :updated     => @updated.to_date.rfc3339 + 'Z',
+        :published   => (@published ? @published.to_date.rfc3339 + 'Z' : nil),
+        :updated     => (@updated ? @updated.to_date.rfc3339 + 'Z' : nil),
       }
     end
 
