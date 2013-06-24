@@ -189,6 +189,7 @@ module Lotus
       object_author = actor
       case object_obj
       when Lotus::Activity
+        object = "activity"
         activity = object_obj
         object_author = activity.actor.short_name if activity.actor
       when Lotus::Author
