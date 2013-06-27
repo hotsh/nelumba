@@ -2,6 +2,7 @@ module Lotus
   module Object
     require 'json'
 
+    attr_reader :title
     attr_reader :author
     attr_reader :content
     attr_reader :display_name

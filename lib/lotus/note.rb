@@ -11,9 +11,6 @@ module Lotus
     # Holds the content as html.
     attr_reader :html
 
-    # Holds a String containing the title of the note.
-    attr_reader :title
-
     # Create a new note.
     #
     # options:
