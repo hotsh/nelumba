@@ -8,6 +8,11 @@ module Lotus
 
     include Lotus::Object
 
+    STANDARD_TYPES = [:article, :audio, :bookmark, :comment, :file, :folder,
+                      :group, :list, :note, :person, :photo, :"photo-album",
+                      :place, :playlist, :product, :review, :service, :status,
+                      :video]
+
     # The object of this activity.
     attr_reader :object
 
@@ -74,7 +79,12 @@ module Lotus
     #                    to an existing Entry.
     def initialize(options = {})
       @object      = options[:object]
+
       @type        = options[:type]
+      if STANDARD_TYPES.map(&:to_s).include? @type
+        @type = @type.intern
+      end
+
       @target      = options[:target]
       @verb        = options[:verb]
 
