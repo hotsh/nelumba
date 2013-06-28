@@ -66,6 +66,8 @@ module Lotus
         "#{$1}<a href='/search?search=%23#{$2}'>##{$2}</a>"
       end
 
+      out.gsub!(/\n/, "<br/>")
+
       out
     end
 
