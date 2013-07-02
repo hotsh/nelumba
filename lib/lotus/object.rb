@@ -70,7 +70,7 @@ module Lotus
     #
     # With a persistence backend:
     # note.mentions do |username, domain|
-    #   i = Identity.first(:username => /^#{Regexp.escape(username)}$/i
+    #   i = Identity.first(:username => /^#{Regexp.escape(username)}$/i)
     #   i.author if i
     # end
     def mentions(&blk)
