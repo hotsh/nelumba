@@ -2,9 +2,6 @@ module Lotus
   class Note
     include Lotus::Object
 
-    # Determines what constitutes a username inside an update text
-    USERNAME_REGULAR_EXPRESSION = /(^|[ \t\n\r\f"'\(\[{]+)@([^ \t\n\r\f&?=@%\/\#]*[^ \t\n\r\f&?=@%\/\#.!:;,"'\]}\)])(?:@([^ \t\n\r\f&?=@%\/\#]*[^ \t\n\r\f&?=@%\/\#.!:;,"'\]}\)]))?/
-
     # Holds the content as plain text.
     attr_reader :text
 
@@ -69,40 +66,6 @@ module Lotus
       out.gsub!(/\n/, "<br/>")
 
       out
-    end
-
-    # Returns a list of Lotus::Author's for those mentioned within the note.
-    #
-    # Requires a block that is given two arguments: the username and the domain
-    # that should return a Lotus::Author that matches when a @username tag
-    # is found.
-    #
-    # Usage:
-    #
-    # note = Lotus::Note.new(:text => "Hello @foo")
-    # note.mentions do |username, domain|
-    #   i = identities.select {|e| e.username == username && e.domain == domain }.first
-    #   i.author if i
-    # end
-    #
-    # With a persistence backend:
-    # note.mentions do |username, domain|
-    #   i = Identity.first(:username => /^#{Regexp.escape(username)}$/i
-    #   i.author if i
-    # end
-    def mentions(&blk)
-      out = CGI.escapeHTML(@text)
-
-      # we let almost anything be in a username, except those that mess with urls.
-      # but you can't end in a .:;, or !
-      # also ignore container chars [] () "" '' {}
-      # XXX: the _correct_ solution will be to use an email validator
-      ret = []
-      out.scan(USERNAME_REGULAR_EXPRESSION) do |beginning, username, domain|
-        ret << blk.call(username, domain) if blk
-      end
-
-      ret
     end
 
     # Returns a list of Lotus::Author's for those replied by the note.

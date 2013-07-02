@@ -2,6 +2,9 @@ module Lotus
   module Object
     require 'json'
 
+    # Determines what constitutes a username inside an update text
+    USERNAME_REGULAR_EXPRESSION = /(^|[ \t\n\r\f"'\(\[{]+)@([^ \t\n\r\f&?=@%\/\#]*[^ \t\n\r\f&?=@%\/\#.!:;,"'\]}\)])(?:@([^ \t\n\r\f&?=@%\/\#]*[^ \t\n\r\f&?=@%\/\#.!:;,"'\]}\)]))?/
+
     attr_reader :title
     attr_reader :author
     attr_reader :content
@@ -49,6 +52,40 @@ module Lotus
         :published   => (@published ? @published.to_date.rfc3339 + 'Z' : nil),
         :updated     => (@updated ? @updated.to_date.rfc3339 + 'Z' : nil),
       }
+    end
+
+    # Returns a list of Lotus::Author's for those mentioned within the object.
+    #
+    # Requires a block that is given two arguments: the username and the domain
+    # that should return a Lotus::Author that matches when a @username tag
+    # is found.
+    #
+    # Usage:
+    #
+    # note = Lotus::Note.new(:text => "Hello @foo")
+    # note.mentions do |username, domain|
+    #   i = identities.select {|e| e.username == username && e.domain == domain }.first
+    #   i.author if i
+    # end
+    #
+    # With a persistence backend:
+    # note.mentions do |username, domain|
+    #   i = Identity.first(:username => /^#{Regexp.escape(username)}$/i
+    #   i.author if i
+    # end
+    def mentions(&blk)
+      out = CGI.escapeHTML(self.content)
+
+      # we let almost anything be in a username, except those that mess with urls.
+      # but you can't end in a .:;, or !
+      # also ignore container chars [] () "" '' {}
+      # XXX: the _correct_ solution will be to use an email validator
+      ret = []
+      out.scan(USERNAME_REGULAR_EXPRESSION) do |beginning, username, domain|
+        ret << blk.call(username, domain) if blk
+      end
+
+      ret
     end
 
     # Returns a string containing the JSON representation of this Comment.
