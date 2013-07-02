@@ -74,7 +74,13 @@ module Lotus
     #   i.author if i
     # end
     def mentions(&blk)
-      out = CGI.escapeHTML(self.content)
+      if self.respond_to? :text
+        out = self.text
+      else
+        out = self.content
+      end
+
+      out = CGI.escapeHTML(out)
 
       # we let almost anything be in a username, except those that mess with urls.
       # but you can't end in a .:;, or !
