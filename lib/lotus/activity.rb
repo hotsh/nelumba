@@ -9,7 +9,7 @@ module Lotus
     include Lotus::Object
 
     STANDARD_TYPES = [:article, :audio, :bookmark, :comment, :file, :folder,
-                      :group, :list, :note, :person, :photo, :"photo-album",
+                      :group, :list, :note, :person, :image,
                       :place, :playlist, :product, :review, :service, :status,
                       :video]
 
@@ -20,7 +20,7 @@ module Lotus
     #
     # The field can be a String for uncommon types. Several are standard:
     #   :article, :audio, :bookmark, :comment, :file, :folder, :group,
-    #   :list, :note, :person, :photo, :"photo-album", :place, :playlist,
+    #   :list, :note, :person, :image, :place, :playlist,
     #   :product, :review, :service, :video
     attr_reader :type
 
