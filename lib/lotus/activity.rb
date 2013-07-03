@@ -212,6 +212,9 @@ module Lotus
         case activity.type
         when :note
           object = "status"
+        when :image, :article
+          object = activity.type.to_s
+          self_distinction = "an"
         else
           object = activity.type.to_s
         end
