@@ -75,9 +75,9 @@ module Lotus
     # end
     def mentions(&blk)
       if self.respond_to? :text
-        out = self.text
+        out = self.text || ""
       else
-        out = self.content
+        out = self.content || ""
       end
 
       out = CGI.escapeHTML(out)
