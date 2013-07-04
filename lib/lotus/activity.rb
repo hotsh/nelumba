@@ -161,80 +161,30 @@ module Lotus
       }.merge(super)
     end
 
-    # Generates components of the description of the action taken by this
-    # activity. This would be a good place for localization efforts.
-    def human_description
-      actor = "someone"
-
-      actor_obj = self.actor
-      case actor_obj
-      when Lotus::Author
-        actor = actor_obj.short_name
-      end
-
-      verb = "did something to"
-      self_distinction = "their own"
-      case self.verb
-      when :favorite
-        verb = "favorited"
-      when :follow
-        verb = "followed"
-        self_distinction = "themselves"
-      when :"stop-following"
-        verb = "stopped following"
-        self_distinction = "themselves"
-      when :unfavorite
-        verb = "unfavorited"
-      when :share
-        verb = "shared"
-      when :post
-        verb = "posted"
-        self_distinction = "a"
-      end
-
-      object = "something"
-      activity = self
-
-      object_obj = self.object
-      object_author = actor
-      case object_obj
-      when Lotus::Activity
-        object = "activity"
-        activity = object_obj
-        object_author = activity.actor.short_name if activity.actor
-      when Lotus::Author
-        object = object_obj.short_name
-        object_author = object
-      end
-
-      if object.is_a? Lotus::Author
-      elsif activity.type
-        case activity.type
-        when :note
-          object = "status"
-        when :image, :article
-          object = activity.type.to_s
-          self_distinction = "an"
-        else
-          object = activity.type.to_s
-        end
-      end
-
-      if object_author != actor
-        sentence = "#{actor} #{verb} #{object_author}'s #{object}"
-      else
-        # Correct self_distinction if needed
-        sentence = "#{actor} #{verb} #{self_distinction} #{object}"
-      end
-
-      {
-        :actor         => actor,
-        :verb          => verb,
-        :activity      => activity,
-        :object        => object,
-        :object_author => object_author,
-        :sentence      => sentence
-      }
+    # Generates a sentence describing this activity in the current or given
+    # locale.
+    #
+    # Usage:
+    #   # The default locale
+    #   Lotus::Activity.new(:verb => :post,
+    #                       :object => Lotus::Note(:content => "hello"),
+    #                       :actor => Lotus::Author.new(:name => "wilkie"))
+    #                  .sentence
+    #   # => "wilkie posted a note"
+    #
+    #   # In Spanish
+    #   Lotus::Activity.new(:verb => :post,
+    #                       :object => Lotus::Note(:content => "hello"),
+    #                       :actor => Lotus::Author.new(:name => "wilkie"))
+    #                  .sentence(:locale => :es)
+    #   # => "wilkie puso una nota"
+    def sentence(options = {})
+      Lotus::I18n.sentence({
+        :actor => self.actor ? self.actor.short_name : nil,
+        :object => self.type,
+        :verb => self.verb,
+        :target => self.target ? self.target.short_name : nil
+      }.merge(options))
     end
   end
 end

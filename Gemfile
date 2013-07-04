@@ -14,4 +14,5 @@ group :test do
   gem "debugger"
 end
 
-gem "redfinger", :git => "git://github.com/hotsh/redfinger.git"
+gem "lotus-i18n", :git => "git://github.com/hotsh/lotus-i18n.git"
+gem "redfinger",  :git => "git://github.com/hotsh/redfinger.git"
