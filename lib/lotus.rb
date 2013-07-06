@@ -87,7 +87,7 @@ module Lotus
   #
   # identity: Can be a String containing a fully qualified name (i.e.
   # "user@domain.tld") or a previously resolved Lotus::Identity.
-  def self.discover_author(identity)
+  def self.discover_person(identity)
     if identity.is_a? String
       identity = self.discover_identity(identity)
     end
