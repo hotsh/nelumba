@@ -20,7 +20,7 @@ module Lotus
       add_extension_namespace :activity, ACTIVITY_NAMESPACE
       element 'activity:object-type'
 
-      element :author, :class => Lotus::Atom::Author
+      element :author, :class => Lotus::Atom::Person
       element :content, :class => ::Atom::Content
       element :displayName
       element :id
@@ -70,7 +70,7 @@ module Lotus
         entry_hash.delete :in_reply_to
 
         if entry_hash[:author]
-          entry_hash[:author] = Lotus::Atom::Author.from_canonical(entry_hash[:author])
+          entry_hash[:author] = Lotus::Atom::Person.from_canonical(entry_hash[:author])
         end
 
         node = XML::Node.new("content")

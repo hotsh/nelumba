@@ -34,8 +34,8 @@ describe Lotus::Notification do
 
   describe "from_unfollow" do
     before do
-      @user   = Lotus::Author.new(:name => "wilkie")
-      @follow = Lotus::Author.new(:name => "wilkie")
+      @user   = Lotus::Person.new(:name => "wilkie")
+      @follow = Lotus::Person.new(:name => "wilkie")
       @salmon = Lotus::Notification.from_unfollow(@user, @follow)
     end
 
@@ -50,8 +50,8 @@ describe Lotus::Notification do
 
   describe "from_follow" do
     before do
-      @user   = Lotus::Author.new(:name => "wilkie")
-      @follow = Lotus::Author.new(:name => "wilkie")
+      @user   = Lotus::Person.new(:name => "wilkie")
+      @follow = Lotus::Person.new(:name => "wilkie")
       @salmon = Lotus::Notification.from_follow(@user, @follow)
     end
 
@@ -66,7 +66,7 @@ describe Lotus::Notification do
 
   describe "from_profile_update" do
     before do
-      @user   = Lotus::Author.new(:name => "wilkie")
+      @user   = Lotus::Person.new(:name => "wilkie")
       @salmon = Lotus::Notification.from_profile_update(@user)
     end
 
@@ -77,8 +77,8 @@ describe Lotus::Notification do
 
   describe "account" do
     before do
-      @user   = Lotus::Author.new(:name => "wilkie", :uri => "acct:wilkie@rstat.us")
-      @follow = Lotus::Author.new(:name => "wilkie")
+      @user   = Lotus::Person.new(:name => "wilkie", :uri => "acct:wilkie@rstat.us")
+      @follow = Lotus::Person.new(:name => "wilkie")
       @salmon = Lotus::Notification.from_follow(@user, @follow)
     end
 

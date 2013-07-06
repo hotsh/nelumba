@@ -9,7 +9,7 @@ module Lotus
 
   module Atom
     # Holds information about the author of the Feed.
-    class Author < ::Atom::Person
+    class Person < ::Atom::Person
       require 'date'
 
       include ::Atom::SimpleExtensions
@@ -149,7 +149,7 @@ module Lotus
 
         ext_name = self.poco_name
         ext_name = ext_name.to_canonical if ext_name
-        Lotus::Author.new(:uid => self.poco_id,
+        Lotus::Person.new(:uid => self.poco_id,
                           :extended_name => ext_name,
                           :organization => organization,
                           :address => address,

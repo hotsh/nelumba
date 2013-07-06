@@ -4,7 +4,7 @@ module Lotus
   require 'atom'
 
   # Holds information about the author of the Feed.
-  class Author
+  class Person
     require 'date'
 
     # Holds the id that represents this contact.
@@ -215,7 +215,7 @@ module Lotus
       self.act(author, :"stop-following")
     end
 
-    # Returns a string containing the JSON representation of this Author.
+    # Returns a string containing the JSON representation of this Person.
     def to_json(*args)
       hash = to_hash.merge({:objectType => "person"})
 

@@ -65,7 +65,7 @@ describe Lotus::Video do
     end
 
     it "should contain the author" do
-      author = mock('Lotus::Author')
+      author = mock('Lotus::Person')
       Lotus::Video.new(:author => author).to_hash[:author].must_equal author
     end
 
@@ -100,7 +100,7 @@ describe Lotus::Video do
 
   describe "#to_json" do
     before do
-      author = Lotus::Author.new :display_name => "wilkie"
+      author = Lotus::Person.new :display_name => "wilkie"
       @note = Lotus::Video.new :content      => "Hello",
                                :author       => author,
                                :embed_code   => "code",

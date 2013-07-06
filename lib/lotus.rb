@@ -24,7 +24,7 @@ require 'lotus/video'
 
 # Data Structures
 require 'lotus/feed'
-require 'lotus/author'
+require 'lotus/person'
 require 'lotus/identity'
 require 'lotus/notification'
 require 'lotus/link'
@@ -83,7 +83,7 @@ module Lotus
                  :activity_outbox_endpoint => activity_outbox_endpoint)
   end
 
-  # Will yield an Lotus::Author for the given person.
+  # Will yield an Lotus::Person for the given person.
   #
   # identity: Can be a String containing a fully qualified name (i.e.
   # "user@domain.tld") or a previously resolved Lotus::Identity.
@@ -94,7 +94,7 @@ module Lotus
 
     return nil if identity.nil? || identity.profile_page.nil?
 
-    # Discover Author information
+    # Discover Person information
 
     # Pull profile page
     # Look for a feed to pull

@@ -54,10 +54,10 @@ module Lotus
       }
     end
 
-    # Returns a list of Lotus::Author's for those mentioned within the object.
+    # Returns a list of Lotus::Person's for those mentioned within the object.
     #
     # Requires a block that is given two arguments: the username and the domain
-    # that should return a Lotus::Author that matches when a @username tag
+    # that should return a Lotus::Person that matches when a @username tag
     # is found.
     #
     # Usage:

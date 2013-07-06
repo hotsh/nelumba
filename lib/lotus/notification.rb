@@ -25,7 +25,7 @@ module Lotus
       @account = account
     end
 
-    # Creates an activity for following a particular Author.
+    # Creates an activity for following a particular Person.
     def self.from_follow(user_author, followed_author)
       activity = Lotus::Activity.new(
         :verb => :follow,
@@ -39,7 +39,7 @@ module Lotus
       self.new(activity)
     end
 
-    # Creates an activity for unfollowing a particular Author.
+    # Creates an activity for unfollowing a particular Person.
     def self.from_unfollow(user_author, followed_author)
       activity = Lotus::Activity.new(
         :verb => "http://ostatus.org/schema/1.0/unfollow",

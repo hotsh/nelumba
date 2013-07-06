@@ -1,6 +1,3 @@
-require 'lotus/activity'
-require 'lotus/author'
-
 module Lotus
   # This class represents a Lotus::Feed object.
   class Feed < Lotus::Collection
@@ -37,10 +34,10 @@ module Lotus
     attr_reader :generator
 
     # Holds the list of contributors, if any, that are involved in this feed
-    # as Lotus::Author.
+    # as Lotus::Person.
     attr_reader :contributors
 
-    # Holds the list of authors as Lotus::Author responsible for this feed.
+    # Holds the list of authors as Lotus::Person responsible for this feed.
     attr_reader :authors
 
     # Holds the list of hubs that are available to manage subscriptions to this
@@ -62,9 +59,9 @@ module Lotus
     #   title_type    => The content type for the title.
     #   subtitle      => The subtitle for this feed.
     #   subtitle_type => The content type for the subtitle.
-    #   authors       => The list of Lotus::Author's for this feed.
+    #   authors       => The list of Lotus::Person's for this feed.
     #                    Defaults: []
-    #   contributors  => The list of Lotus::Author's that contributed to this
+    #   contributors  => The list of Lotus::Person's that contributed to this
     #                    feed. Defaults: []
     #   items         => The list of Lotus::Activity's for this feed.
     #                    Defaults: []
@@ -94,7 +91,7 @@ module Lotus
     #
     # Usage:
     #
-    #   author = Lotus::Author.new(:name => "Kelly")
+    #   author = Lotus::Person.new(:name => "Kelly")
     #
     #   feed = Lotus::Feed.new(:title     => "My Feed",
     #                            :uid     => "1",

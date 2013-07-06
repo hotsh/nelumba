@@ -14,7 +14,7 @@ Currently, only the immutable interface is available.
 ```
 require 'ostatus'
 
-author = Lotus::Author.new(:uri   => "https://rstat.us/users/wilkie",
+author = Lotus::Person.new(:uri   => "https://rstat.us/users/wilkie",
                            :email => "wilkie@xomb.org",
                            :name  => "wilkie")
 
@@ -57,7 +57,7 @@ The Feed is the aggregate. It holds a collection of entries written by a set of 
 #### Usage
 
 ```
-author = Lotus::Author.new(:name => "Kelly")
+author = Lotus::Person.new(:name => "Kelly")
 feed = Lotus::Feed.new(:title   => "My Feed",
                        :id      => "1",
                        :url     => "http://example.com/feeds/1",
@@ -72,9 +72,9 @@ title         => The title for this feed. Defaults: "Untitled"
 title_type    => The content type for the title.
 subtitle      => The subtitle for this feed.
 subtitle_type => The content type for the subtitle.
-authors       => The list of Lotus::Author's for this feed.
+authors       => The list of Lotus::Person's for this feed.
                  Defaults: []
-contributors  => The list of Lotus::Author's that contributed to this
+contributors  => The list of Lotus::Person's that contributed to this
                  feed. Defaults: []
 entries       => The list of Lotus::Activity's for this feed.
                  Defaults: []
@@ -122,7 +122,7 @@ entry = Lotus::Activity.new(:type => :note,
 #### Fields
 ```
 :title        => The title of the entry. Defaults: "Untitled"
-:actor        => An Lotus::Author responsible for generating this entry.
+:actor        => An Lotus::Person responsible for generating this entry.
 :content      => The content of the entry. Defaults: ""
 :content_type => The MIME type of the content.
 :published    => The DateTime depicting when the entry was originally
@@ -140,16 +140,16 @@ entry = Lotus::Activity.new(:type => :note,
                  to an existing Activity.
 ```
 
-### Author
+### Person
 
 This represents a person that creates or contributes content in the feed.
-Feed and Activity can both have one or more Authors or Contributors. One can
+Feed and Activity can both have one or more Persons or Contributors. One can
 represent a great deal of information about a person.
 
 #### Usage
 
 ```
-author = Lotus::Author.new(:name => "wilkie",
+author = Lotus::Person.new(:name => "wilkie",
                            :uri => "https://rstat.us/users/wilkie",
                            :email => "wilkie@xomb.org",
                            :preferredUsername => "wilkie",

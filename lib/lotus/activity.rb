@@ -34,7 +34,7 @@ module Lotus
     # The target of the action.
     attr_reader :target
 
-    # Holds an Lotus::Author.
+    # Holds an Lotus::Person.
     attr_reader :actor
 
     # Holds the source of this entry as an Lotus::Feed.
@@ -47,13 +47,13 @@ module Lotus
     # Holds an array of related Lotus::Activity's that are replies to this one.
     attr_reader :replies
 
-    # Holds an array of Lotus::Author's that have favorited this activity.
+    # Holds an array of Lotus::Person's that have favorited this activity.
     attr_reader :likes
 
-    # Holds an array of Lotus::Author's that have shared this activity.
+    # Holds an array of Lotus::Person's that have shared this activity.
     attr_reader :shares
 
-    # Holds an array of Lotus::Author's that are mentioned in this activity.
+    # Holds an array of Lotus::Person's that are mentioned in this activity.
     attr_reader :mentions
 
     # Create a new entry with the given action and object.
@@ -64,7 +64,7 @@ module Lotus
     #   :target      => The target of this activity.
     #   :verb        => The action of the activity.
     #
-    #   :actor        => An Lotus::Author responsible for generating this entry.
+    #   :actor        => An Lotus::Person responsible for generating this entry.
     #   :source       => An Lotus::Feed where this Entry originated. This
     #                    should be used when an Entry is copied into this feed
     #                    from another.
@@ -168,14 +168,14 @@ module Lotus
     #   # The default locale
     #   Lotus::Activity.new(:verb => :post,
     #                       :object => Lotus::Note(:content => "hello"),
-    #                       :actor => Lotus::Author.new(:name => "wilkie"))
+    #                       :actor => Lotus::Person.new(:name => "wilkie"))
     #                  .sentence
     #   # => "wilkie posted a note"
     #
     #   # In Spanish
     #   Lotus::Activity.new(:verb => :post,
     #                       :object => Lotus::Note(:content => "hello"),
-    #                       :actor => Lotus::Author.new(:name => "wilkie"))
+    #                       :actor => Lotus::Person.new(:name => "wilkie"))
     #                  .sentence(:locale => :es)
     #   # => "wilkie puso una nota"
     def sentence(options = {})

@@ -1,4 +1,4 @@
-require 'lotus/author'
+require 'lotus/person'
 require 'lotus/category'
 require 'lotus/generator'
 
@@ -34,8 +34,8 @@ module Lotus
       element :published, :class => Time, :content_only => true
       element :updated, :class => Time, :content_only => true
       elements :links, :class => ::Atom::Link
-      elements :authors, :class => Lotus::Atom::Author
-      elements :contributors, :class => Lotus::Atom::Author
+      elements :authors, :class => Lotus::Atom::Person
+      elements :contributors, :class => Lotus::Atom::Person
       elements :categories, :class => Lotus::Atom::Category
 
       # Creates an Atom generator for the given Lotus::Feed.
@@ -71,11 +71,11 @@ module Lotus
         hash.delete :hubs
 
         hash[:authors].map! {|a|
-          Lotus::Atom::Author.from_canonical(a)
+          Lotus::Atom::Person.from_canonical(a)
         }
 
         hash[:contributors].map! {|a|
-          Lotus::Atom::Author.from_canonical(a)
+          Lotus::Atom::Person.from_canonical(a)
         }
 
         hash[:categories].map! {|c|

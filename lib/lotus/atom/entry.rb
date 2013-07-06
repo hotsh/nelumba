@@ -4,7 +4,7 @@ module Lotus
 
     class Entry < ::Atom::Entry
       require 'lotus/activity'
-      require 'lotus/author'
+      require 'lotus/person'
       require 'lotus/link'
 
       require 'lotus/atom/author'
@@ -39,7 +39,7 @@ module Lotus
       # This is for backwards compatibility with some implementations of Activity
       # Streams. It should not be generated for Atom representation of Activity
       # Streams (although it is used in JSON)
-      element 'activity:actor', :class => Lotus::Atom::Author
+      element 'activity:actor', :class => Lotus::Atom::Person
 
       element :source, :class => Lotus::Atom::Source
 
@@ -50,13 +50,13 @@ module Lotus
 
       elements :replies, :class => Lotus::Atom::Entry
 
-      elements :shares, :class => Lotus::Atom::Author
-      elements :likes, :class => Lotus::Atom::Author
-      elements :mentions, :class => Lotus::Atom::Author
+      elements :shares, :class => Lotus::Atom::Person
+      elements :likes, :class => Lotus::Atom::Person
+      elements :mentions, :class => Lotus::Atom::Person
 
       elements :categories, :class => ::Atom::Category
       element :content, :class => ::Atom::Content
-      element :author, :class => Lotus::Atom::Author
+      element :author, :class => Lotus::Atom::Person
 
       # ActivityStreams
       element :displayName
@@ -105,7 +105,7 @@ module Lotus
           content = nil
           content_type = nil
           title = nil
-          entry_hash[:activity_object] = object if object.is_a? Lotus::Author
+          entry_hash[:activity_object] = object if object.is_a? Lotus::Person
         end
 
         if content
@@ -126,7 +126,7 @@ module Lotus
         end
 
         if entry_hash[:actor]
-          entry_hash[:author] = Lotus::Atom::Author.from_canonical(entry_hash[:actor])
+          entry_hash[:author] = Lotus::Atom::Person.from_canonical(entry_hash[:actor])
         end
         entry_hash.delete :actor
 

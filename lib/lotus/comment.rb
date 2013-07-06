@@ -9,7 +9,7 @@ module Lotus
     #
     # options:
     #   :content      => The body of the comment in HTML.
-    #   :author       => A Lotus::Author that created the object.
+    #   :author       => A Lotus::Person that created the object.
     #   :display_name => A natural-language, human-readable and plain-text name
     #                    for the comment.
     #   :summary      => Natural-language summarization of the comment.

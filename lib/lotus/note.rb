@@ -14,7 +14,7 @@ module Lotus
     #   :title        => The title of the note. Defaults: "Untitled"
     #   :text         => The content of the note. Defaults: ""
     #   :html         => The content of the note as html.
-    #   :author       => An Author that wrote the note.
+    #   :author       => An Person that wrote the note.
     #   :url          => Permanent location for an html representation of the
     #                    note.
     #   :published    => When the note was originally published.
@@ -32,7 +32,7 @@ module Lotus
     # Produces an HTML string representing the note's content.
     #
     # Requires a block that is given two arguments: the username and the domain
-    # that should return a Lotus::Author that matches when a @username tag
+    # that should return a Lotus::Person that matches when a @username tag
     # is found.
     def to_html(&blk)
       return @html if @html
@@ -68,10 +68,10 @@ module Lotus
       out
     end
 
-    # Returns a list of Lotus::Author's for those replied by the note.
+    # Returns a list of Lotus::Person's for those replied by the note.
     #
     # Requires a block that is given two arguments: the username and the domain
-    # that should return a Lotus::Author that matches when a @username tag
+    # that should return a Lotus::Person that matches when a @username tag
     # is found.
     #
     # Usage:

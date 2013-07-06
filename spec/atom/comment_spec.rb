@@ -5,7 +5,7 @@ require_relative '../../lib/lotus/atom/comment'
 
 describe Lotus::Atom::Comment do
   before do
-    author = Lotus::Author.new(:uri               => "http://example.com/users/1",
+    author = Lotus::Person.new(:uri               => "http://example.com/users/1",
                                :email             => "user@example.com",
                                :name              => "wilkie",
                                :uid => "1",

@@ -9,7 +9,7 @@ require_relative '../../lib/lotus/atom/feed.rb'
 # Somehow, these are still really fast.
 describe Lotus::Atom do
   before do
-    author = Lotus::Author.new(:uri               => "http://example.com/users/1",
+    author = Lotus::Person.new(:uri               => "http://example.com/users/1",
                                :email             => "user@example.com",
                                :name              => "wilkie",
                                :uid => "1",

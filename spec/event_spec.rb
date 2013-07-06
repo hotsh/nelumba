@@ -88,7 +88,7 @@ describe Lotus::Event do
     end
 
     it "should contain the author" do
-      author = mock('Lotus::Author')
+      author = mock('Lotus::Person')
       Lotus::Event.new(:author => author).to_hash[:author].must_equal author
     end
 
@@ -155,7 +155,7 @@ describe Lotus::Event do
 
   describe "#to_json" do
     before do
-      author = Lotus::Author.new :display_name => "wilkie"
+      author = Lotus::Person.new :display_name => "wilkie"
       @note = Lotus::Event.new :content         => "Hello",
                                :author          => author,
                                :attending       => ["a", "b"],

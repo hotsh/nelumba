@@ -70,7 +70,7 @@ describe Lotus::Note do
     end
 
     it "should contain the author" do
-      author = mock('Lotus::Author')
+      author = mock('Lotus::Person')
       Lotus::Note.new(:author => author).to_hash[:author].must_equal author
     end
 
@@ -105,7 +105,7 @@ describe Lotus::Note do
 
   describe "#to_json" do
     before do
-      author = Lotus::Author.new :display_name => "wilkie"
+      author = Lotus::Person.new :display_name => "wilkie"
       @note = Lotus::Note.new :text         => "Hello",
                               :author       => author,
                               :uid          => "id",
