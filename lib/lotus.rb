@@ -130,6 +130,27 @@ module Lotus
 
       return nil unless response.is_a?(Net::HTTPSuccess)
 
+      # Look at HTTP link headers
+      if response["Link"]
+        link = response["Link"]
+
+        new_url = link[/^<([^>]+)>/,1]
+        rel     = link[/;\s*rel\s*=\s*"([^"]+)"/,1]
+        type    = link[/;\s*type\s*=\s*"([^"]+)"/,1]
+
+        if new_url.start_with? "/"
+          domain = url[/^(http[s]?:\/\/[^\/]+)\//,1]
+          new_url = "#{domain}#{new_url}"
+        end
+
+        if rel == "lrdd"
+          unless new_url == url and content_type == type
+            self.discover_feed(new_url, type)
+            return
+          end
+        end
+      end
+
       content_type = response.content_type
       str = response.body
     else
