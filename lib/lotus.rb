@@ -56,7 +56,39 @@ module Lotus
   # Will yield an OStatus::Identity for the given fully qualified name
   # (i.e. "user@domain.tld")
   def self.discover_identity(name)
-    xrd = Redfinger.finger(name)
+    xrd = nil
+
+    if name.match /^https?:\/\//
+      url = name
+      type = 'text/html'
+      response = Lotus::pull_url(url, type)
+
+      # Look at HTTP link headers
+      if response["Link"]
+        link = response["Link"]
+
+        new_url = link[/^<([^>]+)>/,1]
+        rel     = link[/;\s*rel\s*=\s*"([^"]+)"/,1]
+        type    = link[/;\s*type\s*=\s*"([^"]+)"/,1]
+
+        if new_url.start_with? "/"
+          domain = url[/^(http[s]?:\/\/[^\/]+)\//,1]
+          new_url = "#{domain}#{new_url}"
+        end
+
+        if rel == "lrdd"
+          xml = Lotus::pull_url(new_url, type)
+          xrd = Redfinger::Finger.new("xrd_from_profile", xml)
+        end
+      end
+    elsif name.match /@/
+      xrd = Redfinger.finger(name)
+    end
+
+    unless xrd
+      # TODO: Error
+      return nil
+    end
 
     # magic-envelope public key
     public_key = find_link(xrd, 'magic-public-key')
@@ -129,27 +161,6 @@ module Lotus
       response = Lotus::pull_url(url, content_type)
 
       return nil unless response.is_a?(Net::HTTPSuccess)
-
-      # Look at HTTP link headers
-      if response["Link"]
-        link = response["Link"]
-
-        new_url = link[/^<([^>]+)>/,1]
-        rel     = link[/;\s*rel\s*=\s*"([^"]+)"/,1]
-        type    = link[/;\s*type\s*=\s*"([^"]+)"/,1]
-
-        if new_url.start_with? "/"
-          domain = url[/^(http[s]?:\/\/[^\/]+)\//,1]
-          new_url = "#{domain}#{new_url}"
-        end
-
-        if rel == "lrdd"
-          unless new_url == url and content_type == type
-            self.discover_feed(new_url, type)
-            return
-          end
-        end
-      end
 
       content_type = response.content_type
       str = response.body
