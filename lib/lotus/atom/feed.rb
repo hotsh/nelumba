@@ -6,7 +6,7 @@ require 'lotus/generator'
 require 'lotus/atom/entry'
 require 'lotus/atom/generator'
 require 'lotus/atom/category'
-require 'lotus/atom/author'
+require 'lotus/atom/person'
 require 'lotus/atom/link'
 
 module Lotus

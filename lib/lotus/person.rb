@@ -228,9 +228,9 @@ module Lotus
     end
 
     def to_atom
-      require 'lotus/atom/author'
+      require 'lotus/atom/person'
 
-      Lotus::Atom::Author.from_canonical(self).to_xml
+      Lotus::Atom::Person.from_canonical(self).to_xml
     end
   end
 end

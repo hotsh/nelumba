@@ -7,7 +7,7 @@ module Lotus
       require 'lotus/person'
       require 'lotus/link'
 
-      require 'lotus/atom/author'
+      require 'lotus/atom/person'
       require 'lotus/atom/thread'
       require 'lotus/atom/link'
       require 'lotus/atom/comment'
