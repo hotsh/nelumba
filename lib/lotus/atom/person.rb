@@ -67,7 +67,7 @@ module Lotus
       end
 
       def to_xml(*args)
-        x = super(*args)
+        x = super(true)
 
         if self.name
           node = XML::Node.new('name')
