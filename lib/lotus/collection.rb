@@ -14,16 +14,16 @@ module Lotus
 
     def to_hash
       {
-        :items       => (@items || []).dup,
-        :total_items => @total_items
+        :items       => (self.items || []).dup,
+        :total_items => self.total_items || self.items.count
       }.merge(super)
     end
 
     def to_json_hash
       {
         :objectType => "collection",
-        :items      => (@items || []).dup,
-        :totalItems => @total_items
+        :items      => (self.items || []).dup,
+        :totalItems => self.total_items || self.items.count
       }.merge(super)
     end
   end
