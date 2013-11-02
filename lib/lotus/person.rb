@@ -226,5 +226,11 @@ module Lotus
 
       hash.to_json(args)
     end
+
+    def to_atom
+      require 'lotus/atom/author'
+
+      Lotus::Atom::Author.from_canonical(self).to_xml
+    end
   end
 end
