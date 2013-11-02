@@ -14,7 +14,7 @@ module Lotus
 
     def to_hash
       {
-        :items       => @items.dup,
+        :items       => (@items || []).dup,
         :total_items => @total_items
       }.merge(super)
     end
@@ -22,7 +22,7 @@ module Lotus
     def to_json_hash
       {
         :objectType => "collection",
-        :items      => @items.dup,
+        :items      => (@items || []).dup,
         :totalItems => @total_items
       }.merge(super)
     end
