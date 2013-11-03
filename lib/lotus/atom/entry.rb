@@ -106,7 +106,7 @@ module Lotus
           content = nil
           content_type = nil
           title = nil
-          entry_hash[:activity_object] = object if object.is_a? Lotus::Author
+          entry_hash[:activity_object] = object if object.is_a? Lotus::Person
         end
 
         if content
