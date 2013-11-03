@@ -91,7 +91,6 @@ describe Lotus::Atom do
 
   it "should be able to reform canonical structure using Atom" do
     xml = Lotus::Atom::Feed.from_canonical(@master).to_xml
-    puts xml
     new_feed = Lotus::Atom::Feed.new(XML::Reader.string(xml)).to_canonical
 
     old_hash = @master.to_hash

@@ -134,6 +134,13 @@ module Lotus
           end
         end
 
+        # Remove any blank entries
+        hash.keys.each do |key|
+          if hash[key].nil? || hash[key] == ""
+            hash.delete key
+          end
+        end
+
         self.new(hash)
       end
 

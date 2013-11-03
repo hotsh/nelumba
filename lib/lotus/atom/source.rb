@@ -34,7 +34,7 @@ module Lotus
       element :published, :class => Time, :content_only => true
       element :updated, :class => Time, :content_only => true
       elements :links, :class => ::Atom::Link
-      elements :authors, :class => Lotus::Atom::Person
+      elements :authors, :class => Lotus::Atom::Author
       elements :contributors, :class => Lotus::Atom::Person
       elements :categories, :class => Lotus::Atom::Category
 
@@ -71,7 +71,7 @@ module Lotus
         hash.delete :hubs
 
         hash[:authors].map! {|a|
-          Lotus::Atom::Person.from_canonical(a)
+          Lotus::Atom::Author.from_canonical(a)
         }
 
         hash[:contributors].map! {|a|

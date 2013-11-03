@@ -7,6 +7,7 @@ require 'lotus/atom/entry'
 require 'lotus/atom/generator'
 require 'lotus/atom/category'
 require 'lotus/atom/person'
+require 'lotus/atom/author'
 require 'lotus/atom/link'
 
 module Lotus
@@ -36,7 +37,7 @@ module Lotus
       element :published, :class => Time, :content_only => true
       element :updated, :class => Time, :content_only => true
       elements :links, :class => ::Atom::Link
-      elements :authors, :class => Lotus::Atom::Person
+      elements :authors, :class => Lotus::Atom::Author
       elements :contributors, :class => Lotus::Atom::Person
       elements :categories, :class => Lotus::Atom::Category
       elements :entries, :class => Lotus::Atom::Entry
@@ -77,7 +78,7 @@ module Lotus
         hash.delete :hubs
 
         hash[:authors].map! {|a|
-          Lotus::Atom::Person.from_canonical(a)
+          Lotus::Atom::Author.from_canonical(a)
         }
 
         hash[:contributors].map! {|a|
@@ -153,7 +154,7 @@ module Lotus
                         :rights        => self.rights,
                         :published     => self.published,
                         :updated       => self.updated,
-                        :items       => self.entries.map(&:to_canonical),
+                        :items         => self.entries.map(&:to_canonical),
                         :authors       => self.authors.map(&:to_canonical),
                         :contributors  => self.contributors.map(&:to_canonical),
                         :hubs          => self.hubs,

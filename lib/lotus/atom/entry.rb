@@ -8,6 +8,7 @@ module Lotus
       require 'lotus/link'
 
       require 'lotus/atom/person'
+      require 'lotus/atom/author'
       require 'lotus/atom/thread'
       require 'lotus/atom/link'
       require 'lotus/atom/comment'
@@ -39,7 +40,7 @@ module Lotus
       # This is for backwards compatibility with some implementations of Activity
       # Streams. It should not be generated for Atom representation of Activity
       # Streams (although it is used in JSON)
-      element 'activity:actor', :class => Lotus::Atom::Person
+      element 'activity:actor', :class => Lotus::Atom::Author
 
       element :source, :class => Lotus::Atom::Source
 
@@ -56,7 +57,7 @@ module Lotus
 
       elements :categories, :class => ::Atom::Category
       element :content, :class => ::Atom::Content
-      element :author, :class => Lotus::Atom::Person
+      elements :authors, :class => Lotus::Atom::Author
 
       # ActivityStreams
       element :displayName
@@ -105,7 +106,7 @@ module Lotus
           content = nil
           content_type = nil
           title = nil
-          entry_hash[:activity_object] = object if object.is_a? Lotus::Person
+          entry_hash[:activity_object] = object if object.is_a? Lotus::Author
         end
 
         if content
@@ -126,7 +127,7 @@ module Lotus
         end
 
         if entry_hash[:actor]
-          entry_hash[:author] = Lotus::Atom::Person.from_canonical(entry_hash[:actor])
+          entry_hash[:authors] = [Lotus::Atom::Author.from_canonical(entry_hash[:actor])]
         end
         entry_hash.delete :actor
 
@@ -164,6 +165,13 @@ module Lotus
         entry_hash[:displayName] = entry_hash[:display_name]
         entry_hash.delete :display_name
 
+        # Remove empty entries
+        entry_hash.keys.each do |key|
+          if entry_hash[key].nil? || entry_hash[key] == ""
+            entry_hash.delete key
+          end
+        end
+
         self.new(entry_hash)
       end
 
@@ -189,7 +197,7 @@ module Lotus
 
         source = self.source
         source = source.to_canonical if source
-        Lotus::Activity.new(:actor        => self.author ? self.author.to_canonical : nil,
+        Lotus::Activity.new(:actor        => self.authors ? self.authors.first.to_canonical : nil,
                             :uid          => self.id,
                             :url          => self.url,
                             :source       => source,
