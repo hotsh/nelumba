@@ -264,6 +264,7 @@ module Lotus
 
     uri = URI(url)
     request = Net::HTTP::Get.new(uri.request_uri)
+    request['Accept'] = content_type
     request.content_type = content_type
 
     http = Net::HTTP.new(uri.hostname, uri.port)
