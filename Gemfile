@@ -9,9 +9,6 @@ group :test do
   gem "ansi"              # minitest colors
   gem "turn"              # minitest output
   gem "mocha"             # stubs
-
-  gem "awesome_print"
-  gem "debugger"
 end
 
 gem "lotus-i18n", :git => "git://github.com/hotsh/lotus-i18n.git"
