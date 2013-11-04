@@ -75,7 +75,7 @@ module Lotus
       end
 
       def link
-        links.group_by { |l| l.rel.intern if l.rel }
+        link_list = links.group_by { |l| l.rel.intern if l.rel }
       end
 
       def link= options
@@ -203,7 +203,6 @@ module Lotus
                             :source       => source,
                             :display_name => self.displayName,
                             :in_reply_to  => self.thr_in_reply_to.map(&:to_canonical),
-                            :link         => self.link,
                             :object       => object,
                             :type         => object_type,
                             :verb         => self.activity_verb,
