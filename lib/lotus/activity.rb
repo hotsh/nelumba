@@ -172,6 +172,12 @@ module Lotus
     #                  .sentence
     #   # => "wilkie posted a note"
     #
+    #   Lotus::Activity.new(:verb => :follow,
+    #                       :object => Lotus::Person.new(:name => "carol"),
+    #                       :actor => Lotus::Person.new(:name => "wilkie"))
+    #                  .sentence
+    #   # => "wilkie followed carol"
+    #
     #   # In Spanish
     #   Lotus::Activity.new(:verb => :post,
     #                       :object => Lotus::Note(:content => "hello"),
@@ -182,6 +188,7 @@ module Lotus
       Lotus::I18n.sentence({
         :actor => self.actor ? self.actor.short_name : nil,
         :object => self.type,
+        :person => self.object.is_a?(Lotus::Person) ? self.object.name : nil,
         :verb => self.verb,
         :target => self.target ? self.target.short_name : nil
       }.merge(options))
