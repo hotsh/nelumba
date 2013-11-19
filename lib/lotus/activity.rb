@@ -188,6 +188,7 @@ module Lotus
       Lotus::I18n.sentence({
         :actor => self.actor ? self.actor.short_name : nil,
         :object => self.type,
+        :object_owner => (self.verb == :favorite || self.verb == :share) ? self.object.author : nil,
         :person => self.object.is_a?(Lotus::Person) ? self.object.name : nil,
         :verb => self.verb,
         :target => self.target ? self.target.short_name : nil
