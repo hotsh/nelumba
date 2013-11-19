@@ -185,11 +185,41 @@ module Lotus
     #                  .sentence(:locale => :es)
     #   # => "wilkie puso una nota"
     def sentence(options = {})
+      object_owner = nil
+
+      if self.verb == :favorite || self.verb == :share
+        if self.object.author
+          object_owner = self.object.author.name
+        elsif self.object.actor.is_a? Lotus::Person
+          object_owner = self.object.actor.name
+        end
+      end
+
+      object = self.type
+
+      if self.verb == :favorite || self.verb == :share
+        if self.object
+          object = self.object.type
+        end
+      end
+
+      actor = nil
+
+      if self.actor
+        actor = self.actor.short_name
+      end
+
+      person = nil
+
+      if self.object.is_a?(Lotus::Person)
+        person = self.object.name
+      end
+
       Lotus::I18n.sentence({
-        :actor => self.actor ? self.actor.short_name : nil,
-        :object => self.type,
-        :object_owner => (self.verb == :favorite || self.verb == :share) ? self.object.author : nil,
-        :person => self.object.is_a?(Lotus::Person) ? self.object.name : nil,
+        :actor => actor,
+        :object => object,
+        :object_owner => object_owner,
+        :person => person,
         :verb => self.verb,
         :target => self.target ? self.target.short_name : nil
       }.merge(options))
