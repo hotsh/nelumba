@@ -11,5 +11,11 @@ group :test do
   gem "mocha"             # stubs
 end
 
+platforms :rbx do
+  gem "json"
+  gem "racc"
+  gem "rubysl"
+end
+
 gem "lotus-i18n", :git => "git://github.com/hotsh/lotus-i18n.git"
 gem "redfinger",  :git => "git://github.com/hotsh/redfinger.git"
