@@ -1,11 +1,20 @@
 # Lotus
 
+[![Build Status](https://travis-ci.org/hotsh/lotus.png?branch=master)](https://travis-ci.org/hotsh/lotus)
+
 This gem implements federated protocols which let your website connect and interact with any website implementing a federated space.
 Users of a federated service can communicate, produce and consume with users of all sites within that federation as one large community while also allowing them
 to host such websites on their own servers or choice of hosting provider.
 Specifically, this gem deals with handling the data streams and the technologies that are related to Lotus/pump.io such as ActivityStreams, PortableContacts, Webfinger, PubSubHubbub, and Salmon.
 
 One such application of this library (in its older form) is [rstat.us](https://rstat.us), which is a Twitter-like service that you can host yourself.
+
+## Related libraries
+
+* [lotus-i18n](https://github.com/hotsh/lotus-i18n) - Localization for activity-streams social applications.
+* [lotus-mongodb](https://github.com/hotsh/lotus-mongodb) - Persistence layer for lotus objects.
+* [rack-lotus](https://github.com/hotsh/rack-lotus) - Rack middleware to provide lotus controllers for HTTP access to lotus data.
+* [lotus-site](https://github.com/hotsh/lotus-site) - A Lotus based, full-featured website.
 
 ## Usage
 
