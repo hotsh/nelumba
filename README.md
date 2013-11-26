@@ -21,7 +21,7 @@ One such application of this library (in its older form) is [rstat.us](https://r
 Currently, only the immutable interface is available.
 
 ```
-require 'ostatus'
+require 'lotus'
 
 author = Lotus::Person.new(:uri   => "https://rstat.us/users/wilkie",
                            :email => "wilkie@xomb.org",
