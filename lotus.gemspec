@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = %q{Generalized federated system backend for social networks with ActivityStreams/OStatus/pump.io.}
   s.description = %q{This gem allows easier implementation and utilization of distributed, federated social networks.}
 
-  s.add_dependency "ratom", "~> 0.7.2"
+  s.add_dependency "ratom"
   s.add_dependency "ruby-hmac"
   s.add_dependency "rsa"
   s.add_dependency "time-lord"
