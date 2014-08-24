@@ -94,9 +94,9 @@ module Lotus
       ret
     end
 
-    # Returns a string containing the JSON representation of this Comment.
+    # Returns a string containing the JSON representation of this Object.
     def to_json(*args)
-      to_json_hash.delete_if {|k,v| v.nil?}.to_json(args)
+      to_json_hash.delete_if{|k,v| v.nil?}.to_json(*args)
     end
   end
 end
