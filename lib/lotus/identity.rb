@@ -36,6 +36,10 @@ module Lotus
     #                                identity.
     #   :profile_page             => The url for this identity's profile page.
     def initialize(options = {})
+      init(options)
+    end
+
+    def init(options = {})
       @public_key               = options[:public_key]
       @salmon_endpoint          = options[:salmon_endpoint]
       @dialback_endpoint        = options[:dialback_endpoint]

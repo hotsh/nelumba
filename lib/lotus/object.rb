@@ -30,6 +30,10 @@ module Lotus
     attr_reader :html
 
     def initialize(options = {}, &blk)
+      init(options, &blk)
+    end
+
+    def init(options = {}, &blk)
       @author       = options[:author]
       @content      = options[:content]
       @display_name = options[:display_name]

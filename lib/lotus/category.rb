@@ -24,6 +24,10 @@ module Lotus
 
     # Create a Category to apply to a feed or entry.
     def initialize(options = {})
+      init(options)
+    end
+
+    def init(options = {})
       @base = options[:base]
       @lang = options[:lang]
       @scheme = options[:scheme]

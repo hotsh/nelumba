@@ -97,7 +97,11 @@ module Lotus
     #                            :uid     => "1",
     #                            :url     => "http://example.com/feeds/1",
     #                            :authors => [author])
-    def initialize(options = {})
+    def initialize(options = {}, &blk)
+      init(options, &blk)
+    end
+
+    def init(options = {})
       super options
 
       @icon = options[:icon]

@@ -5,8 +5,12 @@ module Lotus
     attr_reader :items
     attr_reader :total_items
 
-    def initialize(options = {})
-      super options
+    def initialize(options = {}, &blk)
+      init(options, &blk)
+    end
+
+    def init(options = {}, &blk)
+      super(options, &blk)
 
       @items       = options[:items] || []
       @total_items = options[:total_items] || @items.count

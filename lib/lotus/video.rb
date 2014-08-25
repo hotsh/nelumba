@@ -11,8 +11,12 @@ module Lotus
     attr_reader :stream
 
     # Creates a new Video activity object.
-    def initialize(options = {})
-      super options
+    def initialize(options = {}, &blk)
+      init(options, &blk)
+    end
+
+    def init(options = {}, &blk)
+      super(options, &blk)
 
       @embed_code = options[:embed_code]
       @stream     = options[:stream]

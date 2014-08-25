@@ -16,7 +16,11 @@ module Lotus
     #   :url  => The url of the feed that will be published.
     #   :hubs => An array of hub urls that are used to handle load
     #            balancing pushes of new data. Default: []
-    def initialize(options = {})
+    def initialize(options = {}, &blk)
+      init(options, &blk)
+    end
+
+    def init(options = {}, &blk)
       if options[:feed]
         @url  = options[:feed].url
         @hubs = options[:feed].hubs

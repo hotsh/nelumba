@@ -8,7 +8,11 @@ module Lotus
     attr_reader :length
     attr_reader :md5
 
-    def initialize(options = {})
+    def initialize(options = {}, &blk)
+      init(options, &blk)
+    end
+
+    def init(options = {}, &blk)
       super options
 
       @md5         = options[:md5]

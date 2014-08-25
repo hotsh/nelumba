@@ -11,8 +11,12 @@ module Lotus
     attr_reader :file_url
     attr_reader :mime_type
 
-    def initialize(options = {})
-      super options
+    def initialize(options = {}, &blk)
+      init(options, &blk)
+    end
+
+    def init(options = {}, &blk)
+      super(options, &blk)
 
       @data        = options[:data]
       @compression = options[:compression]

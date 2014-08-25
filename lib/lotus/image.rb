@@ -4,8 +4,12 @@ module Lotus
 
     attr_reader :full_image
 
-    def initialize(options = {})
-      super options
+    def initialize(options = {}, &blk)
+      init(options, &blk)
+    end
+
+    def init(options = {}, &blk)
+      super(options, &blk)
 
       @full_image = options[:full_image]
     end

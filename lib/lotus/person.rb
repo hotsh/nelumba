@@ -128,6 +128,10 @@ module Lotus
     #   uri                => The uri that uniquely identifies this author.
     #   email              => The email of the author.
     def initialize(options = {})
+      init(options)
+    end
+
+    def init(options = {})
       @uri = options[:uri]
       @name = options[:name] || "anonymous"
       @email = options[:email]

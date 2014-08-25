@@ -4,7 +4,11 @@ module Lotus
 
     attr_reader :rating
 
-    def initialize(options = {})
+    def initialize(options = {}, &blk)
+      init(options, &blk)
+    end
+
+    def init(options = {}, &blk)
       super options
 
       @rating = options[:rating]

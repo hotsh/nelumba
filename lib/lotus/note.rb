@@ -15,7 +15,7 @@ module Lotus
     #   :updated      => When the note was last updated.
     #   :uid          => The unique id that identifies this note.
     def initialize(options = {}, &blk)
-      super(options, &blk)
+      init(options, &blk)
     end
 
     # Returns a hash of all relevant fields.

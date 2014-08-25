@@ -11,7 +11,11 @@ module Lotus
 
     attr_reader :location
 
-    def initialize(options = {})
+    def initialize(options = {}, &blk)
+      init(options, &blk)
+    end
+
+    def init(options = {}, &blk)
       super options
 
       @attending       = options[:attending]       || []

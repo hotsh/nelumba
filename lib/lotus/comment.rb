@@ -18,7 +18,11 @@ module Lotus
     #   :image        =>
     #   :published    => The Time when this comment was originally published.
     #   :updated      => The Time when this comment was last modified.
-    def initialize(options = {})
+    def initialize(options = {}, &blk)
+      init(options, &blk)
+    end
+
+    def init(options = {}, &blk)
       @in_reply_to  = options[:in_reply_to] || []
 
       super options

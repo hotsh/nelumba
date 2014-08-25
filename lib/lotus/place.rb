@@ -5,8 +5,12 @@ module Lotus
     attr_reader :position
     attr_reader :address
 
-    def initialize(options = {})
-      super options
+    def initialize(options = {}, &blk)
+      init(options, &blk)
+    end
+
+    def init(options = {}, &blk)
+      super(options, &blk)
 
       @position = options[:position]
       @address  = options[:address]

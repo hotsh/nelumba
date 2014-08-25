@@ -4,8 +4,12 @@ module Lotus
 
     attr_reader :target_url
 
-    def initialize(options = {})
-      super options
+    def initialize(options = {}, &blk)
+      init(options, &blk)
+    end
+
+    def init(options = {}, &blk)
+      super(options, &blk)
 
       @target_url = options[:target_url]
     end
