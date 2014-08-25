@@ -55,6 +55,9 @@ module Lotus
           Lotus::Atom::Entry.from_canonical(e)
         }
 
+        hash.delete :text
+        hash.delete :html
+
         # Ensure that the generator is encoded.
         if hash[:generator]
           hash[:generator] = Lotus::Atom::Generator.from_canonical(hash[:generator])

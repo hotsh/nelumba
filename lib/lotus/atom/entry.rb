@@ -88,14 +88,15 @@ module Lotus
         # Ensure that the content type is encoded.
         object = obj.object
 
+        title = object.title
+
+        content = object.text
+        content = object.html if object.html
+
+        content_type = nil
+        content_type = "html" if object.html
+
         if object.is_a? Lotus::Note
-          title = object.title
-
-          content = object.text
-          content = object.html if object.html
-
-          content_type = nil
-          content_type = "html" if object.html
         elsif object.is_a? Lotus::Comment
           content = nil
           content_type = nil

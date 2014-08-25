@@ -24,6 +24,7 @@ module Lotus
       element :content, :class => ::Atom::Content
       element :displayName
       element :id
+      element :title
       element :url
       element :summary
       element :updated, :published, :class => DateTime, :content_only => true
@@ -56,6 +57,9 @@ module Lotus
 
       def self.from_canonical(obj)
         entry_hash = obj.to_hash
+
+        entry_hash.delete :text
+        entry_hash.delete :html
 
         entry_hash[:id] = entry_hash[:uid]
         entry_hash.delete :uid
