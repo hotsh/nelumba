@@ -96,5 +96,21 @@ describe Lotus::Activity do
     it "should store an empty array of likes by default" do
       Lotus::Activity.new.likes.must_equal []
     end
+
+    it "should store an empty hash of interactions by default" do
+      Lotus::Activity.new.interactions.must_equal({})
+    end
+  end
+
+  describe "#interaction_count" do
+    it "should pull values out of interactions" do
+      Lotus::Activity.new(:interactions => {:share => {:count => 3}})
+                     .interaction_count(:share).must_equal 3
+    end
+
+    it "should defautl a value of 0 when verb isn't found" do
+      Lotus::Activity.new(:interactions => {:share => {:count => 3}})
+                     .interaction_count(:like).must_equal 0
+    end
   end
 end

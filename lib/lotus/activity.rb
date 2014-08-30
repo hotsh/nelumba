@@ -13,6 +13,13 @@ module Lotus
                       :place, :playlist, :product, :review, :service, :status,
                       :video]
 
+    # Holds a hash containing the information about interactions where keys
+    # are verbs.
+    #
+    # For instance, it could have a :share key, with a hash containing the
+    # number of times it has been shared.
+    attr_reader :interactions
+
     # The object of this activity.
     attr_reader :object
 
@@ -77,7 +84,9 @@ module Lotus
     #                    Or an array of Lotus::Entry's that this entry is a
     #                    response to. Use this when this Entry is a reply
     #                    to an existing Entry.
-    def initialize(options = {})
+    def initialize(options = {}, &blk)
+      super(options, &blk)
+
       @object      = options[:object]
 
       @type        = options[:type]
@@ -99,12 +108,25 @@ module Lotus
         options[:in_reply_to] = [options[:in_reply_to]]
       end
 
-      @in_reply_to  = options[:in_reply_to] || []
-      @replies      = options[:replies]     || []
+      @in_reply_to  = options[:in_reply_to]  || []
+      @replies      = options[:replies]      || []
 
-      @mentions     = options[:mentions]    || []
-      @likes        = options[:likes]       || []
-      @shares       = options[:shares]      || []
+      @mentions     = options[:mentions]     || []
+      @likes        = options[:likes]        || []
+      @shares       = options[:shares]       || []
+
+      @interactions = options[:interactions] || {}
+    end
+
+    # Returns the number of times the given verb has been used with this
+    # Activity.
+    def interaction_count(verb)
+      hash = self.interactions
+      if hash && hash.has_key?(verb)
+        hash[verb][:count] || 0
+      else
+        0
+      end
     end
 
     def published_ago_in_words
