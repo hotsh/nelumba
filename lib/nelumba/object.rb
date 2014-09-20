@@ -88,7 +88,7 @@ module Nelumba
         if author
           "#{$1}<a href='#{author.uri}'>@#{$2}</a>"
         else
-          "#{$1}<a href='#'>@#{$2}</a>"
+          "#{$1}@#{$2}"
         end
       end
 
