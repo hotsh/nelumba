@@ -46,8 +46,9 @@ module Nelumba
 
       # Alternative representations of 'content'
       @text         = options[:text] || @content || ""
-      @html         = options[:html] || to_html(&blk)
+      @content      = @content || options[:text]
 
+      @html         = options[:html] || to_html(&blk)
       @content      = @content || @html
     end
 
