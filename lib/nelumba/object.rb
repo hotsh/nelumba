@@ -34,22 +34,28 @@ module Nelumba
     end
 
     def init(options = {}, &blk)
-      @author       = options[:author]
-      @content      = options[:content]
-      @display_name = options[:display_name]
-      @uid          = options[:uid]
-      @url          = options[:url]
-      @summary      = options[:summary]
-      @published    = options[:published] || Time.now
-      @updated      = options[:updated] || Time.now
-      @title        = options[:title] || "Untitled"
+      @author        = options[:author]
+      @content       = options[:content]
+      @display_name  = options[:display_name]
+      @uid           = options[:uid]
+      @url           = options[:url]
+      @summary       = options[:summary]
+      @published     = options[:published] || Time.now
+      @updated       = options[:updated] || Time.now
+      @title         = options[:title] || "Untitled"
+
+      options[:published] = @published
+      options[:updated]   = @updated
+      options[:title]     = @title
 
       # Alternative representations of 'content'
-      @text         = options[:text] || @content || ""
-      @content      = @content || options[:text]
+      @text          = options[:text] || @content || ""
+      @content       = @content || options[:text]
+      options[:text] = @text
 
-      @html         = options[:html] || to_html(&blk)
-      @content      = @content || @html
+      @html          = options[:html] || to_html(&blk)
+      @content       = @content || @html
+      options[:html] = @html
     end
 
     # TODO: Convert html to safe text
