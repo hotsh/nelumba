@@ -219,6 +219,36 @@ module Nelumba
       self.act(author, :"stop-following")
     end
 
+    # Determines the displayed name to use to refer to this Person.
+    def preferred_display_name
+      if self.display_name
+        self.display_name
+      elsif self.name
+        self.name
+      elsif self.preferred_username
+        self.preferred_username
+      elsif self.nickname
+        self.nickname
+      else
+        self.uid
+      end
+    end
+
+    # Determines the short name to use to refer to this Person.
+    def preferred_short_name
+      if self.preferred_username
+        self.preferred_username
+      elsif self.nickname
+        self.nickname
+      elsif self.display_name
+        self.display_name
+      elsif self.name
+        self.name
+      else
+        self.uid
+      end
+    end
+
     # Returns a string containing the JSON representation of this Person.
     def to_json(*args)
       hash = to_hash.merge({:objectType => "person"})

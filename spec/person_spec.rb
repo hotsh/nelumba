@@ -147,4 +147,88 @@ describe Nelumba::Person do
       Nelumba::Person.new(:account => account).to_hash[:account].must_equal account
     end
   end
+
+  describe "#preferred_display_name" do
+    it "should use display_name over all else" do
+      author = Nelumba::Person.new(:display_name       => "display",
+                                   :name               => "name",
+                                   :preferred_username => "preferred",
+                                   :nickname           => "nickname",
+                                   :uid                => "unique")
+
+      author.preferred_display_name.must_equal "display"
+    end
+
+    it "should use name over all else when display name doesn't exist" do
+      author = Nelumba::Person.new(:name               => "name",
+                                   :preferred_username => "preferred",
+                                   :nickname           => "nickname",
+                                   :uid                => "unique")
+
+      author.preferred_display_name.must_equal "name"
+    end
+
+    it "should use preferred_username when name and display_name don't exist" do
+      author = Nelumba::Person.new(:preferred_username => "preferred",
+                                   :nickname           => "nickname",
+                                   :uid                => "unique")
+
+      author.preferred_display_name.must_equal "preferred"
+    end
+
+    it "should use nickname when it exists and others do not" do
+      author = Nelumba::Person.new(:nickname => "nickname",
+                                   :uid      => "unique")
+
+      author.preferred_display_name.must_equal "nickname"
+    end
+
+    it "should use uid when all else fails" do
+      author = Nelumba::Person.new(:uid => "unique")
+
+      author.preferred_display_name.must_equal "unique"
+    end
+  end
+
+  describe "#preferred_short_name" do
+    it "should use preferred_username over all else" do
+      author = Nelumba::Person.new(:display_name       => "display",
+                                   :name               => "name",
+                                   :preferred_username => "preferred",
+                                   :nickname           => "nickname",
+                                   :uid                => "unique")
+
+      author.preferred_short_name.must_equal "preferred"
+    end
+
+    it "should use nickname over all else when preferred_username name doesn't exist" do
+      author = Nelumba::Person.new(:name         => "name",
+                                   :display_name => "display",
+                                   :nickname     => "nickname",
+                                   :uid          => "unique")
+
+      author.preferred_short_name.must_equal "nickname"
+    end
+
+    it "should use display_name when nickname and preferred_username don't exist" do
+      author = Nelumba::Person.new(:name         => "name",
+                                   :display_name => "display",
+                                   :uid          => "unique")
+
+      author.preferred_short_name.must_equal "display"
+    end
+
+    it "should use name when it exists and others do not" do
+      author = Nelumba::Person.new(:name => "name",
+                                   :uid  => "unique")
+
+      author.preferred_short_name.must_equal "name"
+    end
+
+    it "should use uid when all else fails" do
+      author = Nelumba::Person.new(:uid => "unique")
+
+      author.preferred_short_name.must_equal "unique"
+    end
+  end
 end
