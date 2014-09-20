@@ -1,125 +1,125 @@
 require_relative 'helper'
-require_relative '../lib/lotus/file.rb'
+require_relative '../lib/nelumba/file.rb'
 
-describe Lotus::File do
+describe Nelumba::File do
   describe "#initialize" do
     it "should store an author" do
       author = mock('author')
-      Lotus::File.new(:author => author).author.must_equal author
+      Nelumba::File.new(:author => author).author.must_equal author
     end
 
     it "should store content" do
-      Lotus::File.new(:content => "txt").content.must_equal "txt"
+      Nelumba::File.new(:content => "txt").content.must_equal "txt"
     end
 
     it "should store the md5" do
-      Lotus::File.new(:md5 => "txt").md5.must_equal "txt"
+      Nelumba::File.new(:md5 => "txt").md5.must_equal "txt"
     end
 
     it "should store the file url" do
-      Lotus::File.new(:file_url => "txt").file_url.must_equal "txt"
+      Nelumba::File.new(:file_url => "txt").file_url.must_equal "txt"
     end
 
     it "should store the mime_type" do
-      Lotus::File.new(:mime_type => "txt").mime_type.must_equal "txt"
+      Nelumba::File.new(:mime_type => "txt").mime_type.must_equal "txt"
     end
 
     it "should store the length" do
-      Lotus::File.new(:length => "txt").length.must_equal "txt"
+      Nelumba::File.new(:length => "txt").length.must_equal "txt"
     end
 
     it "should store the published date" do
       time = mock('date')
-      Lotus::File.new(:published => time).published.must_equal time
+      Nelumba::File.new(:published => time).published.must_equal time
     end
 
     it "should store the updated date" do
       time = mock('date')
-      Lotus::File.new(:updated => time).updated.must_equal time
+      Nelumba::File.new(:updated => time).updated.must_equal time
     end
 
     it "should store a display name" do
-      Lotus::File.new(:display_name => "url")
+      Nelumba::File.new(:display_name => "url")
                         .display_name.must_equal "url"
     end
 
     it "should store a summary" do
-      Lotus::File.new(:summary => "url").summary.must_equal "url"
+      Nelumba::File.new(:summary => "url").summary.must_equal "url"
     end
 
     it "should store a url" do
-      Lotus::File.new(:url => "url").url.must_equal "url"
+      Nelumba::File.new(:url => "url").url.must_equal "url"
     end
 
     it "should store an id" do
-      Lotus::File.new(:uid => "id").uid.must_equal "id"
+      Nelumba::File.new(:uid => "id").uid.must_equal "id"
     end
   end
 
   describe "#to_hash" do
     it "should contain the content" do
-      Lotus::File.new(:content => "Hello")
+      Nelumba::File.new(:content => "Hello")
                         .to_hash[:content].must_equal "Hello"
     end
 
     it "should contain the md5" do
-      Lotus::File.new(:md5 => "txt")
+      Nelumba::File.new(:md5 => "txt")
                    .to_hash[:md5].must_equal "txt"
     end
 
     it "should contain the file url" do
-      Lotus::File.new(:file_url => "txt")
+      Nelumba::File.new(:file_url => "txt")
                    .to_hash[:file_url].must_equal "txt"
     end
 
     it "should contain the mime_type" do
-      Lotus::File.new(:mime_type => "txt")
+      Nelumba::File.new(:mime_type => "txt")
                    .to_hash[:mime_type].must_equal "txt"
     end
 
     it "should contain the length" do
-      Lotus::File.new(:length => "txt")
+      Nelumba::File.new(:length => "txt")
                    .to_hash[:length].must_equal "txt"
     end
 
     it "should contain the author" do
-      author = mock('Lotus::Person')
-      Lotus::File.new(:author => author).to_hash[:author].must_equal author
+      author = mock('Nelumba::Person')
+      Nelumba::File.new(:author => author).to_hash[:author].must_equal author
     end
 
     it "should contain the uid" do
-      Lotus::File.new(:uid => "Hello").to_hash[:uid].must_equal "Hello"
+      Nelumba::File.new(:uid => "Hello").to_hash[:uid].must_equal "Hello"
     end
 
     it "should contain the url" do
-      Lotus::File.new(:url => "Hello").to_hash[:url].must_equal "Hello"
+      Nelumba::File.new(:url => "Hello").to_hash[:url].must_equal "Hello"
     end
 
     it "should contain the summary" do
-      Lotus::File.new(:summary=> "Hello")
+      Nelumba::File.new(:summary=> "Hello")
                  .to_hash[:summary].must_equal "Hello"
     end
 
     it "should contain the display name" do
-      Lotus::File.new(:display_name => "Hello")
+      Nelumba::File.new(:display_name => "Hello")
                  .to_hash[:display_name].must_equal "Hello"
     end
 
     it "should contain the published date" do
       date = mock('Time')
-      Lotus::File.new(:published => date).to_hash[:published].must_equal date
+      Nelumba::File.new(:published => date).to_hash[:published].must_equal date
     end
 
     it "should contain the updated date" do
       date = mock('Time')
-      Lotus::File.new(:updated => date).to_hash[:updated].must_equal date
+      Nelumba::File.new(:updated => date).to_hash[:updated].must_equal date
     end
   end
 
   describe "#to_json" do
     before do
-      author = Lotus::Person.new :display_name => "wilkie"
-      @note = Lotus::File.new :content     => "Hello",
+      author = Nelumba::Person.new :display_name => "wilkie"
+      @note = Nelumba::File.new :content     => "Hello",
                                 :author      => author,
                                 :length      => 125,
                                 :md5         => "hash",

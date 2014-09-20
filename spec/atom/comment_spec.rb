@@ -1,11 +1,11 @@
 require_relative '../helper'
 
-require_relative '../../lib/lotus/atom/entry'
-require_relative '../../lib/lotus/atom/comment'
+require_relative '../../lib/nelumba/atom/entry'
+require_relative '../../lib/nelumba/atom/comment'
 
-describe Lotus::Atom::Comment do
+describe Nelumba::Atom::Comment do
   before do
-    author = Lotus::Person.new(:uri               => "http://example.com/users/1",
+    author = Nelumba::Person.new(:uri               => "http://example.com/users/1",
                                :email             => "user@example.com",
                                :name              => "wilkie",
                                :uid => "1",
@@ -42,10 +42,10 @@ describe Lotus::Atom::Comment do
                                  :birthday    => Date.today,
                                  :anniversary => Date.today)
 
-    @master = Lotus::Activity.new(
+    @master = Nelumba::Activity.new(
       :verb => :post,
       :actor => author,
-      :object => Lotus::Comment.new(:content => "hello",
+      :object => Nelumba::Comment.new(:content => "hello",
                                     :author => author,
                                     :display_name => "wilkie",
                                     :in_reply_to => [],
@@ -56,7 +56,7 @@ describe Lotus::Atom::Comment do
 
   describe "<xml>" do
     before do
-      @xml_str = Lotus::Atom::Entry.from_canonical(@master).to_xml
+      @xml_str = Nelumba::Atom::Entry.from_canonical(@master).to_xml
       @xml = XML::Parser.string(@xml_str).parse
     end
 

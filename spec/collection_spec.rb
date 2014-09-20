@@ -1,101 +1,101 @@
 require_relative 'helper'
-require_relative '../lib/lotus/collection.rb'
+require_relative '../lib/nelumba/collection.rb'
 
-describe Lotus::Collection do
+describe Nelumba::Collection do
   describe "#initialize" do
     it "should store content" do
-      Lotus::Collection.new(:content => "foo").content.must_equal "foo"
+      Nelumba::Collection.new(:content => "foo").content.must_equal "foo"
     end
 
     it "should store an author" do
       author = mock('author')
-      Lotus::Collection.new(:author => author).author.must_equal author
+      Nelumba::Collection.new(:author => author).author.must_equal author
     end
 
     it "should store a summary" do
-      Lotus::Collection.new(:summary => "url").summary.must_equal "url"
+      Nelumba::Collection.new(:summary => "url").summary.must_equal "url"
     end
 
     it "should store a display name" do
-      Lotus::Collection.new(:display_name => "url")
+      Nelumba::Collection.new(:display_name => "url")
                        .display_name.must_equal "url"
     end
 
     it "should store the published date" do
       time = mock('date')
-      Lotus::Collection.new(:published => time).published.must_equal time
+      Nelumba::Collection.new(:published => time).published.must_equal time
     end
 
     it "should store the updated date" do
       time = mock('date')
-      Lotus::Collection.new(:updated => time).updated.must_equal time
+      Nelumba::Collection.new(:updated => time).updated.must_equal time
     end
 
     it "should store a url" do
-      Lotus::Collection.new(:url => "url").url.must_equal "url"
+      Nelumba::Collection.new(:url => "url").url.must_equal "url"
     end
 
     it "should store an id" do
-      Lotus::Collection.new(:uid => "id").uid.must_equal "id"
+      Nelumba::Collection.new(:uid => "id").uid.must_equal "id"
     end
 
     it "should store an array of items" do
-      Lotus::Collection.new(:items => ["foo"]).items.must_equal ["foo"]
+      Nelumba::Collection.new(:items => ["foo"]).items.must_equal ["foo"]
     end
 
     it "should default items to an empty array" do
-      Lotus::Collection.new.items.must_equal []
+      Nelumba::Collection.new.items.must_equal []
     end
   end
 
   describe "#to_hash" do
     it "should contain the content" do
-      Lotus::Collection.new(:content => "Hello")
+      Nelumba::Collection.new(:content => "Hello")
                        .to_hash[:content].must_equal "Hello"
     end
 
     it "should contain the author" do
-      author = mock('Lotus::Person')
-      Lotus::Collection.new(:author => author).to_hash[:author].must_equal author
+      author = mock('Nelumba::Person')
+      Nelumba::Collection.new(:author => author).to_hash[:author].must_equal author
     end
 
     it "should contain the uid" do
-      Lotus::Collection.new(:uid => "Hello").to_hash[:uid].must_equal "Hello"
+      Nelumba::Collection.new(:uid => "Hello").to_hash[:uid].must_equal "Hello"
     end
 
     it "should contain the url" do
-      Lotus::Collection.new(:url => "Hello").to_hash[:url].must_equal "Hello"
+      Nelumba::Collection.new(:url => "Hello").to_hash[:url].must_equal "Hello"
     end
 
     it "should contain the summary" do
-      Lotus::Collection.new(:summary => "Hello")
+      Nelumba::Collection.new(:summary => "Hello")
                        .to_hash[:summary].must_equal "Hello"
     end
 
     it "should contain the display name" do
-      Lotus::Collection.new(:display_name => "Hello")
+      Nelumba::Collection.new(:display_name => "Hello")
                        .to_hash[:display_name].must_equal "Hello"
     end
 
     it "should contain the published date" do
       date = mock('Time')
-      Lotus::Collection.new(:published => date).to_hash[:published].must_equal date
+      Nelumba::Collection.new(:published => date).to_hash[:published].must_equal date
     end
 
     it "should contain the updated date" do
       date = mock('Time')
-      Lotus::Collection.new(:updated => date).to_hash[:updated].must_equal date
+      Nelumba::Collection.new(:updated => date).to_hash[:updated].must_equal date
     end
 
     it "should contain the array of items" do
-      Lotus::Collection.new(:items => ["f"]).to_hash[:items].must_equal ["f"]
+      Nelumba::Collection.new(:items => ["f"]).to_hash[:items].must_equal ["f"]
     end
   end
 
   describe "#to_json" do
     before do
-      author = Lotus::Person.new :display_name => "wilkie"
-      @note = Lotus::Collection.new :items        => ["Hello"],
+      author = Nelumba::Person.new :display_name => "wilkie"
+      @note = Nelumba::Collection.new :items        => ["Hello"],
                                     :author       => author,
                                     :uid          => "id",
                                     :url          => "url",

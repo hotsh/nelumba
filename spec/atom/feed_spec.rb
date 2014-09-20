@@ -1,15 +1,15 @@
 require_relative '../helper'
-require_relative '../../lib/lotus/feed.rb'
-require_relative '../../lib/lotus/atom/feed.rb'
+require_relative '../../lib/nelumba/feed.rb'
+require_relative '../../lib/nelumba/atom/feed.rb'
 
 # Sanity checks on atom generation because I don't trust ratom completely.
 #
 # Since I can't be completely sure how to test the implementations since they
 # are patchy inheritance, I'll just do big acceptance tests and overtest.
 # Somehow, these are still really fast.
-describe Lotus::Atom do
+describe Nelumba::Atom do
   before do
-    author = Lotus::Person.new(:uri               => "http://example.com/users/1",
+    author = Nelumba::Person.new(:uri               => "http://example.com/users/1",
                                :email             => "user@example.com",
                                :name              => "wilkie",
                                :uid => "1",
@@ -46,13 +46,13 @@ describe Lotus::Atom do
                                  :birthday    => Date.today,
                                  :anniversary => Date.today)
 
-    source_feed = Lotus::Feed.new(:title => "moo",
+    source_feed = Nelumba::Feed.new(:title => "moo",
                                   :authors => [author],
                                   :rights => "CC")
 
-    reply_to = Lotus::Activity.new(:type  => :note,
+    reply_to = Nelumba::Activity.new(:type  => :note,
                                    :actor => author,
-                                   :object => Lotus::Note.new(
+                                   :object => Nelumba::Note.new(
                                      :title => "My First Entry",
                                      :html => "Hello"),
                                    :uid => "54321",
@@ -60,9 +60,9 @@ describe Lotus::Atom do
                                    :published => Time.now,
                                    :updated => Time.now)
 
-    entry = Lotus::Activity.new(:actor => author,
+    entry = Nelumba::Activity.new(:actor => author,
                                 :type => :note,
-                                :object => Lotus::Note.new(
+                                :object => Nelumba::Note.new(
                                   :title => "My Entry",
                                   :html => "Hello"),
                                 :source => source_feed,
@@ -72,7 +72,7 @@ describe Lotus::Atom do
                                 :in_reply_to => reply_to,
                                 :updated => Time.now)
 
-    @master = Lotus::Feed.new(:title => "My Feed",
+    @master = Nelumba::Feed.new(:title => "My Feed",
                               :title_type => "html",
                               :subtitle => "Subtitle",
                               :subtitle_type => "html",
@@ -90,8 +90,8 @@ describe Lotus::Atom do
   end
 
   it "should be able to reform canonical structure using Atom" do
-    xml = Lotus::Atom::Feed.from_canonical(@master).to_xml
-    new_feed = Lotus::Atom::Feed.new(XML::Reader.string(xml)).to_canonical
+    xml = Nelumba::Atom::Feed.from_canonical(@master).to_xml
+    new_feed = Nelumba::Atom::Feed.new(XML::Reader.string(xml)).to_canonical
 
     old_hash = @master.to_hash
     new_hash = new_feed.to_hash
@@ -152,7 +152,7 @@ describe Lotus::Atom do
 
   describe "<xml>" do
     before do
-      @xml_str = Lotus::Atom::Feed.from_canonical(@master).to_xml
+      @xml_str = Nelumba::Atom::Feed.from_canonical(@master).to_xml
       @xml = XML::Parser.string(@xml_str).parse
     end
 
@@ -185,35 +185,35 @@ describe Lotus::Atom do
       end
 
       describe "<id>" do
-        it "should contain the id from Lotus::Feed" do
+        it "should contain the id from Nelumba::Feed" do
           @feed.find_first('xmlns:id', 'xmlns:http://www.w3.org/2005/Atom')
             .content.must_equal @master.uid
         end
       end
 
       describe "<rights>" do
-        it "should contain the rights from Lotus::Feed" do
+        it "should contain the rights from Nelumba::Feed" do
           @feed.find_first('xmlns:rights', 'xmlns:http://www.w3.org/2005/Atom')
             .content.must_equal @master.rights
         end
       end
 
       describe "<logo>" do
-        it "should contain the logo from Lotus::Feed" do
+        it "should contain the logo from Nelumba::Feed" do
           @feed.find_first('xmlns:logo', 'xmlns:http://www.w3.org/2005/Atom')
             .content.must_equal @master.logo
         end
       end
 
       describe "<icon>" do
-        it "should contain the icon from Lotus::Feed" do
+        it "should contain the icon from Nelumba::Feed" do
           @feed.find_first('xmlns:icon', 'xmlns:http://www.w3.org/2005/Atom')
             .content.must_equal @master.icon
         end
       end
 
       describe "<published>" do
-        it "should contain the time in the published field in Lotus::Feed" do
+        it "should contain the time in the published field in Nelumba::Feed" do
           time = @feed.find_first('xmlns:published',
                                   'xmlns:http://www.w3.org/2005/Atom').content
           DateTime::rfc3339(time).to_s.must_equal @master.published.to_datetime.to_s
@@ -221,7 +221,7 @@ describe Lotus::Atom do
       end
 
       describe "<updated>" do
-        it "should contain the time in the updated field in Lotus::Feed" do
+        it "should contain the time in the updated field in Nelumba::Feed" do
           time = @feed.find_first('xmlns:updated',
                                   'xmlns:http://www.w3.org/2005/Atom').content
           DateTime::rfc3339(time).to_s.must_equal @master.updated.to_datetime.to_s
@@ -253,11 +253,11 @@ describe Lotus::Atom do
           @title = @feed.find_first('xmlns:title', 'xmlns:http://www.w3.org/2005/Atom')
         end
 
-        it "should contain the title from Lotus::Feed" do
+        it "should contain the title from Nelumba::Feed" do
           @title.content.must_equal @master.title
         end
 
-        it "should contain the type attribute from Lotus::Feed" do
+        it "should contain the type attribute from Nelumba::Feed" do
           @title.attributes.get_attribute('type').value.must_equal @master.title_type
         end
       end
@@ -267,11 +267,11 @@ describe Lotus::Atom do
           @subtitle = @feed.find_first('xmlns:subtitle', 'xmlns:http://www.w3.org/2005/Atom')
         end
 
-        it "should contain the subtitle from Lotus::Feed" do
+        it "should contain the subtitle from Nelumba::Feed" do
           @subtitle.content.must_equal @master.subtitle
         end
 
-        it "should contain the type attribute from Lotus::Feed" do
+        it "should contain the type attribute from Nelumba::Feed" do
           @subtitle.attributes.get_attribute('type').value.must_equal @master.subtitle_type
         end
       end

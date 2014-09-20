@@ -1,98 +1,98 @@
 require_relative 'helper'
-require_relative '../lib/lotus/bookmark.rb'
+require_relative '../lib/nelumba/bookmark.rb'
 
-describe Lotus::Bookmark do
+describe Nelumba::Bookmark do
   describe "#initialize" do
     it "should store an author" do
       author = mock('author')
-      Lotus::Bookmark.new(:author => author).author.must_equal author
+      Nelumba::Bookmark.new(:author => author).author.must_equal author
     end
 
     it "should store the target url" do
-      Lotus::Bookmark.new(:target_url => "txt").target_url.must_equal "txt"
+      Nelumba::Bookmark.new(:target_url => "txt").target_url.must_equal "txt"
     end
 
     it "should store content" do
-      Lotus::Bookmark.new(:content => "txt").content.must_equal "txt"
+      Nelumba::Bookmark.new(:content => "txt").content.must_equal "txt"
     end
 
     it "should store the published date" do
       time = mock('date')
-      Lotus::Bookmark.new(:published => time).published.must_equal time
+      Nelumba::Bookmark.new(:published => time).published.must_equal time
     end
 
     it "should store the updated date" do
       time = mock('date')
-      Lotus::Bookmark.new(:updated => time).updated.must_equal time
+      Nelumba::Bookmark.new(:updated => time).updated.must_equal time
     end
 
     it "should store a display name" do
-      Lotus::Bookmark.new(:display_name => "url")
+      Nelumba::Bookmark.new(:display_name => "url")
                         .display_name.must_equal "url"
     end
 
     it "should store a summary" do
-      Lotus::Bookmark.new(:summary => "url").summary.must_equal "url"
+      Nelumba::Bookmark.new(:summary => "url").summary.must_equal "url"
     end
 
     it "should store a url" do
-      Lotus::Bookmark.new(:url => "url").url.must_equal "url"
+      Nelumba::Bookmark.new(:url => "url").url.must_equal "url"
     end
 
     it "should store an id" do
-      Lotus::Bookmark.new(:uid => "id").uid.must_equal "id"
+      Nelumba::Bookmark.new(:uid => "id").uid.must_equal "id"
     end
   end
 
   describe "#to_hash" do
     it "should contain the content" do
-      Lotus::Bookmark.new(:content => "Hello")
+      Nelumba::Bookmark.new(:content => "Hello")
                         .to_hash[:content].must_equal "Hello"
     end
 
     it "should contain the author" do
-      author = mock('Lotus::Person')
-      Lotus::Bookmark.new(:author => author).to_hash[:author].must_equal author
+      author = mock('Nelumba::Person')
+      Nelumba::Bookmark.new(:author => author).to_hash[:author].must_equal author
     end
 
     it "should contain the uid" do
-      Lotus::Bookmark.new(:uid => "Hello").to_hash[:uid].must_equal "Hello"
+      Nelumba::Bookmark.new(:uid => "Hello").to_hash[:uid].must_equal "Hello"
     end
 
     it "should contain the target_url" do
-      Lotus::Bookmark.new(:target_url => "Hello")
+      Nelumba::Bookmark.new(:target_url => "Hello")
                      .to_hash[:target_url].must_equal "Hello"
     end
 
     it "should contain the url" do
-      Lotus::Bookmark.new(:url => "Hello").to_hash[:url].must_equal "Hello"
+      Nelumba::Bookmark.new(:url => "Hello").to_hash[:url].must_equal "Hello"
     end
 
     it "should contain the summary" do
-      Lotus::Bookmark.new(:summary=> "Hello")
+      Nelumba::Bookmark.new(:summary=> "Hello")
                  .to_hash[:summary].must_equal "Hello"
     end
 
     it "should contain the display name" do
-      Lotus::Bookmark.new(:display_name => "Hello")
+      Nelumba::Bookmark.new(:display_name => "Hello")
                  .to_hash[:display_name].must_equal "Hello"
     end
 
     it "should contain the published date" do
       date = mock('Time')
-      Lotus::Bookmark.new(:published => date).to_hash[:published].must_equal date
+      Nelumba::Bookmark.new(:published => date).to_hash[:published].must_equal date
     end
 
     it "should contain the updated date" do
       date = mock('Time')
-      Lotus::Bookmark.new(:updated => date).to_hash[:updated].must_equal date
+      Nelumba::Bookmark.new(:updated => date).to_hash[:updated].must_equal date
     end
   end
 
   describe "#to_json" do
     before do
-      author = Lotus::Person.new :display_name => "wilkie"
-      @note = Lotus::Bookmark.new :content      => "Hello",
+      author = Nelumba::Person.new :display_name => "wilkie"
+      @note = Nelumba::Bookmark.new :content      => "Hello",
                                   :author       => author,
                                   :uid          => "id",
                                   :target_url   => "target",

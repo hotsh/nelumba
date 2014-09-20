@@ -7,4 +7,4 @@ end
 
 require "mocha/setup"
 
-require 'lotus'
+require 'nelumba'

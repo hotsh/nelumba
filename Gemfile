@@ -17,5 +17,5 @@ platforms :rbx do
   gem "rubysl"
 end
 
-gem "lotus-i18n", :git => "git://github.com/hotsh/lotus-i18n.git"
+gem "nelumba-i18n", :git => "git://github.com/hotsh/nelumba-i18n.git"
 gem "redfinger",  :git => "git://github.com/hotsh/redfinger.git"

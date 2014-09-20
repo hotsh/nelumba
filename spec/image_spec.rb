@@ -1,98 +1,98 @@
 require_relative 'helper'
-require_relative '../lib/lotus/image.rb'
+require_relative '../lib/nelumba/image.rb'
 
-describe Lotus::Image do
+describe Nelumba::Image do
   describe "#initialize" do
     it "should store an author" do
       author = mock('author')
-      Lotus::Image.new(:author => author).author.must_equal author
+      Nelumba::Image.new(:author => author).author.must_equal author
     end
 
     it "should store full_image" do
-      Lotus::Image.new(:full_image => "txt").full_image.must_equal "txt"
+      Nelumba::Image.new(:full_image => "txt").full_image.must_equal "txt"
     end
 
     it "should store content" do
-      Lotus::Image.new(:content => "txt").content.must_equal "txt"
+      Nelumba::Image.new(:content => "txt").content.must_equal "txt"
     end
 
     it "should store the published date" do
       time = mock('date')
-      Lotus::Image.new(:published => time).published.must_equal time
+      Nelumba::Image.new(:published => time).published.must_equal time
     end
 
     it "should store the updated date" do
       time = mock('date')
-      Lotus::Image.new(:updated => time).updated.must_equal time
+      Nelumba::Image.new(:updated => time).updated.must_equal time
     end
 
     it "should store a display name" do
-      Lotus::Image.new(:display_name => "url")
+      Nelumba::Image.new(:display_name => "url")
                         .display_name.must_equal "url"
     end
 
     it "should store a summary" do
-      Lotus::Image.new(:summary => "url").summary.must_equal "url"
+      Nelumba::Image.new(:summary => "url").summary.must_equal "url"
     end
 
     it "should store a url" do
-      Lotus::Image.new(:url => "url").url.must_equal "url"
+      Nelumba::Image.new(:url => "url").url.must_equal "url"
     end
 
     it "should store an id" do
-      Lotus::Image.new(:uid => "id").uid.must_equal "id"
+      Nelumba::Image.new(:uid => "id").uid.must_equal "id"
     end
   end
 
   describe "#to_hash" do
     it "should contain the content" do
-      Lotus::Image.new(:content => "Hello")
+      Nelumba::Image.new(:content => "Hello")
                         .to_hash[:content].must_equal "Hello"
     end
 
     it "should contain the author" do
-      author = mock('Lotus::Person')
-      Lotus::Image.new(:author => author).to_hash[:author].must_equal author
+      author = mock('Nelumba::Person')
+      Nelumba::Image.new(:author => author).to_hash[:author].must_equal author
     end
 
     it "should contain the full_image" do
-      Lotus::Image.new(:full_image => "Hello")
+      Nelumba::Image.new(:full_image => "Hello")
                   .to_hash[:full_image].must_equal "Hello"
     end
 
     it "should contain the uid" do
-      Lotus::Image.new(:uid => "Hello").to_hash[:uid].must_equal "Hello"
+      Nelumba::Image.new(:uid => "Hello").to_hash[:uid].must_equal "Hello"
     end
 
     it "should contain the url" do
-      Lotus::Image.new(:url => "Hello").to_hash[:url].must_equal "Hello"
+      Nelumba::Image.new(:url => "Hello").to_hash[:url].must_equal "Hello"
     end
 
     it "should contain the summary" do
-      Lotus::Image.new(:summary=> "Hello")
+      Nelumba::Image.new(:summary=> "Hello")
                  .to_hash[:summary].must_equal "Hello"
     end
 
     it "should contain the display name" do
-      Lotus::Image.new(:display_name => "Hello")
+      Nelumba::Image.new(:display_name => "Hello")
                  .to_hash[:display_name].must_equal "Hello"
     end
 
     it "should contain the published date" do
       date = mock('Time')
-      Lotus::Image.new(:published => date).to_hash[:published].must_equal date
+      Nelumba::Image.new(:published => date).to_hash[:published].must_equal date
     end
 
     it "should contain the updated date" do
       date = mock('Time')
-      Lotus::Image.new(:updated => date).to_hash[:updated].must_equal date
+      Nelumba::Image.new(:updated => date).to_hash[:updated].must_equal date
     end
   end
 
   describe "#to_json" do
     before do
-      author = Lotus::Person.new :display_name => "wilkie"
-      @note = Lotus::Image.new :content      => "Hello",
+      author = Nelumba::Person.new :display_name => "wilkie"
+      @note = Nelumba::Image.new :content      => "Hello",
                                :author       => author,
                                :full_image   => "img",
                                :uid          => "id",

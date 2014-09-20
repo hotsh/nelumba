@@ -1,143 +1,143 @@
 require_relative 'helper'
-require_relative '../lib/lotus/binary.rb'
+require_relative '../lib/nelumba/binary.rb'
 
-describe Lotus::Binary do
+describe Nelumba::Binary do
   describe "#initialize" do
     it "should store an author" do
       author = mock('author')
-      Lotus::Binary.new(:author => author).author.must_equal author
+      Nelumba::Binary.new(:author => author).author.must_equal author
     end
 
     it "should store content" do
-      Lotus::Binary.new(:content => "txt").content.must_equal "txt"
+      Nelumba::Binary.new(:content => "txt").content.must_equal "txt"
     end
 
     it "should store the data" do
-      Lotus::Binary.new(:data => "txt").data.must_equal "txt"
+      Nelumba::Binary.new(:data => "txt").data.must_equal "txt"
     end
 
     it "should store the compression" do
-      Lotus::Binary.new(:compression => "txt").compression.must_equal "txt"
+      Nelumba::Binary.new(:compression => "txt").compression.must_equal "txt"
     end
 
     it "should store the md5" do
-      Lotus::Binary.new(:md5 => "txt").md5.must_equal "txt"
+      Nelumba::Binary.new(:md5 => "txt").md5.must_equal "txt"
     end
 
     it "should store the file url" do
-      Lotus::Binary.new(:file_url => "txt").file_url.must_equal "txt"
+      Nelumba::Binary.new(:file_url => "txt").file_url.must_equal "txt"
     end
 
     it "should store the mime_type" do
-      Lotus::Binary.new(:mime_type => "txt").mime_type.must_equal "txt"
+      Nelumba::Binary.new(:mime_type => "txt").mime_type.must_equal "txt"
     end
 
     it "should store the length" do
-      Lotus::Binary.new(:length => "txt").length.must_equal "txt"
+      Nelumba::Binary.new(:length => "txt").length.must_equal "txt"
     end
 
     it "should store the published date" do
       time = mock('date')
-      Lotus::Binary.new(:published => time).published.must_equal time
+      Nelumba::Binary.new(:published => time).published.must_equal time
     end
 
     it "should store the updated date" do
       time = mock('date')
-      Lotus::Binary.new(:updated => time).updated.must_equal time
+      Nelumba::Binary.new(:updated => time).updated.must_equal time
     end
 
     it "should store a display name" do
-      Lotus::Binary.new(:display_name => "url")
+      Nelumba::Binary.new(:display_name => "url")
                         .display_name.must_equal "url"
     end
 
     it "should store a summary" do
-      Lotus::Binary.new(:summary => "url").summary.must_equal "url"
+      Nelumba::Binary.new(:summary => "url").summary.must_equal "url"
     end
 
     it "should store a url" do
-      Lotus::Binary.new(:url => "url").url.must_equal "url"
+      Nelumba::Binary.new(:url => "url").url.must_equal "url"
     end
 
     it "should store an id" do
-      Lotus::Binary.new(:uid => "id").uid.must_equal "id"
+      Nelumba::Binary.new(:uid => "id").uid.must_equal "id"
     end
   end
 
   describe "#to_hash" do
     it "should contain the content" do
-      Lotus::Binary.new(:content => "Hello")
+      Nelumba::Binary.new(:content => "Hello")
                         .to_hash[:content].must_equal "Hello"
     end
 
     it "should contain the data" do
-      Lotus::Binary.new(:data => "txt")
+      Nelumba::Binary.new(:data => "txt")
                    .to_hash[:data].must_equal "txt"
     end
 
     it "should contain the compression" do
-      Lotus::Binary.new(:compression => "txt")
+      Nelumba::Binary.new(:compression => "txt")
                    .to_hash[:compression].must_equal "txt"
     end
 
     it "should contain the md5" do
-      Lotus::Binary.new(:md5 => "txt")
+      Nelumba::Binary.new(:md5 => "txt")
                    .to_hash[:md5].must_equal "txt"
     end
 
     it "should contain the file url" do
-      Lotus::Binary.new(:file_url => "txt")
+      Nelumba::Binary.new(:file_url => "txt")
                    .to_hash[:file_url].must_equal "txt"
     end
 
     it "should contain the mime_type" do
-      Lotus::Binary.new(:mime_type => "txt")
+      Nelumba::Binary.new(:mime_type => "txt")
                    .to_hash[:mime_type].must_equal "txt"
     end
 
     it "should contain the length" do
-      Lotus::Binary.new(:length => "txt")
+      Nelumba::Binary.new(:length => "txt")
                    .to_hash[:length].must_equal "txt"
     end
 
     it "should contain the author" do
-      author = mock('Lotus::Person')
-      Lotus::Binary.new(:author => author).to_hash[:author].must_equal author
+      author = mock('Nelumba::Person')
+      Nelumba::Binary.new(:author => author).to_hash[:author].must_equal author
     end
 
     it "should contain the uid" do
-      Lotus::Binary.new(:uid => "Hello").to_hash[:uid].must_equal "Hello"
+      Nelumba::Binary.new(:uid => "Hello").to_hash[:uid].must_equal "Hello"
     end
 
     it "should contain the url" do
-      Lotus::Binary.new(:url => "Hello").to_hash[:url].must_equal "Hello"
+      Nelumba::Binary.new(:url => "Hello").to_hash[:url].must_equal "Hello"
     end
 
     it "should contain the summary" do
-      Lotus::Binary.new(:summary=> "Hello")
+      Nelumba::Binary.new(:summary=> "Hello")
                  .to_hash[:summary].must_equal "Hello"
     end
 
     it "should contain the display name" do
-      Lotus::Binary.new(:display_name => "Hello")
+      Nelumba::Binary.new(:display_name => "Hello")
                  .to_hash[:display_name].must_equal "Hello"
     end
 
     it "should contain the published date" do
       date = mock('Time')
-      Lotus::Binary.new(:published => date).to_hash[:published].must_equal date
+      Nelumba::Binary.new(:published => date).to_hash[:published].must_equal date
     end
 
     it "should contain the updated date" do
       date = mock('Time')
-      Lotus::Binary.new(:updated => date).to_hash[:updated].must_equal date
+      Nelumba::Binary.new(:updated => date).to_hash[:updated].must_equal date
     end
   end
 
   describe "#to_json" do
     before do
-      author = Lotus::Person.new :display_name => "wilkie"
-      @note = Lotus::Binary.new :content     => "Hello",
+      author = Nelumba::Person.new :display_name => "wilkie"
+      @note = Nelumba::Binary.new :content     => "Hello",
                                 :author      => author,
                                 :data        => "data",
                                 :length      => 125,

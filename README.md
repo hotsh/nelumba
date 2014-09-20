@@ -1,48 +1,48 @@
-# Lotus
+# Nelumba
 
-[![Build Status](https://travis-ci.org/hotsh/lotus.png?branch=master)](https://travis-ci.org/hotsh/lotus)
+[![Build Status](https://travis-ci.org/hotsh/nelumba.png?branch=master)](https://travis-ci.org/hotsh/nelumba)
 
 This gem implements federated protocols which let your website connect and interact with any website implementing a federated space.
 Users of a federated service can communicate, produce and consume with users of all sites within that federation as one large community while also allowing them
 to host such websites on their own servers or choice of hosting provider.
-Specifically, this gem deals with handling the data streams and the technologies that are related to Lotus/pump.io such as ActivityStreams, PortableContacts, Webfinger, PubSubHubbub, and Salmon.
+Specifically, this gem deals with handling the data streams and the technologies that are related to Nelumba/pump.io such as ActivityStreams, PortableContacts, Webfinger, PubSubHubbub, and Salmon.
 
 One such application of this library (in its older form) is [rstat.us](https://rstat.us), which is a Twitter-like service that you can host yourself.
 
 ## Related libraries
 
-* [lotus-i18n](https://github.com/hotsh/lotus-i18n) - Localization for activity-streams social applications.
-* [lotus-mongodb](https://github.com/hotsh/lotus-mongodb) - Persistence layer for lotus objects.
-* [rack-lotus](https://github.com/hotsh/rack-lotus) - Rack middleware to provide lotus controllers for HTTP access to lotus data.
-* [lotus-site](https://github.com/hotsh/lotus-site) - A Lotus based, full-featured website.
+* [nelumba-i18n](https://github.com/hotsh/nelumba-i18n) - Localization for activity-streams social applications.
+* [nelumba-mongodb](https://github.com/hotsh/nelumba-mongodb) - Persistence layer for nelumba objects.
+* [rack-nelumba](https://github.com/hotsh/rack-nelumba) - Rack middleware to provide nelumba controllers for HTTP access to nelumba data.
+* [nelumba-site](https://github.com/hotsh/nelumba-site) - A Nelumba based, full-featured website.
 
 ## Usage
 
 Currently, only the immutable interface is available.
 
 ```
-require 'lotus'
+require 'nelumba'
 
-author = Lotus::Person.new(:uri   => "https://rstat.us/users/wilkie",
-                           :email => "wilkie@xomb.org",
-                           :name  => "wilkie")
+author = Nelumba::Person.new(:uri   => "https://rstat.us/users/wilkie",
+                             :email => "wilkie@xomb.org",
+                             :name  => "wilkie")
 
-blog_post = Lotus::Activity.new(:activity => :post,
-                                :title => "Lotus gem",
-                                :actor => author,
-                                :content => "Long blog post",
-                                :content_type => "text/html",
-                                :id => "1",
-                                :uri => "http://blog.davewilkinsonii.com/posts/ostatus_gem",
-                                :published => Time.now)
+blog_post = Nelumba::Activity.new(:activity => :post,
+                                  :title => "Nelumba gem",
+                                  :actor => author,
+                                  :content => "Long blog post",
+                                  :content_type => "text/html",
+                                  :id => "1",
+                                  :uri => "http://blog.davewilkinsonii.com/posts/ostatus_gem",
+                                  :published => Time.now)
 
-feed = Lotus::Feed.new(:title => "wilkie writes a thing",
-                       :url => "http://blog.davewilkinsonii.com",
-                       :rights => "CC0",
-                       :hubs => ["http://hub.davewilkinsonii.com"],
-                       :authors => [author],
-                       :published => Time.now,
-                       :entries => [blog_post])
+feed = Nelumba::Feed.new(:title => "wilkie writes a thing",
+                         :url => "http://blog.davewilkinsonii.com",
+                         :rights => "CC0",
+                         :hubs => ["http://hub.davewilkinsonii.com"],
+                         :authors => [author],
+                         :published => Time.now,
+                         :entries => [blog_post])
 ```
 
 To generate an Atom representation:
@@ -51,10 +51,10 @@ To generate an Atom representation:
 feed.to_atom
 ```
 
-To generate a collection of Lotus objects from Atom:
+To generate a collection of Nelumba objects from Atom:
 
 ```
-Lotus.feed_from_url("https://rstat.us/users/wilkieii/feed")
+Nelumba.feed_from_url("https://rstat.us/users/wilkieii/feed")
 ```
 
 ## Object Documentation
@@ -66,11 +66,11 @@ The Feed is the aggregate. It holds a collection of entries written by a set of 
 #### Usage
 
 ```
-author = Lotus::Person.new(:name => "Kelly")
-feed = Lotus::Feed.new(:title   => "My Feed",
-                       :id      => "1",
-                       :url     => "http://example.com/feeds/1",
-                       :authors => [author])
+author = Nelumba::Person.new(:name => "Kelly")
+feed = Nelumba::Feed.new(:title   => "My Feed",
+                         :id      => "1",
+                         :url     => "http://example.com/feeds/1",
+                         :authors => [author])
 ```
 
 #### Fields
@@ -81,11 +81,11 @@ title         => The title for this feed. Defaults: "Untitled"
 title_type    => The content type for the title.
 subtitle      => The subtitle for this feed.
 subtitle_type => The content type for the subtitle.
-authors       => The list of Lotus::Person's for this feed.
+authors       => The list of Nelumba::Person's for this feed.
                  Defaults: []
-contributors  => The list of Lotus::Person's that contributed to this
+contributors  => The list of Nelumba::Person's that contributed to this
                  feed. Defaults: []
-entries       => The list of Lotus::Activity's for this feed.
+entries       => The list of Nelumba::Activity's for this feed.
                  Defaults: []
 icon          => The url of the icon that represents this feed. It
                  should have an aspect ratio of 1 horizontal to 1
@@ -94,7 +94,7 @@ icon          => The url of the icon that represents this feed. It
 logo          => The url of the logo that represents this feed. It
                  should have an aspect ratio of 2 horizontal to 1
                  vertical.
-categories    => An array of Lotus::Category's that describe how to
+categories    => An array of Nelumba::Category's that describe how to
                  categorize and describe the content of the feed.
                  Defaults: []
 rights        => A String depicting the rights of entries without
@@ -106,9 +106,9 @@ published     => The DateTime representing when this feed was originally
                  published.
 salmon_url    => The url of the salmon endpoint, if one exists, for this
                  feed.
-links         => An array of Lotus::Link that adds relations to other
+links         => An array of Nelumba::Link that adds relations to other
                  resources.
-generator     => An Lotus::Generator representing the agent
+generator     => An Nelumba::Generator representing the agent
                  responsible for generating this feed.
 ```
 
@@ -121,17 +121,17 @@ interpret the object. It can be a :note or :post or :image, etc.
 
 #### Usage
 ```
-entry = Lotus::Activity.new(:type => :note,
-                            :title => "wilkie's Daily Update",
-                            :content => "My day is going really well!",
-                            :id => "123",
-                            :url => "http://example.com/entries/123")
+entry = Nelumba::Activity.new(:type => :note,
+                              :title => "wilkie's Daily Update",
+                              :content => "My day is going really well!",
+                              :id => "123",
+                              :url => "http://example.com/entries/123")
 ```
 
 #### Fields
 ```
 :title        => The title of the entry. Defaults: "Untitled"
-:actor        => An Lotus::Person responsible for generating this entry.
+:actor        => An Nelumba::Person responsible for generating this entry.
 :content      => The content of the entry. Defaults: ""
 :content_type => The MIME type of the content.
 :published    => The DateTime depicting when the entry was originally
@@ -141,10 +141,10 @@ entry = Lotus::Activity.new(:type => :note,
 :id           => The unique id that identifies this entry.
 :activity     => The activity this entry represents. Either a single string
                  denoting what type of object this entry represents, or an
-                 entire Lotus::Activity when a more detailed description is
+                 entire Nelumba::Activity when a more detailed description is
                  appropriate.
-:in_reply_to  => An Lotus::Activity for which this entry is a response.
-                 Or an array of Lotus::Activity's that this entry is a
+:in_reply_to  => An Nelumba::Activity for which this entry is a response.
+                 Or an array of Nelumba::Activity's that this entry is a
                  response to. Use this when this Activity is a reply
                  to an existing Activity.
 ```
@@ -158,16 +158,16 @@ represent a great deal of information about a person.
 #### Usage
 
 ```
-author = Lotus::Person.new(:name => "wilkie",
-                           :uri => "https://rstat.us/users/wilkie",
-                           :email => "wilkie@xomb.org",
-                           :preferredUsername => "wilkie",
-                           :organization => {:name => "Hackers of the Severed Hand",
-                                             :department => "Software",
-                                             :title => "Founder"},
-                           :gender => "androgynous",
-                           :display_name => "Dave Wilkinson",
-                           :birthday => Time.new(1987, 2, 9))
+author = Nelumba::Person.new(:name => "wilkie",
+                             :uri => "https://rstat.us/users/wilkie",
+                             :email => "wilkie@xomb.org",
+                             :preferredUsername => "wilkie",
+                             :organization => {:name => "Hackers of the Severed Hand",
+                                               :department => "Software",
+                                               :title => "Founder"},
+                             :gender => "androgynous",
+                             :display_name => "Dave Wilkinson",
+                             :birthday => Time.new(1987, 2, 9))
 ```
 
 #### Fields
@@ -235,8 +235,8 @@ author = Lotus::Person.new(:name => "wilkie",
 
 * General cleanup and abstraction of elements of Atom et al that aren't very consistent or useful.
 * Add a persistence layer and allow this to be mixed with Rails and Sinatra style models.
-* Add rails/sinatra aides to allow rapid development of Lotus powered websites.
-* Add already written osub/opub functionality to allow this gem to subscribe directly to other Lotus powered websites.
+* Add rails/sinatra aides to allow rapid development of Nelumba powered websites.
+* Add already written osub/opub functionality to allow this gem to subscribe directly to other Nelumba powered websites.
 * Add Webfinger user identity and verification written in the Salmon library and pull the remaining logic out of rstat.us.
 * Add JSON backend.
-* Write a PuSH hub to aid in small-scale deployment. (Possibly as a detached project. Lotus talks to the hub via a socket.)
+* Write a PuSH hub to aid in small-scale deployment. (Possibly as a detached project. Nelumba talks to the hub via a socket.)
