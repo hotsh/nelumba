@@ -228,7 +228,7 @@ module Nelumba
       actor = nil
 
       if self.actor
-        actor = self.actor.short_name
+        actor = self.actor.preferred_display_name
       end
 
       person = nil
@@ -243,7 +243,7 @@ module Nelumba
         :object_owner => object_owner,
         :person => person,
         :verb => self.verb,
-        :target => self.target ? self.target.short_name : nil
+        :target => self.target ? self.target.preferred_display_name : nil
       }.merge(options))
     end
   end
