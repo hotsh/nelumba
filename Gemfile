@@ -18,4 +18,3 @@ platforms :rbx do
 end
 
 gem "nelumba-i18n", :git => "git://github.com/hotsh/nelumba-i18n.git"
-gem "redfinger",  :git => "git://github.com/hotsh/redfinger.git"

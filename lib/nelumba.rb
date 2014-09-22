@@ -36,6 +36,9 @@ require 'nelumba/crypto'
 require 'nelumba/subscription'
 require 'nelumba/publisher'
 
+# Discovery
+require 'nelumba/discover'
+
 # This module contains elements that allow federated interaction. It also
 # contains methods to construct these objects from external sources.
 module Nelumba
