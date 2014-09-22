@@ -70,8 +70,10 @@ module Nelumba
       host_meta = Nelumba::Discover.pull_url(url, accept)
 
       if host_meta.nil?
+        # TODO: Should we do this? probably not. ugh. but we must.
         scheme = 'http'
         url = "#{scheme}://#{domain}#{port}/.well-known/host-meta"
+        puts url
         host_meta = Nelumba::Discover.pull_url(url, accept)
       end
 
@@ -83,6 +85,7 @@ module Nelumba
       links = host_meta.xpath("/xmlns:XRD/xmlns:Link")
       link = links.select{|link| link.attr('rel') == 'lrdd' }.first
       lrdd_template = link.attr('template') || link.attr('href')
+      puts lrdd_template
 
       xrd_url = lrdd_template.gsub(/{uri}/, "acct:#{username}")
 
@@ -321,7 +324,7 @@ module Nelumba
 
       uri = URI(url)
       request = Net::HTTP::Get.new(uri.request_uri)
-      request['Accept'] = accept
+      request['Accept'] = accept.join(',')
 
       http = Net::HTTP.new(uri.hostname, uri.port)
       if uri.scheme == 'https'
