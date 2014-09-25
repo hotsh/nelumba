@@ -73,7 +73,6 @@ module Nelumba
         # TODO: Should we do this? probably not. ugh. but we must.
         scheme = 'http'
         url = "#{scheme}://#{domain}#{port}/.well-known/host-meta"
-        puts url
         host_meta = Nelumba::Discover.pull_url(url, accept)
       end
 
@@ -85,7 +84,6 @@ module Nelumba
       links = host_meta.xpath("/xmlns:XRD/xmlns:Link")
       link = links.select{|link| link.attr('rel') == 'lrdd' }.first
       lrdd_template = link.attr('template') || link.attr('href')
-      puts lrdd_template
 
       xrd_url = lrdd_template.gsub(/{uri}/, "acct:#{username}")
 
@@ -246,8 +244,15 @@ module Nelumba
 
         return nil if links.empty?
 
+        href = links.first[:href]
+        if href.start_with? "/"
+          # Append domain from what we know
+          uri = URI::parse(url) rescue URI.new
+          href = "#{uri.scheme}://#{uri.host}#{uri.port == 80 ? "" : ":#{uri.port}"}#{href}"
+        end
+
         # Resolve relative links
-        link = URI::parse(links.first[:href]) rescue URI.new
+        link = URI::parse(href) rescue URI.new
 
         unless link.scheme
           link.scheme = URI::parse(url).scheme
@@ -325,6 +330,7 @@ module Nelumba
       uri = URI(url)
       request = Net::HTTP::Get.new(uri.request_uri)
       request['Accept'] = accept.join(',')
+      request['User-Agent'] = 'nelumba'
 
       http = Net::HTTP.new(uri.hostname, uri.port)
       if uri.scheme == 'https'
@@ -332,11 +338,7 @@ module Nelumba
         http.verify_mode = OpenSSL::SSL::VERIFY_PEER
       end
 
-      begin
-        response = http.request(request)
-      rescue OpenSSL::SSL::SSLError
-        return nil
-      end
+      response = http.request(request)
 
       if response.is_a?(Net::HTTPRedirection) && limit > 0
         location = response['location']
@@ -344,6 +346,9 @@ module Nelumba
       else
         response
       end
+
+      rescue OpenSSL::SSL::SSLError
+        return nil
     end
 
     # :nodoc:
