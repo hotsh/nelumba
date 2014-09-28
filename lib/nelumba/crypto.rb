@@ -58,9 +58,7 @@ module Nelumba
     # Creates an EMSA signature for the given plaintext and key.
     def self.emsa_sign(text, private_key)
       private_key = generate_key(private_key) unless private_key.is_a? RSA::Key
-
       signature = self.emsa_signature(text, private_key)
-
       self.decrypt(private_key, signature)
     end
 
