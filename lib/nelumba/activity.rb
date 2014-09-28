@@ -138,7 +138,7 @@ module Nelumba
     end
 
     # Returns a hash of all relevant fields.
-    def to_hash
+    def to_hash(scheme = 'https', domain = 'example.org', port = nil)
       {
         :source => self.source,
 
@@ -153,8 +153,8 @@ module Nelumba
         :target => self.target,
         :actor => self.actor,
         :verb => self.verb,
-        :type => self.type
-      }.merge(super)
+        :type => self.type,
+      }.merge(super(scheme, domain, port))
     end
 
     # Returns a string containing the Atom representation of this Activity.
@@ -166,7 +166,7 @@ module Nelumba
 
     # Returns a hash of all relevant fields with JSON activity streams
     # conventions.
-    def to_json_hash
+    def to_json_hash(scheme = 'https', domain = 'example.org', port = nil)
       {
         :objectType => "activity",
         :object => @object,
@@ -180,7 +180,7 @@ module Nelumba
         :mentions => self.mentions.dup,
         :likes => self.likes.dup,
         :shares => self.shares.dup,
-      }.merge(super)
+      }.merge(super(scheme, domain, port))
     end
 
     # Generates a sentence describing this activity in the current or given

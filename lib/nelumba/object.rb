@@ -143,33 +143,59 @@ module Nelumba
       ret
     end
 
-    def to_hash
+    def to_hash(scheme = 'https', domain = 'example.org', port = nil)
+      url_start = "#{scheme}://#{domain}#{port.nil? ? "" : ":#{port}"}"
+
+      uid = self.uid
+      url = self.url
+
+      if uid && uid.start_with?("/")
+        uid = "#{url_start}#{uid}"
+      end
+
+      if url && url.start_with?("/")
+        url = "#{url_start}#{url}"
+      end
+
       {
-        :author       => @author,
-        :summary      => @summary,
-        :content      => @content,
-        :display_name => @display_name,
-        :uid          => @uid,
-        :url          => @url,
-        :published    => @published,
-        :updated      => @updated,
-        :title        => @title,
-        :text         => @text,
-        :html         => @html,
+        :author       => self.author,
+        :summary      => self.summary,
+        :content      => self.content,
+        :display_name => self.display_name,
+        :uid          => uid,
+        :url          => url,
+        :published    => self.published,
+        :updated      => self.updated,
+        :title        => self.title,
+        :text         => self.text,
+        :html         => self.html,
       }
     end
 
-    def to_json_hash
+    def to_json_hash(scheme = 'https', domain = 'example.org', port = nil)
+      url_start = "#{scheme}://#{domain}#{port.nil? ? "" : ":#{port}"}"
+
+      uid = self.uid
+      url = self.url
+
+      if uid.start_with? "/"
+        uid = "#{url_start}#{uid}"
+      end
+
+      if url.start_with? "/"
+        url = "#{url_start}#{url}"
+      end
+
       {
-        :author      => @author,
-        :content     => @content,
-        :summary     => @summary,
-        :displayName => @display_name,
-        :id          => @uid,
-        :url         => @url,
-        :title       => @title,
-        :published   => (@published ? @published.to_date.rfc3339 + 'Z' : nil),
-        :updated     => (@updated ? @updated.to_date.rfc3339 + 'Z' : nil),
+        :author      => self.author,
+        :content     => self.content,
+        :summary     => self.summary,
+        :displayName => self.display_name,
+        :id          => uid,
+        :url         => url,
+        :title       => self.title,
+        :published   => (self.published ? self.published.to_date.rfc3339 + 'Z' : nil),
+        :updated     => (self.updated ? self.updated.to_date.rfc3339 + 'Z' : nil),
       }
     end
 
