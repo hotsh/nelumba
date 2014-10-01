@@ -178,11 +178,11 @@ module Nelumba
       uid = self.uid
       url = self.url
 
-      if uid.start_with? "/"
+      if uid && uid.start_with?("/")
         uid = "#{url_start}#{uid}"
       end
 
-      if url.start_with? "/"
+      if url && url.start_with?("/")
         url = "#{url_start}#{url}"
       end
 
@@ -241,6 +241,10 @@ module Nelumba
 
     # Returns a string containing the JSON representation of this Object.
     def to_json(*args)
+      to_json_hash.delete_if{|k,v| v.nil?}.to_json(*args)
+    end
+
+    def to_as1(*args)
       to_json_hash.delete_if{|k,v| v.nil?}.to_json(*args)
     end
   end

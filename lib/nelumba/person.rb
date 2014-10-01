@@ -178,6 +178,31 @@ module Nelumba
       }
     end
 
+    def to_json_hash
+      {
+        :uri => self.uri,
+        :email => self.email,
+        :name => self.name,
+        :objectType => "person",
+
+        :id => self.uid,
+        :gender => self.gender,
+        :note => self.note,
+        :nickname => self.nickname,
+        :displayName => self.display_name,
+        :preferredUsername => self.preferred_username,
+        :updated => self.updated,
+        :published => self.published,
+        :birthday => self.birthday,
+        :anniversary => self.anniversary,
+
+        :extendedName => self.extended_name,
+        :organization => self.organization,
+        :account => self.account,
+        :address => self.address
+      }
+    end
+
     # Creates an Activity where this author acts upon the given object.
     def act(action, object)
       type = "person"
@@ -251,14 +276,11 @@ module Nelumba
 
     # Returns a string containing the JSON representation of this Person.
     def to_json(*args)
-      hash = to_hash.merge({:objectType => "person"})
+      to_json_hash.delete_if{|k,v| v.nil?}.to_json(*args)
+    end
 
-      hash[:id] = hash[:uid]
-      hash.delete :uid
-
-      hash.each {|k,v| hash.delete(k) if v.nil?}
-
-      hash.to_json(args)
+    def to_as1(*args)
+      to_json_hash.delete_if{|k,v| v.nil?}.to_json(*args)
     end
 
     def to_atom
