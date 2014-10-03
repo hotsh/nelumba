@@ -36,6 +36,11 @@ describe Nelumba::Person do
         .preferred_username.must_equal "foobar"
     end
 
+    it "should store the pronoun" do
+      pronoun = mock('hash')
+      Nelumba::Person.new(:pronoun => pronoun).pronoun.must_equal pronoun
+    end
+
     it "should store the birthday" do
       time = mock('datetime')
       Nelumba::Person.new(:birthday => time).birthday.must_equal time
@@ -101,6 +106,11 @@ describe Nelumba::Person do
     it "should return a Hash containing the preferred username" do
       Nelumba::Person.new(:preferred_username => "foobar")
         .preferred_username.must_equal "foobar"
+    end
+
+    it "should return a Hash containing the preferred username" do
+      pronoun = mock('hash')
+      Nelumba::Person.new(:pronoun => pronoun).to_hash[:pronoun].must_equal pronoun
     end
 
     it "should return a Hash containing the birthday" do

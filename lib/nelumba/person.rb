@@ -78,6 +78,14 @@ module Nelumba
     # Holds the gender of this contact.
     attr_reader :gender
 
+    # Holds the requested pronouns.
+    #
+    # contains one or more of the following:
+    #   :plural     => Whether or not the actor is considered plural
+    #   :personal   => Personal pronoun (xe)
+    #   :possessive => Possessive pronoun (her)
+    attr_reader :pronoun
+
     # Holds a note for this contact.
     attr_reader :note
 
@@ -132,74 +140,80 @@ module Nelumba
     end
 
     def init(options = {})
-      @uri = options[:uri]
-      @name = options[:name] || "anonymous"
-      @email = options[:email]
+      @uri                = options[:uri]
+      @name               = options[:name] || "anonymous"
+      @email              = options[:email]
 
-      @uid = options[:uid]
-      @name = options[:name]
-      @gender = options[:gender]
-      @note = options[:note]
-      @nickname = options[:nickname]
-      @display_name = options[:display_name]
+      @uid                = options[:uid]
+      @name               = options[:name]
+      @gender             = options[:gender]
+      @note               = options[:note]
+      @nickname           = options[:nickname]
+      @display_name       = options[:display_name]
       @preferred_username = options[:preferred_username]
-      @updated = options[:updated]
-      @published = options[:published]
-      @birthday = options[:birthday]
-      @anniversary = options[:anniversary]
+      @updated            = options[:updated]
+      @published          = options[:published]
+      @birthday           = options[:birthday]
+      @anniversary        = options[:anniversary]
 
-      @extended_name = options[:extended_name]
-      @organization = options[:organization]
-      @account = options[:account]
-      @address = options[:address]
+      @pronoun            = options[:pronoun] || {}
+
+      @extended_name      = options[:extended_name]
+      @organization       = options[:organization]
+      @account            = options[:account]
+      @address            = options[:address]
     end
 
     def to_hash
       {
-        :uri => self.uri,
-        :email => self.email,
-        :name => self.name,
+        :uri                => self.uri,
+        :email              => self.email,
+        :name               => self.name,
 
-        :uid => self.uid,
-        :gender => self.gender,
-        :note => self.note,
-        :nickname => self.nickname,
-        :display_name => self.display_name,
+        :uid                => self.uid,
+        :gender             => self.gender,
+        :note               => self.note,
+        :nickname           => self.nickname,
+        :display_name       => self.display_name,
         :preferred_username => self.preferred_username,
-        :updated => self.updated,
-        :published => self.published,
-        :birthday => self.birthday,
-        :anniversary => self.anniversary,
+        :updated            => self.updated,
+        :published          => self.published,
+        :birthday           => self.birthday,
+        :anniversary        => self.anniversary,
 
-        :extended_name => self.extended_name,
-        :organization => self.organization,
-        :account => self.account,
-        :address => self.address
+        :pronoun            => self.pronoun,
+
+        :extended_name      => self.extended_name,
+        :organization       => self.organization,
+        :account            => self.account,
+        :address            => self.address
       }
     end
 
     def to_json_hash
       {
-        :uri => self.uri,
-        :email => self.email,
-        :name => self.name,
-        :objectType => "person",
+        :uri               => self.uri,
+        :email             => self.email,
+        :name              => self.name,
+        :objectType        => "person",
 
-        :id => self.uid,
-        :gender => self.gender,
-        :note => self.note,
-        :nickname => self.nickname,
-        :displayName => self.display_name,
+        :id                => self.uid,
+        :gender            => self.gender,
+        :note              => self.note,
+        :nickname          => self.nickname,
+        :displayName       => self.display_name,
         :preferredUsername => self.preferred_username,
-        :updated => self.updated,
-        :published => self.published,
-        :birthday => self.birthday,
-        :anniversary => self.anniversary,
+        :updated           => self.updated,
+        :published         => self.published,
+        :birthday          => self.birthday,
+        :anniversary       => self.anniversary,
 
-        :extendedName => self.extended_name,
-        :organization => self.organization,
-        :account => self.account,
-        :address => self.address
+        :pronoun           => self.pronoun,
+
+        :extendedName      => self.extended_name,
+        :organization      => self.organization,
+        :account           => self.account,
+        :address           => self.address
       }
     end
 
@@ -209,9 +223,9 @@ module Nelumba
       type = object.type if object.is_a? Nelumba::Activity
 
       Nelumba::Activity.new :verb   => action,
-                          :actor  => self,
-                          :object => object,
-                          :type   => type
+                            :actor  => self,
+                            :object => object,
+                            :type   => type
     end
 
     # Creates an Activity where this author favorites the given activity.

@@ -128,7 +128,7 @@ module Nelumba
               hash[:"poco_id"] = hash[:uid]
             end
             hash.delete :uid
-          elsif (k != :uri) && (k != :name) && (k != :email)
+          elsif (k != :uri) && (k != :name) && (k != :email) && (k != :pronoun)
             hash[:"poco_#{to_k}"] = hash[k]
             hash.delete k
           end

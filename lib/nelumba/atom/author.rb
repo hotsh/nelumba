@@ -38,6 +38,8 @@ module Nelumba
       element 'poco:note'
       element 'poco:preferredUsername'
 
+      element 'pronoun'
+
       # unfortunately ratom doesn't handle elements with the same local name well.
       # this is a workaround for that.
       attr_writer :name, :poco_name
@@ -122,6 +124,7 @@ module Nelumba
               hash[:"poco_id"] = hash[:uid]
             end
             hash.delete :uid
+          elsif k == :pronoun
           elsif (k != :uri) && (k != :name) && (k != :email)
             hash[:"poco_#{to_k}"] = hash[k]
             hash.delete k
