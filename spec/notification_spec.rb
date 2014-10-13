@@ -40,7 +40,7 @@ describe Nelumba::Notification do
     end
 
     it "should create a new Notification representing the given user author" do
-      @salmon.activity.actor.must_equal @user
+      @salmon.activity.actors.first.must_equal @user
     end
 
     it "should create a new Notification representing the given user author" do
@@ -56,7 +56,7 @@ describe Nelumba::Notification do
     end
 
     it "should create a new Notification representing the given user author" do
-      @salmon.activity.actor.must_equal @user
+      @salmon.activity.actors.first.must_equal @user
     end
 
     it "should create a new Notification representing the given user author" do
@@ -71,7 +71,7 @@ describe Nelumba::Notification do
     end
 
     it "should create a new Notification representing the given user author" do
-      @salmon.activity.actor.must_equal @user
+      @salmon.activity.actors.first.must_equal @user
     end
   end
 
@@ -83,7 +83,7 @@ describe Nelumba::Notification do
     end
 
     it "should provide the uri of the actor when the uri is an account" do
-      @salmon.account.must_equal @salmon.activity.actor.uri
+      @salmon.account.must_equal @salmon.activity.actors.first.uri
     end
   end
 end

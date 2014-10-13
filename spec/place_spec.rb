@@ -5,7 +5,13 @@ describe Nelumba::Place do
   describe "#initialize" do
     it "should store an author" do
       author = mock('author')
-      Nelumba::Place.new(:author => author).author.must_equal author
+      Nelumba::Place.new(:author => author).authors.first.must_equal author
+    end
+
+    it "should store multiple authors" do
+      author  = mock('author')
+      author2 = mock('author')
+      Nelumba::Place.new(:authors => [author, author2]).authors.must_equal [author, author2]
     end
 
     it "should store the address" do
@@ -32,7 +38,7 @@ describe Nelumba::Place do
 
     it "should store a display name" do
       Nelumba::Place.new(:display_name => "url")
-                        .display_name.must_equal "url"
+                    .display_name.must_equal "url"
     end
 
     it "should store a summary" do
@@ -56,7 +62,13 @@ describe Nelumba::Place do
 
     it "should contain the author" do
       author = mock('Nelumba::Person')
-      Nelumba::Place.new(:author => author).to_hash[:author].must_equal author
+      Nelumba::Place.new(:author => author).to_hash[:authors].first.must_equal author
+    end
+
+    it "should contain the author" do
+      author  = mock('Nelumba::Person')
+      author2 = mock('Nelumba::Person')
+      Nelumba::Place.new(:authors => [author, author2]).to_hash[:authors].must_equal [author, author2]
     end
 
     it "should contain the address" do
@@ -77,12 +89,12 @@ describe Nelumba::Place do
 
     it "should contain the summary" do
       Nelumba::Place.new(:summary=> "Hello")
-                 .to_hash[:summary].must_equal "Hello"
+                    .to_hash[:summary].must_equal "Hello"
     end
 
     it "should contain the display name" do
       Nelumba::Place.new(:display_name => "Hello")
-                 .to_hash[:display_name].must_equal "Hello"
+                    .to_hash[:display_name].must_equal "Hello"
     end
 
     it "should contain the published date" do
@@ -99,24 +111,24 @@ describe Nelumba::Place do
   describe "#to_json" do
     before do
       author = Nelumba::Person.new :display_name => "wilkie"
-      @note = Nelumba::Place.new :content      => "Hello",
-                               :author       => author,
-                               :position     => "foo",
-                               :address      => "bar",
-                               :uid          => "id",
-                               :url          => "url",
-                               :title        => "title",
-                               :summary      => "foo",
-                               :display_name => "meh",
-                               :published    => Time.now,
-                               :updated      => Time.now
+      @note = Nelumba::Place.new   :content      => "Hello",
+                                   :author       => author,
+                                   :position     => "foo",
+                                   :address      => "bar",
+                                   :uid          => "id",
+                                   :url          => "url",
+                                   :title        => "title",
+                                   :summary      => "foo",
+                                   :display_name => "meh",
+                                   :published    => Time.now,
+                                   :updated      => Time.now
 
       @json = @note.to_json
       @data = JSON.parse(@json)
     end
 
     it "should contain the embedded json for the author" do
-      @data["author"].must_equal JSON.parse(@note.author.to_json)
+      @data["authors"].first.must_equal JSON.parse(@note.authors.first.to_json)
     end
 
     it "should contain a 'place' objectType" do
@@ -152,11 +164,11 @@ describe Nelumba::Place do
     end
 
     it "should contain the published date as rfc3339" do
-      @data["published"].must_equal @note.published.to_date.rfc3339 + 'Z'
+      @data["published"].must_equal @note.published.utc.iso8601
     end
 
     it "should contain the updated date as rfc3339" do
-      @data["updated"].must_equal @note.updated.to_date.rfc3339 + 'Z'
+      @data["updated"].must_equal @note.updated.utc.iso8601
     end
   end
 end

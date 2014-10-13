@@ -19,7 +19,7 @@ module Nelumba
       @signature = signature
       @plaintext = plaintext
 
-      account = activity.actor.uri
+      account = activity.actors.first.uri
 
       # XXX: Negotiate various weird uri schemes to find identity account
       @account = account
@@ -28,12 +28,11 @@ module Nelumba
     # Creates an activity for following a particular Person.
     def self.from_follow(user_author, followed_author)
       activity = Nelumba::Activity.new(
-        :verb => :follow,
-        :object => followed_author,
-        :actor    => user_author,
-        :title    => "Now following #{followed_author.name}",
-        :content  => "Now following #{followed_author.name}",
-        :content_type => "html"
+        :verb    => :follow,
+        :object  => followed_author,
+        :actor   => user_author,
+        :title   => "Now following #{followed_author.name}",
+        :content => "Now following #{followed_author.name}"
       )
 
       self.new(activity)
@@ -42,12 +41,11 @@ module Nelumba
     # Creates an activity for unfollowing a particular Person.
     def self.from_unfollow(user_author, followed_author)
       activity = Nelumba::Activity.new(
-        :verb => "http://ostatus.org/schema/1.0/unfollow",
-        :object => followed_author,
-        :actor    => user_author,
-        :title => "Stopped following #{followed_author.name}",
-        :content => "Stopped following #{followed_author.name}",
-        :content_type => "html"
+        :verb    => "http://ostatus.org/schema/1.0/unfollow",
+        :object  => followed_author,
+        :actor   => user_author,
+        :title   => "Stopped following #{followed_author.name}",
+        :content => "Stopped following #{followed_author.name}"
       )
 
       self.new(activity)
@@ -56,11 +54,10 @@ module Nelumba
     # Creates an activity for a profile update.
     def self.from_profile_update(user_author)
       activity = Nelumba::Activity.new(
-        :verb => "http://ostatus.org/schema/1.0/update-profile",
-        :actor    => user_author,
-        :title => "#{user_author.name} changed their profile information.",
-        :content => "#{user_author.name} changed their profile information.",
-        :content_type => "html"
+        :verb    => "http://ostatus.org/schema/1.0/update-profile",
+        :actor   => user_author,
+        :title   => "#{user_author.name} changed their profile information.",
+        :content => "#{user_author.name} changed their profile information."
       )
 
       self.new(activity)

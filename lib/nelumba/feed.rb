@@ -12,17 +12,17 @@ module Nelumba
     # machine interpreted.
     attr_reader :rights
 
-    # Holds the title for this feed.
-    attr_reader :title
-
-    # Holds the content-type for the title.
-    attr_reader :title_type
-
-    # Holds the subtitle for this feed.
+    # The subtitle of the feed
     attr_reader :subtitle
 
-    # Holds the content-type for the subtitle.
+    # The content-type of the subtitle of the feed
     attr_reader :subtitle_type
+
+    # The subtitle with content type of text
+    attr_reader :subtitle_text
+
+    # The subtitle with content type of html
+    attr_reader :subtitle_html
 
     # Holds the URL for the icon representing this feed.
     attr_reader :icon
@@ -36,9 +36,6 @@ module Nelumba
     # Holds the list of contributors, if any, that are involved in this feed
     # as Nelumba::Person.
     attr_reader :contributors
-
-    # Holds the list of authors as Nelumba::Person responsible for this feed.
-    attr_reader :authors
 
     # Holds the list of hubs that are available to manage subscriptions to this
     # feed.
@@ -56,9 +53,7 @@ module Nelumba
     #   uid           => The unique identifier for this feed.
     #   url           => The url that represents this feed.
     #   title         => The title for this feed. Defaults: "Untitled"
-    #   title_type    => The content type for the title.
     #   subtitle      => The subtitle for this feed.
-    #   subtitle_type => The content type for the subtitle.
     #   authors       => The list of Nelumba::Person's for this feed.
     #                    Defaults: []
     #   contributors  => The list of Nelumba::Person's that contributed to this
@@ -101,22 +96,47 @@ module Nelumba
       init(options, &blk)
     end
 
-    def init(options = {})
-      super options
+    def init(options = {}, &blk)
+      super options, &blk
 
-      @icon = options[:icon]
-      @logo = options[:logo]
-      @rights = options[:rights]
-      @title = options[:title] || "Untitled"
-      @title_type = options[:title_type]
-      @subtitle = options[:subtitle]
-      @subtitle_type = options[:subtitle_type]
-      @authors = options[:authors] || []
-      @categories = options[:categories] || []
+      @icon         = options[:icon]
+      @subtitle     = options[:subtitle]
+      @logo         = options[:logo]
+      @rights       = options[:rights]
+      @authors      = options[:authors] || []
+      @categories   = options[:categories] || []
       @contributors = options[:contributors] || []
-      @salmon_url = options[:salmon_url]
-      @hubs = options[:hubs] || []
-      @generator = options[:generator]
+      @salmon_url   = options[:salmon_url]
+      @hubs         = options[:hubs] || []
+      @generator    = options[:generator]
+
+      # Alternative representations of 'subtitle'
+      if options[:subtitle]
+        @subtitle = options[:subtitle]
+        if options[:subtitle_type]
+          @subtitle_type = options[:subtitle_type]
+        else
+          @subtitle_type = "text"
+        end
+      end
+
+      @subtitle_text = options[:subtitle_text] || @subtitle || ""
+      @subtitle_html = options[:subtitle_html] || Nelumba::Object.to_html(@subtitle_text, &blk)
+
+      if @subtitle.nil?
+        if @subtitle_html
+          @subtitle      = @subtitle_html
+          @subtitle_type = "html"
+        elsif @subtitle_text
+          @subtitle      = @subtitle_text
+          @subtitle_type = "text"
+        end
+      end
+
+      options[:subtitle]        = @subtitle
+      options[:subtitle_type]   = @subtitle_type
+      options[:subtitle_text]   = @subtitle_text
+      options[:subtitle_html]   = @subtitle_html
     end
 
     # Yields a Nelumba::Link to this feed.
@@ -144,10 +164,9 @@ module Nelumba
         :icon => self.icon,
         :logo => self.logo,
         :rights => self.rights,
-        :title => self.title,
-        :title_type => self.title_type,
         :subtitle => self.subtitle,
-        :subtitle_type => self.subtitle_type,
+        :subtitle_text => self.subtitle_text,
+        :subtitle_html => self.subtitle_html,
         :authors => (self.authors || []).dup,
         :categories => (self.categories || []).dup,
         :contributors => (self.contributors || []).dup,
@@ -167,7 +186,7 @@ module Nelumba
     def to_atom
       require 'nelumba/atom/feed'
 
-      Nelumba::Atom::Feed.from_canonical(self).to_xml
+      Nelumba::Atom::Feed.from_canonical(self)
     end
   end
 end

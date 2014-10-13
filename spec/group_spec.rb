@@ -5,7 +5,13 @@ describe Nelumba::Group do
   describe "#initialize" do
     it "should store an author" do
       author = mock('author')
-      Nelumba::Group.new(:author => author).author.must_equal author
+      Nelumba::Group.new(:author => author).authors.first.must_equal author
+    end
+
+    it "should store multiple authors" do
+      author  = mock('author')
+      author2 = mock('author')
+      Nelumba::Group.new(:authors => [author, author2]).authors.must_equal [author, author2]
     end
 
     it "should store content" do
@@ -24,7 +30,7 @@ describe Nelumba::Group do
 
     it "should store a display name" do
       Nelumba::Group.new(:display_name => "url")
-                        .display_name.must_equal "url"
+                    .display_name.must_equal "url"
     end
 
     it "should store a summary" do
@@ -43,12 +49,18 @@ describe Nelumba::Group do
   describe "#to_hash" do
     it "should contain the content" do
       Nelumba::Group.new(:content => "Hello")
-                        .to_hash[:content].must_equal "Hello"
+                    .to_hash[:content].must_equal "Hello"
     end
 
     it "should contain the author" do
       author = mock('Nelumba::Person')
-      Nelumba::Group.new(:author => author).to_hash[:author].must_equal author
+      Nelumba::Group.new(:author => author).to_hash[:authors].first.must_equal author
+    end
+
+    it "should contain multiple authors" do
+      author  = mock('Nelumba::Person')
+      author2 = mock('Nelumba::Person')
+      Nelumba::Group.new(:authors => [author, author2]).to_hash[:authors].must_equal [author, author2]
     end
 
     it "should contain the uid" do
@@ -61,12 +73,12 @@ describe Nelumba::Group do
 
     it "should contain the summary" do
       Nelumba::Group.new(:summary=> "Hello")
-                 .to_hash[:summary].must_equal "Hello"
+                    .to_hash[:summary].must_equal "Hello"
     end
 
     it "should contain the display name" do
       Nelumba::Group.new(:display_name => "Hello")
-                 .to_hash[:display_name].must_equal "Hello"
+                    .to_hash[:display_name].must_equal "Hello"
     end
 
     it "should contain the published date" do
@@ -83,22 +95,22 @@ describe Nelumba::Group do
   describe "#to_json" do
     before do
       author = Nelumba::Person.new :display_name => "wilkie"
-      @note = Nelumba::Group.new :content      => "Hello",
-                               :author       => author,
-                               :uid          => "id",
-                               :url          => "url",
-                               :title        => "title",
-                               :summary      => "foo",
-                               :display_name => "meh",
-                               :published    => Time.now,
-                               :updated      => Time.now
+      @note = Nelumba::Group.new   :content      => "Hello",
+                                   :author       => author,
+                                   :uid          => "id",
+                                   :url          => "url",
+                                   :title        => "title",
+                                   :summary      => "foo",
+                                   :display_name => "meh",
+                                   :published    => Time.now,
+                                   :updated      => Time.now
 
       @json = @note.to_json
       @data = JSON.parse(@json)
     end
 
     it "should contain the embedded json for the author" do
-      @data["author"].must_equal JSON.parse(@note.author.to_json)
+      @data["authors"].first.must_equal JSON.parse(@note.authors.first.to_json)
     end
 
     it "should contain a 'group' objectType" do
@@ -126,11 +138,11 @@ describe Nelumba::Group do
     end
 
     it "should contain the published date as rfc3339" do
-      @data["published"].must_equal @note.published.to_date.rfc3339 + 'Z'
+      @data["published"].must_equal @note.published.utc.iso8601
     end
 
     it "should contain the updated date as rfc3339" do
-      @data["updated"].must_equal @note.updated.to_date.rfc3339 + 'Z'
+      @data["updated"].must_equal @note.updated.utc.iso8601
     end
   end
 end

@@ -13,6 +13,9 @@ module Nelumba
     end
 
     def init(options = {}, &blk)
+      options ||= {}
+      options[:type] = :file
+
       super options
 
       @md5         = options[:md5]
@@ -32,7 +35,6 @@ module Nelumba
 
     def to_json_hash
       {
-        :objectType  => "file",
         :md5         => @md5,
         :fileUrl     => @file_url,
         :mimeType    => @mime_type,

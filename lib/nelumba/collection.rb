@@ -10,6 +10,9 @@ module Nelumba
     end
 
     def init(options = {}, &blk)
+      options ||= {}
+      options[:type] = :collection
+
       super(options, &blk)
 
       @items       = options[:items] || []
@@ -25,7 +28,6 @@ module Nelumba
 
     def to_json_hash
       {
-        :objectType => "collection",
         :items      => (self.items || []).dup,
         :totalItems => self.total_items || self.items.count
       }.merge(super)

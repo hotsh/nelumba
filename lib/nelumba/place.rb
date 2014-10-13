@@ -10,6 +10,9 @@ module Nelumba
     end
 
     def init(options = {}, &blk)
+      options ||= {}
+      options[:type] = :place
+
       super(options, &blk)
 
       @position = options[:position]
@@ -25,7 +28,6 @@ module Nelumba
 
     def to_json_hash
       {
-        :objectType => "place",
         :position   => @position,
         :address    => @address
       }.merge(super)

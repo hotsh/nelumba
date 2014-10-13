@@ -2,10 +2,11 @@ module Nelumba
   class Service
     include Nelumba::Object
 
-    def to_json_hash
-      {
-        :objectType => "service"
-      }.merge(super)
+    def init(options = {}, &blk)
+      options ||= {}
+      options[:type] = :service
+
+      super(options, &blk)
     end
   end
 end

@@ -16,7 +16,10 @@ module Nelumba
     end
 
     def init(options = {}, &blk)
-      super options
+      options ||= {}
+      options[:type] = :event
+
+      super options, &blk
 
       @attending       = options[:attending]       || []
       @maybe_attending = options[:maybe_attending] || []
@@ -41,14 +44,12 @@ module Nelumba
 
     def to_json_hash
       {
-        :objectType     => "event",
-
         :attending      => @attending.dup,
         :maybeAttending => @maybe_attending.dup,
         :notAttending   => @not_attending.dup,
 
-        :startTime      => (@start_time && @start_time.to_date.rfc3339 + 'Z'),
-        :endTime        => (@end_time   && @end_time.to_date.rfc3339   + 'Z'),
+        :startTime      => (@start_time && @start_time.utc.iso8601),
+        :endTime        => (@end_time   && @end_time.utc.iso8601),
 
         :location       => @location
       }.merge(super)

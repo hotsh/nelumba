@@ -9,6 +9,9 @@ module Nelumba
     end
 
     def init(options = {}, &blk)
+      options ||= {}
+      options[:type] = :review
+
       super options
 
       @rating = options[:rating]
@@ -22,7 +25,6 @@ module Nelumba
 
     def to_json_hash
       {
-        :objectType => "review",
         :rating     => @rating
       }.merge(super)
     end

@@ -52,10 +52,11 @@ module Nelumba
       #   or: 'wilkie@example.org'
 
       # Remove acct: prefix if it exists
-      acct.gsub!(/^acct\:/, "")
+      acct = acct.gsub(/^acct\:/, "")
 
       # Get domain and port
       matches = acct.match /([^@]+)@([^:]+)(:\d+)?$/
+      return nil if matches.nil?
       username = matches[1]
       domain   = matches[2]
       port     = matches[3] || "" # will include the ':'
@@ -85,7 +86,7 @@ module Nelumba
       link = links.select{|link| link.attr('rel') == 'lrdd' }.first
       lrdd_template = link.attr('template') || link.attr('href')
 
-      xrd_url = lrdd_template.gsub(/{uri}/, "acct:#{username}")
+      xrd_url = lrdd_template.gsub(/{uri}/, "acct:#{username}@#{domain}#{port}")
 
       xrd = Nelumba::Discover.pull_url(xrd_url, accept)
       return nil if xrd.nil?
@@ -279,7 +280,7 @@ module Nelumba
 
       case content_type
       when 'application/atom+xml', 'application/rss+xml', 'application/xml'
-        Nelumba::Atom::Feed.new(XML::Reader.string(string)).to_canonical
+        Nelumba::Atom::Feed.to_canonical(string)
       end
     end
 
@@ -347,8 +348,8 @@ module Nelumba
         response
       end
 
-      rescue OpenSSL::SSL::SSLError
-        return nil
+    rescue OpenSSL::SSL::SSLError
+      return nil
     end
 
     # :nodoc:

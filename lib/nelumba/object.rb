@@ -1,16 +1,43 @@
 module Nelumba
   module Object
+    require 'time-lord/units'
+    require 'time-lord/scale'
+    require 'time-lord/period'
+
     require 'json'
     require 'cgi'
 
     # Determines what constitutes a username inside an update text
     USERNAME_REGULAR_EXPRESSION = /(^|[ \t\n\r\f"'\(\[{]+)@([^ \t\n\r\f&?=@%\/\#]*[^ \t\n\r\f&?=@%\/\#.!:;,"'\]}\)])(?:@([^ \t\n\r\f&?=@%\/\#]*[^ \t\n\r\f&?=@%\/\#.!:;,"'\]}\)]))?/
 
+    # The title of the object
     attr_reader :title
-    attr_reader :author
+
+    # The content-type of the title
+    attr_reader :title_type
+
+    # The title with content type of text
+    attr_reader :title_text
+
+    # The title with content type of html
+    attr_reader :title_html
+
+    # Holds the list of authors as Nelumba::Person responsible for this feed.
+    attr_reader :authors
+
+    # Holds the source feed for this object
+    attr_reader :source
+
+    def first_author
+      self.authors.first
+    end
+
     attr_reader :display_name
     attr_reader :uid
     attr_reader :url
+
+    # The type of object
+    attr_reader :type
 
     # Natural-language description of this object
     attr_reader :summary
@@ -21,6 +48,9 @@ module Nelumba
     # Natural-language text content
     attr_reader :content
 
+    # The content type for the content
+    attr_reader :content_type
+
     attr_reader :published
     attr_reader :updated
 
@@ -30,41 +60,125 @@ module Nelumba
     # Holds the content as html.
     attr_reader :html
 
+    # Holds a collection of Nelumba::Object's that this object is in reply to.
+    attr_reader :in_reply_to
+
+    # Holds an array of related Nelumba::Object's that are replies to this one.
+    attr_reader :replies
+
+    # Holds an array of Nelumba::Person's that have favorited this activity.
+    attr_reader :likes
+
+    # Holds an array of Nelumba::Person's that have shared this activity.
+    attr_reader :shares
+
+    # Holds an array of Nelumba::Person's that are mentioned in this activity.
+    attr_reader :mentions
+
+    # Holds a hash containing the information about interactions where keys
+    # are verbs.
+    #
+    # For instance, it could have a :share key, with a hash containing the
+    # number of times it has been shared.
+    attr_reader :interactions
+
     def initialize(options = {}, &blk)
       init(options, &blk)
     end
 
     def init(options = {}, &blk)
-      @author        = options[:author]
-      @content       = options[:content]
+      unless options[:in_reply_to].nil? or options[:in_reply_to].is_a?(Array)
+        options[:in_reply_to] = [options[:in_reply_to]]
+      end
+
+      if options.has_key? :author
+        if options[:author].is_a? Array
+          options[:authors] = options[:author]
+        else
+          options[:authors] = [options[:author]]
+        end
+        options.delete :author
+      end
+
+      @authors       = options[:authors] || []
       @display_name  = options[:display_name]
       @uid           = options[:uid]
       @url           = options[:url]
       @summary       = options[:summary]
-      @published     = options[:published] || Time.now
-      @updated       = options[:updated] || Time.now
-      @title         = options[:title] || "Untitled"
+      @published     = options[:published]    || Time.now
+      @updated       = options[:updated]      || Time.now
+      @type          = options[:type]
+      @in_reply_to   = options[:in_reply_to]  || []
+
+      @replies       = options[:replies]      || []
+
+      @mentions      = options[:mentions]     || []
+      @likes         = options[:likes]        || []
+      @shares        = options[:shares]       || []
+      @source        = options[:source]
+
+      @interactions  = options[:interactions] || {}
 
       options[:published] = @published
       options[:updated]   = @updated
-      options[:title]     = @title
 
       # Alternative representations of 'content'
+      if options[:content]
+        @content = options[:content]
+        if options[:content_type]
+          @content_type = options[:content_type]
+        else
+          @content_type = "text"
+        end
+      end
+
       @text          = options[:text] || @content || ""
-      @content       = @content || options[:text]
+      unless @content
+        @content      = options[:text]
+        @content_type = "text"
+      end
       options[:text] = @text
 
-      @html          = options[:html] || to_html(&blk)
-      @content       = @content || @html
+      @html          = options[:html] || Nelumba::Object.to_html(@text, &blk)
+      unless @content
+        @content      = @html
+        @content_type = "html"
+      end
       options[:html] = @html
+
+      # Alternative representations of 'title'
+      if options[:title]
+        @title = options[:title]
+        if options[:title_type]
+          @title_type = options[:title_type]
+        else
+          @title_type = "text"
+        end
+      end
+
+      @title_text = options[:title_text] || @title || "Untitled"
+      @title_html = options[:title_html] || Nelumba::Object.to_html(@title_text, &blk)
+
+      if @title.nil?
+        if @title_html
+          @title      = @title_html
+          @title_type = "html"
+        elsif @title_text
+          @title      = @title_text
+          @title_type = "text"
+        end
+      end
+
+      options[:title]        = @title
+      options[:title_type]   = @title_type
+      options[:title_text]   = @title_text
+      options[:title_html]   = @title_html
+      options[:content]      = @content
+      options[:content_type] = @content_type
     end
 
     # TODO: Convert html to safe text
-    def to_text()
-      return @text if @text
-
-      return "" if @html.nil?
-
+    def self.to_text(text)
       ""
     end
 
@@ -73,12 +187,8 @@ module Nelumba
     # Requires a block that is given two arguments: the username and the domain
     # that should return a Nelumba::Person that matches when a @username tag
     # is found.
-    def to_html(&blk)
-      return @html if @html
-
-      return "" if @text.nil?
-
-      out = CGI.escapeHTML(@text)
+    def self.to_html(text, &blk)
+      out = CGI.escapeHTML(text)
 
       # Replace any absolute addresses with a link
       # Note: Do this first! Otherwise it will add anchors inside anchors!
@@ -158,7 +268,8 @@ module Nelumba
       end
 
       {
-        :author       => self.author,
+        :source       => self.source,
+        :authors      => self.authors,
         :summary      => self.summary,
         :content      => self.content,
         :display_name => self.display_name,
@@ -167,8 +278,16 @@ module Nelumba
         :published    => self.published,
         :updated      => self.updated,
         :title        => self.title,
+        :title_text   => self.title_text,
+        :title_html   => self.title_html,
+        :object_type  => self.type,
         :text         => self.text,
         :html         => self.html,
+        :in_reply_to  => self.in_reply_to.dup || [],
+        :replies      => self.replies.dup,
+        :mentions     => self.mentions.dup,
+        :likes        => self.likes.dup,
+        :shares       => self.shares.dup,
       }
     end
 
@@ -187,16 +306,42 @@ module Nelumba
       end
 
       {
-        :author      => self.author,
+        :source      => self.source,
+        :authors     => self.authors,
         :content     => self.content,
         :summary     => self.summary,
         :displayName => self.display_name,
         :id          => uid,
         :url         => url,
         :title       => self.title,
-        :published   => (self.published ? self.published.to_date.rfc3339 + 'Z' : nil),
-        :updated     => (self.updated ? self.updated.to_date.rfc3339 + 'Z' : nil),
+        :objectType  => self.type,
+        :published   => (self.published ? self.published.utc.iso8601 : nil),
+        :updated     => (self.updated ? self.updated.utc.iso8601 : nil),
+        :inReplyTo   => (self.in_reply_to || []).dup,
+        :replies     => self.replies.dup,
+        :mentions    => self.mentions.dup,
+        :likes       => self.likes.dup,
+        :shares      => self.shares.dup,
       }
+    end
+
+    # Returns the number of times the given verb has been used with this
+    # Activity.
+    def interaction_count(verb)
+      hash = self.interactions
+      if hash && hash.has_key?(verb)
+        hash[verb][:count] || 0
+      else
+        0
+      end
+    end
+
+    def published_ago_in_words
+      TimeLord::Period.new(self.published.to_time, Time.now).to_words
+    end
+
+    def updated_ago_in_words
+      TimeLord::Period.new(self.updated.to_time, Time.now).to_words
     end
 
     # Returns a list of Nelumba::Person's for those mentioned within the object.
@@ -218,12 +363,8 @@ module Nelumba
     #   i = Identity.first(:username => /^#{Regexp.escape(username)}$/i)
     #   i.author if i
     # end
-    def mentions(&blk)
-      if self.respond_to? :text
-        out = self.text || ""
-      else
-        out = self.content || ""
-      end
+    def parse_mentions(&blk)
+      out = self.text || ""
 
       out = CGI.escapeHTML(out)
 

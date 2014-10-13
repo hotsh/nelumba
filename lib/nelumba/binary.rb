@@ -16,6 +16,9 @@ module Nelumba
     end
 
     def init(options = {}, &blk)
+      options ||= {}
+      options[:type] = :binary
+
       super(options, &blk)
 
       @data        = options[:data]
@@ -39,7 +42,6 @@ module Nelumba
 
     def to_json_hash
       {
-        :objectType  => "binary",
         :data        => @data,
         :compression => @compression,
         :md5         => @md5,

@@ -10,33 +10,33 @@ require_relative '../../lib/nelumba/atom/feed.rb'
 describe Nelumba::Atom do
   before do
     author = Nelumba::Person.new(:uri               => "http://example.com/users/1",
-                               :email             => "user@example.com",
-                               :name              => "wilkie",
-                               :uid => "1",
-                               :nickname    => "wilkie",
-                               :extended_name     => {:formatted => "Dave Wilkinson",
-                                 :family_name => "Wilkinson",
-                                 :given_name => "Dave",
-                                 :middle_name => "William",
-                                 :honorific_prefix => "Mr.",
-                                 :honorific_suffix => "II"},
-                               :address => {:formatted => "123 Cherry Lane\nFoobar, PA, USA\n15206",
-                                 :street_address => "123 Cherry Lane",
-                                 :locality => "Foobar",
-                                 :region => "PA",
-                                 :postal_code => "15206",
-                                 :country => "USA"},
-                               :organization => {:name => "Hackers of the Severed Hand",
-                                 :department => "Making Shit",
-                                 :title => "Founder",
-                                 :type => "open source",
-                                 :start_date => Date.today,
-                                 :end_date => Date.today,
-                                 :location => "everywhere",
-                                 :description => "I make ostatus work"},
-                               :account     => {:domain => "example.com",
-                                 :username => "wilkie",
-                                 :userid => "1"},
+                                 :email             => "user@example.com",
+                                 :name              => "wilkie",
+                                 :uid => "1",
+                                 :nickname    => "wilkie",
+                                 :extended_name     => {:formatted => "Dave Wilkinson",
+                                   :family_name => "Wilkinson",
+                                   :given_name => "Dave",
+                                   :middle_name => "William",
+                                   :honorific_prefix => "Mr.",
+                                   :honorific_suffix => "II"},
+                                 :address => {:formatted => "123 Cherry Lane\nFoobar, PA, USA\n15206",
+                                   :street_address => "123 Cherry Lane",
+                                   :locality => "Foobar",
+                                   :region => "PA",
+                                   :postal_code => "15206",
+                                   :country => "USA"},
+                                 :organization => {:name => "Hackers of the Severed Hand",
+                                   :department => "Making Shit",
+                                   :title => "Founder",
+                                   :type => "open source",
+                                   :start_date => Date.today,
+                                   :end_date => Date.today,
+                                   :location => "everywhere",
+                                   :description => "I make ostatus work"},
+                                 :account     => {:domain => "example.com",
+                                   :username => "wilkie",
+                                   :userid => "1"},
                                  :gender      => "androgynous",
                                  :note        => "cool dude",
                                  :display_name => "Dave Wilkinson",
@@ -47,51 +47,53 @@ describe Nelumba::Atom do
                                  :anniversary => Date.today)
 
     source_feed = Nelumba::Feed.new(:title => "moo",
-                                  :authors => [author],
-                                  :rights => "CC")
+                                    :authors => [author],
+                                    :rights => "CC")
 
     reply_to = Nelumba::Activity.new(:type  => :note,
-                                   :actor => author,
-                                   :object => Nelumba::Note.new(
-                                     :title => "My First Entry",
-                                     :html => "Hello"),
-                                   :uid => "54321",
-                                   :url => "http://example.com/entries/1",
-                                   :published => Time.now,
-                                   :updated => Time.now)
+                                     :actor => author,
+                                     :verb  => :post,
+                                     :object => Nelumba::Note.new(
+                                       :title => "My First Entry",
+                                       :html => "Hello"),
+                                     :uid => "54321",
+                                     :url => "http://example.com/entries/1",
+                                     :published => Time.now,
+                                     :updated => Time.now)
 
-    entry = Nelumba::Activity.new(:actor => author,
-                                :type => :note,
-                                :object => Nelumba::Note.new(
-                                  :title => "My Entry",
-                                  :html => "Hello"),
-                                :source => source_feed,
-                                :uid => "54321",
-                                :url => "http://example.com/entries/1",
-                                :published => Time.now,
-                                :in_reply_to => reply_to,
-                                :updated => Time.now)
+    entry = Nelumba::Activity.new(:actor  => author,
+                                  :verb   => :post,
+                                  :object => Nelumba::Note.new(
+                                    :uid    => "54321",
+                                    :url    => "http://example.com/entries/1",
+                                    :title  => "My Entry",
+                                    :html   => "Hello",
+                                    :in_reply_to => reply_to,
+                                    :author => author,
+                                    :published => Time.now,
+                                    :source => source_feed,
+                                    :updated => Time.now))
 
     @master = Nelumba::Feed.new(:title => "My Feed",
-                              :title_type => "html",
-                              :subtitle => "Subtitle",
-                              :subtitle_type => "html",
-                              :url => "http://example.com/feeds/1",
-                              :rights => "CC0",
-                              :icon => "http://example.com/icon.png",
-                              :logo => "http://example.com/logo.png",
-                              :hubs => ["http://hub.example.com",
-                                        "http://hub2.example.com"],
-                              :published => Time.now,
-                              :updated => Time.now,
-                              :authors => [author],
-                              :items => [entry],
-                              :uid => "12345")
+                                :title_type => "html",
+                                :subtitle => "Subtitle",
+                                :subtitle_type => "html",
+                                :url => "http://example.com/feeds/1",
+                                :rights => "CC0",
+                                :icon => "http://example.com/icon.png",
+                                :logo => "http://example.com/logo.png",
+                                :hubs => ["http://hub.example.com",
+                                          "http://hub2.example.com"],
+                                :published => Time.now,
+                                :updated => Time.now,
+                                :authors => [author],
+                                :items => [entry],
+                                :uid => "12345")
   end
 
   it "should be able to reform canonical structure using Atom" do
-    xml = Nelumba::Atom::Feed.from_canonical(@master).to_xml
-    new_feed = Nelumba::Atom::Feed.new(XML::Reader.string(xml)).to_canonical
+    xml = Nelumba::Atom::Feed.from_canonical(@master)
+    new_feed = Nelumba::Atom::Feed.to_canonical(xml)
 
     old_hash = @master.to_hash
     new_hash = new_feed.to_hash
@@ -102,20 +104,23 @@ describe Nelumba::Atom do
     old_hash[:items] = old_hash[:items].map(&:to_hash)
     new_hash[:items] = new_hash[:items].map(&:to_hash)
 
-    old_hash[:items][0][:in_reply_to] = []
-    new_hash[:items][0][:in_reply_to] = []
-
-    old_hash[:items][0][:actor] = old_hash[:items][0][:actor].to_hash
-    new_hash[:items][0][:actor] = new_hash[:items][0][:actor].to_hash
-
-    old_hash[:items][0][:source] = old_hash[:items][0][:source].to_hash
-    new_hash[:items][0][:source] = new_hash[:items][0][:source].to_hash
+    old_hash[:items][0][:actors] = old_hash[:items][0][:actors].map(&:to_hash)
+    new_hash[:items][0][:actors] = new_hash[:items][0][:actors].map(&:to_hash)
 
     old_hash[:items][0][:object] = old_hash[:items][0][:object].to_hash
     new_hash[:items][0][:object] = new_hash[:items][0][:object].to_hash
 
-    old_hash[:items][0][:source][:authors] = old_hash[:items][0][:source][:authors].map(&:to_hash)
-    new_hash[:items][0][:source][:authors] = new_hash[:items][0][:source][:authors].map(&:to_hash)
+    old_hash[:items][0][:object][:in_reply_to] = []
+    new_hash[:items][0][:object][:in_reply_to] = []
+
+    old_hash[:items][0][:object][:source] = old_hash[:items][0][:object][:source].to_hash
+    new_hash[:items][0][:object][:source] = new_hash[:items][0][:object][:source].to_hash
+
+    old_hash[:items][0][:object][:authors] = old_hash[:items][0][:object][:authors].map(&:to_hash)
+    new_hash[:items][0][:object][:authors] = new_hash[:items][0][:object][:authors].map(&:to_hash)
+
+    old_hash[:items][0][:object][:source][:authors] = old_hash[:items][0][:object][:source][:authors].map(&:to_hash)
+    new_hash[:items][0][:object][:source][:authors] = new_hash[:items][0][:object][:source][:authors].map(&:to_hash)
 
     # Flatten all keys to their to_s
     # We want to compare the to_s for all keys
@@ -152,7 +157,7 @@ describe Nelumba::Atom do
 
   describe "<xml>" do
     before do
-      @xml_str = Nelumba::Atom::Feed.from_canonical(@master).to_xml
+      @xml_str = Nelumba::Atom::Feed.from_canonical(@master)
       @xml = XML::Parser.string(@xml_str).parse
     end
 
@@ -312,60 +317,60 @@ describe Nelumba::Atom do
         describe "<poco:id>" do
           it "should list the author's portable contact id" do
             @author.find_first('poco:id',
-                               'http://portablecontacts.net/spec/1.0').content.must_equal @master.authors.first.uid
+                               'poco:http://portablecontacts.net/spec/1.0').content.must_equal @master.authors.first.uid
           end
         end
 
         describe "<poco:name>" do
           before do
             @poco_name = @author.find_first('poco:name',
-                                            'http://portablecontacts.net/spec/1.0')
+                                            'poco:http://portablecontacts.net/spec/1.0')
           end
 
           describe "<formatted>" do
             it "should list the author's portable contact formatted name" do
-              @poco_name.find_first('xmlns:formatted',
-                                    'xmlns:http://www.w3.org/2005/Atom')
+              @poco_name.find_first('poco:formatted',
+                                    'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.extended_name[:formatted]
             end
           end
 
           describe "<familyName>" do
             it "should list the author's portable contact family name" do
-              @poco_name.find_first('xmlns:familyName',
-                                    'xmlns:http://www.w3.org/2005/Atom')
+              @poco_name.find_first('poco:familyName',
+                                    'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.extended_name[:family_name]
             end
           end
 
           describe "<givenName>" do
             it "should list the author's portable contact given name" do
-              @poco_name.find_first('xmlns:givenName',
-                                    'xmlns:http://www.w3.org/2005/Atom')
+              @poco_name.find_first('poco:givenName',
+                                    'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.extended_name[:given_name]
             end
           end
 
           describe "<middleName>" do
             it "should list the author's portable contact middle name" do
-              @poco_name.find_first('xmlns:middleName',
-                                    'xmlns:http://www.w3.org/2005/Atom')
+              @poco_name.find_first('poco:middleName',
+                                    'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.extended_name[:middle_name]
             end
           end
 
           describe "<honorificPrefix>" do
             it "should list the author's portable contact honorific prefix" do
-              @poco_name.find_first('xmlns:honorificPrefix',
-                                    'xmlns:http://www.w3.org/2005/Atom')
+              @poco_name.find_first('poco:honorificPrefix',
+                                    'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.extended_name[:honorific_prefix]
             end
           end
 
           describe "<honorificSuffix>" do
             it "should list the author's portable contact honorific suffix" do
-              @poco_name.find_first('xmlns:honorificSuffix',
-                                    'xmlns:http://www.w3.org/2005/Atom')
+              @poco_name.find_first('poco:honorificSuffix',
+                                    'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.extended_name[:honorific_suffix]
             end
           end
@@ -374,71 +379,73 @@ describe Nelumba::Atom do
         describe "<poco:organization>" do
           before do
             @poco_org = @author.find_first('poco:organization',
-                                           'http://portablecontacts.net/spec/1.0')
+                                           'poco:http://portablecontacts.net/spec/1.0')
           end
 
-          describe "<name>" do
+          describe "<poco:name>" do
             it "should list the author's portable contact organization name" do
-              @poco_org.find_first('xmlns:name',
-                                   'xmlns:http://www.w3.org/2005/Atom')
+              @poco_org.find_first('poco:name',
+                                   'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.organization[:name]
             end
           end
 
-          describe "<department>" do
+          describe "<poco:department>" do
             it "should list the author's portable contact organization department" do
-              @poco_org.find_first('xmlns:department',
-                                   'xmlns:http://www.w3.org/2005/Atom')
+              @poco_org.find_first('poco:department',
+                                   'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.organization[:department]
             end
           end
 
-          describe "<title>" do
+          describe "<poco:title>" do
             it "should list the author's portable contact organization title" do
-              @poco_org.find_first('xmlns:title',
-                                   'xmlns:http://www.w3.org/2005/Atom')
+              @poco_org.find_first('poco:title',
+                                   'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.organization[:title]
             end
           end
 
-          describe "<type>" do
+          describe "<poco:type>" do
             it "should list the author's portable contact organization type" do
-              @poco_org.find_first('xmlns:type',
-                                   'xmlns:http://www.w3.org/2005/Atom')
+              @poco_org.find_first('poco:type',
+                                   'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.organization[:type]
             end
           end
 
-          describe "<startDate>" do
+          describe "<poco:startDate>" do
             it "should list the author's portable contact organization startDate" do
-              time = @poco_org.find_first('xmlns:startDate',
-                                          'xmlns:http://www.w3.org/2005/Atom').content
+              time = @poco_org.find_first('poco:startDate',
+                                          'poco:http://portablecontacts.net/spec/1.0')
+                              .content
               DateTime::parse(time).to_s
                 .must_equal @master.authors.first.organization[:start_date].to_datetime.to_s
             end
           end
 
-          describe "<endDate>" do
+          describe "<poco:endDate>" do
             it "should list the author's portable contact organization endDate" do
-              time = @poco_org.find_first('xmlns:endDate',
-                                          'xmlns:http://www.w3.org/2005/Atom').content
+              time = @poco_org.find_first('poco:endDate',
+                                          'poco:http://portablecontacts.net/spec/1.0')
+                              .content
               DateTime::parse(time).to_s
                 .must_equal @master.authors.first.organization[:end_date].to_datetime.to_s
             end
           end
 
-          describe "<location>" do
+          describe "<poco:location>" do
             it "should list the author's portable contact organization location" do
-              @poco_org.find_first('xmlns:location',
-                                   'xmlns:http://www.w3.org/2005/Atom')
+              @poco_org.find_first('poco:location',
+                                   'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.organization[:location]
             end
           end
 
-          describe "<description>" do
+          describe "<poco:description>" do
             it "should list the author's portable contact organization description" do
-              @poco_org.find_first('xmlns:description',
-                                   'xmlns:http://www.w3.org/2005/Atom')
+              @poco_org.find_first('poco:description',
+                                   'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.organization[:description]
             end
           end
@@ -447,53 +454,53 @@ describe Nelumba::Atom do
         describe "<poco:address>" do
           before do
             @poco_address = @author.find_first('poco:address',
-                                               'http://portablecontacts.net/spec/1.0')
+                                               'poco:http://portablecontacts.net/spec/1.0')
           end
 
-          describe "<formatted>" do
+          describe "<poco:formatted>" do
             it "should list the author's portable contact formatted address" do
-              @poco_address.find_first('xmlns:formatted',
-                                       'xmlns:http://www.w3.org/2005/Atom')
+              @poco_address.find_first('poco:formatted',
+                                       'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.address[:formatted]
             end
           end
 
-          describe "<streetAddress>" do
+          describe "<poco:streetAddress>" do
             it "should list the author's portable contact address streetAddress" do
-              @poco_address.find_first('xmlns:streetAddress',
-                                       'xmlns:http://www.w3.org/2005/Atom')
+              @poco_address.find_first('poco:streetAddress',
+                                       'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.address[:street_address]
             end
           end
 
-          describe "<locality>" do
+          describe "<poco:locality>" do
             it "should list the author's portable contact address locality" do
-              @poco_address.find_first('xmlns:locality',
-                                       'xmlns:http://www.w3.org/2005/Atom')
+              @poco_address.find_first('poco:locality',
+                                       'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.address[:locality]
             end
           end
 
-          describe "<region>" do
+          describe "<poco:region>" do
             it "should list the author's portable contact address region" do
-              @poco_address.find_first('xmlns:region',
-                                       'xmlns:http://www.w3.org/2005/Atom')
+              @poco_address.find_first('poco:region',
+                                       'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.address[:region]
             end
           end
 
-          describe "<postalCode>" do
+          describe "<poco:postalCode>" do
             it "should list the author's portable contact address postalCode" do
-              @poco_address.find_first('xmlns:postalCode',
-                                       'xmlns:http://www.w3.org/2005/Atom')
+              @poco_address.find_first('poco:postalCode',
+                                       'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.address[:postal_code]
             end
           end
 
-          describe "<country>" do
+          describe "<poco:country>" do
             it "should list the author's portable contact address country" do
-              @poco_address.find_first('xmlns:country',
-                                       'xmlns:http://www.w3.org/2005/Atom')
+              @poco_address.find_first('poco:country',
+                                       'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.address[:country]
             end
           end
@@ -502,29 +509,29 @@ describe Nelumba::Atom do
         describe "<poco:account>" do
           before do
             @poco_account = @author.find_first('poco:account',
-                                               'http://portablecontacts.net/spec/1.0')
+                                               'poco:http://portablecontacts.net/spec/1.0')
           end
 
-          describe "<domain>" do
+          describe "<poco:domain>" do
             it "should list the author's portable contact account domain" do
-              @poco_account.find_first('xmlns:domain',
-                                       'xmlns:http://www.w3.org/2005/Atom')
+              @poco_account.find_first('poco:domain',
+                                       'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.account[:domain]
             end
           end
 
-          describe "<username>" do
+          describe "<poco:username>" do
             it "should list the author's portable contact account username" do
-              @poco_account.find_first('xmlns:username',
-                                       'xmlns:http://www.w3.org/2005/Atom')
+              @poco_account.find_first('poco:username',
+                                       'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.account[:username]
             end
           end
 
-          describe "<userid>" do
+          describe "<poco:userid>" do
             it "should list the author's portable contact account userid" do
-              @poco_account.find_first('xmlns:userid',
-                                       'xmlns:http://www.w3.org/2005/Atom')
+              @poco_account.find_first('poco:userid',
+                                       'poco:http://portablecontacts.net/spec/1.0')
                 .content.must_equal @master.authors.first.account[:userid]
             end
           end
@@ -533,7 +540,7 @@ describe Nelumba::Atom do
         describe "<poco:displayName>" do
           it "should list the author's portable contact display name" do
             @author.find_first('poco:displayName',
-                               'http://portablecontacts.net/spec/1.0')
+                               'poco:http://portablecontacts.net/spec/1.0')
               .content.must_equal @master.authors.first.display_name
           end
         end
@@ -541,7 +548,7 @@ describe Nelumba::Atom do
         describe "<poco:nickname>" do
           it "should list the author's portable contact nickname" do
             @author.find_first('poco:nickname',
-                               'http://portablecontacts.net/spec/1.0')
+                               'poco:http://portablecontacts.net/spec/1.0')
               .content.must_equal @master.authors.first.nickname
           end
         end
@@ -549,7 +556,7 @@ describe Nelumba::Atom do
         describe "<poco:gender>" do
           it "should list the author's portable contact gender" do
             @author.find_first('poco:gender',
-                               'http://portablecontacts.net/spec/1.0')
+                               'poco:http://portablecontacts.net/spec/1.0')
               .content.must_equal @master.authors.first.gender
           end
         end
@@ -557,7 +564,7 @@ describe Nelumba::Atom do
         describe "<poco:note>" do
           it "should list the author's portable contact note" do
             @author.find_first('poco:note',
-                               'http://portablecontacts.net/spec/1.0')
+                               'poco:http://portablecontacts.net/spec/1.0')
               .content.must_equal @master.authors.first.note
           end
         end
@@ -565,7 +572,7 @@ describe Nelumba::Atom do
         describe "<poco:preferredUsername>" do
           it "should list the author's portable contact preferred username" do
             @author.find_first('poco:preferredUsername',
-                               'http://portablecontacts.net/spec/1.0')
+                               'poco:http://portablecontacts.net/spec/1.0')
               .content.must_equal @master.authors.first.preferred_username
           end
         end
@@ -573,7 +580,7 @@ describe Nelumba::Atom do
         describe "<poco:birthday>" do
           it "should list the author's portable contact birthday" do
             time = @author.find_first('poco:birthday',
-                                      'http://portablecontacts.net/spec/1.0').content
+                                      'poco:http://portablecontacts.net/spec/1.0').content
             DateTime::parse(time).to_s.must_equal @master.authors.first
                                                        .birthday.to_datetime.to_s
           end
@@ -582,7 +589,7 @@ describe Nelumba::Atom do
         describe "<poco:anniversary>" do
           it "should list the author's portable contact anniversary" do
             time = @author.find_first('poco:anniversary',
-                                      'http://portablecontacts.net/spec/1.0').content
+                                      'poco:http://portablecontacts.net/spec/1.0').content
             DateTime::parse(time).to_s.must_equal @master.authors.first
                                                        .anniversary.to_datetime.to_s
           end
@@ -591,7 +598,7 @@ describe Nelumba::Atom do
         describe "<poco:published>" do
           it "should list the author's portable contact published date" do
             time = @author.find_first('poco:published',
-                                      'http://portablecontacts.net/spec/1.0').content
+                                      'poco:http://portablecontacts.net/spec/1.0').content
             DateTime::parse(time).to_s.must_equal @master.authors.first
                                                        .published.to_datetime.to_s
           end
@@ -600,7 +607,7 @@ describe Nelumba::Atom do
         describe "<poco:updated>" do
           it "should list the author's portable contact updated date" do
             time = @author.find_first('poco:updated',
-                                      'http://portablecontacts.net/spec/1.0').content
+                                      'poco:http://portablecontacts.net/spec/1.0').content
             DateTime::parse(time).to_s.must_equal @master.authors.first
                                                        .updated.to_datetime.to_s
           end
@@ -632,7 +639,7 @@ describe Nelumba::Atom do
         describe "<id>" do
           it "should contain the entry id" do
             @entry.find_first('xmlns:id', 'xmlns:http://www.w3.org/2005/Atom')
-              .content.must_equal @master.items.first.uid
+              .content.must_equal @master.items.first.object.uid
           end
         end
 
@@ -640,7 +647,7 @@ describe Nelumba::Atom do
           it "should contain a link for self" do
             @entry.find_first('xmlns:link[@rel="self"]',
                               'xmlns:http://www.w3.org/2005/Atom').attributes
-               .get_attribute('href').value.must_equal(@master.items.first.url)
+               .get_attribute('href').value.must_equal(@master.items.first.object.url)
           end
         end
 

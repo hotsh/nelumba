@@ -5,7 +5,13 @@ describe Nelumba::Badge do
   describe "#initialize" do
     it "should store an author" do
       author = mock('author')
-      Nelumba::Badge.new(:author => author).author.must_equal author
+      Nelumba::Badge.new(:author => author).authors.first.must_equal author
+    end
+
+    it "should store multiple authors" do
+      author  = mock('author')
+      author2 = mock('author')
+      Nelumba::Badge.new(:authors => [author, author2]).authors.must_equal [author, author2]
     end
 
     it "should store content" do
@@ -48,7 +54,13 @@ describe Nelumba::Badge do
 
     it "should contain the author" do
       author = mock('Nelumba::Person')
-      Nelumba::Badge.new(:author => author).to_hash[:author].must_equal author
+      Nelumba::Badge.new(:author => author).to_hash[:authors].first.must_equal author
+    end
+
+    it "should contain all authors" do
+      author  = mock('Nelumba::Person')
+      author2 = mock('Nelumba::Person')
+      Nelumba::Badge.new(:authors => [author, author2]).to_hash[:authors].must_equal [author, author2]
     end
 
     it "should contain the uid" do
@@ -83,22 +95,22 @@ describe Nelumba::Badge do
   describe "#to_json" do
     before do
       author = Nelumba::Person.new :display_name => "wilkie"
-      @note = Nelumba::Badge.new :content      => "Hello",
-                               :author       => author,
-                               :uid          => "id",
-                               :url          => "url",
-                               :title        => "title",
-                               :summary      => "foo",
-                               :display_name => "meh",
-                               :published    => Time.now,
-                               :updated      => Time.now
+      @note = Nelumba::Badge.new :content        => "Hello",
+                                 :author         => author,
+                                 :uid            => "id",
+                                 :url            => "url",
+                                 :title          => "title",
+                                 :summary        => "foo",
+                                 :display_name   => "meh",
+                                 :published      => Time.now,
+                                 :updated        => Time.now
 
       @json = @note.to_json
       @data = JSON.parse(@json)
     end
 
     it "should contain the embedded json for the author" do
-      @data["author"].must_equal JSON.parse(@note.author.to_json)
+      @data["authors"].first.must_equal JSON.parse(@note.authors.first.to_json)
     end
 
     it "should contain a 'badge' objectType" do
@@ -126,11 +138,11 @@ describe Nelumba::Badge do
     end
 
     it "should contain the published date as rfc3339" do
-      @data["published"].must_equal @note.published.to_date.rfc3339 + 'Z'
+      @data["published"].must_equal @note.published.utc.iso8601
     end
 
     it "should contain the updated date as rfc3339" do
-      @data["updated"].must_equal @note.updated.to_date.rfc3339 + 'Z'
+      @data["updated"].must_equal @note.updated.utc.iso8601
     end
   end
 end

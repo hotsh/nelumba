@@ -2,9 +2,6 @@ module Nelumba
   class Comment
     include Nelumba::Object
 
-    # Holds a collection of Nelumba::Activity's that this comment is in reply to.
-    attr_reader :in_reply_to
-
     # Create a new Comment activity object.
     #
     # options:
@@ -23,25 +20,10 @@ module Nelumba
     end
 
     def init(options = {}, &blk)
-      @in_reply_to  = options[:in_reply_to] || []
+      options ||= {}
+      options[:type] = :comment
 
       super options
-    end
-
-    # Returns a Hash representing this comment.
-    def to_hash
-      {
-        :in_reply_to  => @in_reply_to
-      }.merge(super)
-    end
-
-    # Returns a Hash representing this comment with JSON ActivityStreams
-    # conventions.
-    def to_json_hash
-      {
-        :objectType   => "comment",
-        :in_reply_to  => @in_reply_to
-      }.merge(super)
     end
   end
 end

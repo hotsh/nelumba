@@ -18,17 +18,16 @@ module Nelumba
       init(options, &blk)
     end
 
+    def init(options = {}, &blk)
+      options ||= {}
+      options[:type] = :note
+
+      super(options, &blk)
+    end
+
     # Returns a hash of all relevant fields.
     def to_hash
       super.to_hash
-    end
-
-    # Returns a hash of all relevant fields with JSON activity streams
-    # conventions.
-    def to_json_hash
-      {
-        :objectType => "note",
-      }.merge(super)
     end
   end
 end

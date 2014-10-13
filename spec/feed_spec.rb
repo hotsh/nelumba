@@ -3,20 +3,16 @@ require_relative '../lib/nelumba/feed.rb'
 
 describe Nelumba::Feed do
   describe "#initialize" do
-    it "should store a title" do
-      Nelumba::Feed.new(:title => "My Title").title.must_equal "My Title"
-    end
-
-    it "should store a title type" do
-      Nelumba::Feed.new(:title_type => "html").title_type.must_equal "html"
-    end
-
     it "should store a subtitle" do
       Nelumba::Feed.new(:subtitle => "My Title").subtitle.must_equal "My Title"
     end
 
-    it "should store a subtitle type" do
-      Nelumba::Feed.new(:subtitle_type => "html").subtitle_type.must_equal "html"
+    it "should store a subtitle_text" do
+      Nelumba::Feed.new(:subtitle_text => "foo").subtitle_text.must_equal "foo"
+    end
+
+    it "should store a subtitle_html" do
+      Nelumba::Feed.new(:subtitle_html => "foo").subtitle_html.must_equal "foo"
     end
 
     it "should store a list of categories" do
@@ -161,16 +157,24 @@ describe Nelumba::Feed do
       Nelumba::Feed.new(:title => "My Title").to_hash[:title].must_equal "My Title"
     end
 
-    it "should return a Hash containing the title type" do
-      Nelumba::Feed.new(:title_type => "html").to_hash[:title_type].must_equal "html"
+    it "should return a Hash containing the title text" do
+      Nelumba::Feed.new(:title_text => "My Title").to_hash[:title_text].must_equal "My Title"
+    end
+
+    it "should return a Hash containing the title html" do
+      Nelumba::Feed.new(:title_html => "My Title").to_hash[:title_html].must_equal "My Title"
     end
 
     it "should return a Hash containing the subtitle" do
       Nelumba::Feed.new(:subtitle => "My Title").to_hash[:subtitle].must_equal "My Title"
     end
 
-    it "should return a Hash containing the subtitle type" do
-      Nelumba::Feed.new(:subtitle_type => "html").to_hash[:subtitle_type].must_equal "html"
+    it "should return a Hash containing the subtitle html" do
+      Nelumba::Feed.new(:subtitle_html => "html").to_hash[:subtitle_html].must_equal "html"
+    end
+
+    it "should return a Hash containing the subtitle text" do
+      Nelumba::Feed.new(:subtitle_text => "text").to_hash[:subtitle_text].must_equal "text"
     end
 
     it "should return a Hash containing a list of categories" do
@@ -195,7 +199,7 @@ describe Nelumba::Feed do
 
     it "should return a Hash containing a list of hubs" do
       Nelumba::Feed.new(:hubs => ["hub1", "hub2"]).to_hash[:hubs]
-        .must_equal ["hub1", "hub2"]
+                   .must_equal ["hub1", "hub2"]
     end
 
     it "should return a Hash containing the id of the feed" do
@@ -239,12 +243,9 @@ describe Nelumba::Feed do
 
   describe "#to_atom" do
     it "should relegate Atom generation to Nelumba::Atom::Feed" do
-      atom_entry = mock('atom')
-      atom_entry.expects(:to_xml).returns("ATOM")
-
       require_relative '../lib/nelumba/atom/feed.rb'
 
-      Nelumba::Atom::Feed.stubs(:new).returns(atom_entry)
+      Nelumba::Atom::Feed.stubs(:from_canonical).returns("ATOM")
 
       Nelumba::Feed.new(:title => "foo").to_atom.must_equal "ATOM"
     end

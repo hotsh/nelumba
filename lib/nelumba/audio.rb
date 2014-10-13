@@ -12,6 +12,9 @@ module Nelumba
 
     # Creates a new Audio activity object.
     def initialize(options = {})
+      options ||= {}
+      options[:type] = :audio
+
       super options
 
       @embed_code = options[:embed_code]
@@ -30,7 +33,6 @@ module Nelumba
     # conventions.
     def to_json_hash
       {
-        :objectType => "audio",
         :embedCode  => @embed_code,
         :stream     => @stream
       }.merge(super)

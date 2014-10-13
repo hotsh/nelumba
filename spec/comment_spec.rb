@@ -9,7 +9,13 @@ describe Nelumba::Comment do
 
     it "should store an author" do
       author = mock('author')
-      Nelumba::Comment.new(:author => author).author.must_equal author
+      Nelumba::Comment.new(:author => author).authors.first.must_equal author
+    end
+
+    it "should store multiple authors" do
+      author  = mock('author')
+      author2 = mock('author')
+      Nelumba::Comment.new(:authors => [author, author2]).authors.must_equal [author, author2]
     end
 
     it "should store the display_name" do
@@ -42,7 +48,13 @@ describe Nelumba::Comment do
 
     it "should contain the author" do
       author = mock('Nelumba::Person')
-      Nelumba::Comment.new(:author => author).to_hash[:author].must_equal author
+      Nelumba::Comment.new(:author => author).to_hash[:authors].first.must_equal author
+    end
+
+    it "should contain all authors" do
+      author  = mock('Nelumba::Person')
+      author2 = mock('Nelumba::Person')
+      Nelumba::Comment.new(:authors => [author, author2]).to_hash[:authors].must_equal [author, author2]
     end
 
     it "should contain the uid" do
@@ -55,7 +67,7 @@ describe Nelumba::Comment do
 
     it "should contain the display_name" do
       Nelumba::Comment.new(:display_name => "Hello")
-                 .to_hash[:display_name].must_equal "Hello"
+                      .to_hash[:display_name].must_equal "Hello"
     end
 
     it "should contain the published date" do
@@ -73,20 +85,20 @@ describe Nelumba::Comment do
     before do
       author = Nelumba::Person.new :display_name => "wilkie"
       @note = Nelumba::Comment.new :content      => "Hello",
-                                 :author       => author,
-                                 :summary      => "foo",
-                                 :display_name => "Foo",
-                                 :uid          => "id",
-                                 :url          => "url",
-                                 :published    => Time.now,
-                                 :updated      => Time.now
+                                   :author       => author,
+                                   :summary      => "foo",
+                                   :display_name => "Foo",
+                                   :uid          => "id",
+                                   :url          => "url",
+                                   :published    => Time.now,
+                                   :updated      => Time.now
 
       @json = @note.to_json
       @data = JSON.parse(@json)
     end
 
     it "should contain the embedded json for the author" do
-      @data["author"].must_equal JSON.parse(@note.author.to_json)
+      @data["authors"].first.must_equal JSON.parse(@note.authors.first.to_json)
     end
 
     it "should contain a 'comment' objectType" do
@@ -118,11 +130,11 @@ describe Nelumba::Comment do
     end
 
     it "should contain the published date as rfc3339" do
-      @data["published"].must_equal @note.published.to_date.rfc3339 + 'Z'
+      @data["published"].must_equal @note.published.utc.iso8601
     end
 
     it "should contain the updated date as rfc3339" do
-      @data["updated"].must_equal @note.updated.to_date.rfc3339 + 'Z'
+      @data["updated"].must_equal @note.updated.utc.iso8601
     end
   end
 end

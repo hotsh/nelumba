@@ -1,6 +1,4 @@
 module Nelumba
-  require 'atom'
-
   class Link
     # The URL for the related resource.
     attr_reader :href

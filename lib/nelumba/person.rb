@@ -1,8 +1,6 @@
 require 'nelumba/activity'
 
 module Nelumba
-  require 'atom'
-
   # Holds information about the author of the Feed.
   class Person
     require 'date'
@@ -137,6 +135,10 @@ module Nelumba
     #   email              => The email of the author.
     def initialize(options = {})
       init(options)
+    end
+
+    def type
+      :person
     end
 
     def init(options = {})

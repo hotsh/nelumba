@@ -9,6 +9,9 @@ module Nelumba
     end
 
     def init(options = {}, &blk)
+      options ||= {}
+      options[:type] = :bookmark
+
       super(options, &blk)
 
       @target_url = options[:target_url]
@@ -22,7 +25,6 @@ module Nelumba
 
     def to_json_hash
       {
-        :objectType => "bookmark",
         :targetUrl  => @target_url
       }.merge(super)
     end

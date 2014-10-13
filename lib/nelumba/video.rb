@@ -16,6 +16,9 @@ module Nelumba
     end
 
     def init(options = {}, &blk)
+      options ||= {}
+      options[:type] = :video
+
       super(options, &blk)
 
       @embed_code = options[:embed_code]
@@ -34,7 +37,6 @@ module Nelumba
     # conventions.
     def to_json_hash
       {
-        :objectType => "video",
         :embedCode  => @embed_code,
         :stream     => @stream
       }.merge(super)

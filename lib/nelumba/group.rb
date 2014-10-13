@@ -2,10 +2,11 @@ module Nelumba
   class Group
     include Nelumba::Object
 
-    def to_json_hash
-      {
-        :objectType => "group"
-      }.merge(super)
+    def init(options = {}, &blk)
+      options ||= {}
+      options[:type] = :group
+
+      super options, &blk
     end
   end
 end

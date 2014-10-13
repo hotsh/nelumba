@@ -7,8 +7,8 @@ describe Nelumba::Activity do
       Nelumba::Activity.new(:object => "object").object.must_equal "object"
     end
 
-    it "should store an type" do
-      Nelumba::Activity.new(:type => :audio).type.must_equal :audio
+    it "should store a type of 'activity'" do
+      Nelumba::Activity.new.type.must_equal :activity
     end
 
     it "should store a verb" do
@@ -21,7 +21,13 @@ describe Nelumba::Activity do
 
     it "should store an actor" do
       actor = mock('author')
-      Nelumba::Activity.new(:actor => actor).actor.must_equal actor
+      Nelumba::Activity.new(:actor => actor).actors.first.must_equal actor
+    end
+
+    it "should store multiple actors" do
+      actor = mock('author')
+      actor2 = mock('author')
+      Nelumba::Activity.new(:actors => [actor, actor2]).actors.must_equal [actor, actor2]
     end
 
     it "should store the published date" do
@@ -80,7 +86,7 @@ describe Nelumba::Activity do
     end
 
     it "should store an array of mentions" do
-      thread = mock('entry')
+      thread = mock('person')
       Nelumba::Activity.new(:mentions => [thread]).mentions.must_equal [thread]
     end
 
@@ -89,7 +95,7 @@ describe Nelumba::Activity do
     end
 
     it "should store an array of likes" do
-      thread = mock('entry')
+      thread = mock('person')
       Nelumba::Activity.new(:likes => [thread]).likes.must_equal [thread]
     end
 

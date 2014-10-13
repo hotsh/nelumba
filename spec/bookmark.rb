@@ -28,7 +28,7 @@ describe Nelumba::Bookmark do
 
     it "should store a display name" do
       Nelumba::Bookmark.new(:display_name => "url")
-                        .display_name.must_equal "url"
+                       .display_name.must_equal "url"
     end
 
     it "should store a summary" do
@@ -47,7 +47,7 @@ describe Nelumba::Bookmark do
   describe "#to_hash" do
     it "should contain the content" do
       Nelumba::Bookmark.new(:content => "Hello")
-                        .to_hash[:content].must_equal "Hello"
+                       .to_hash[:content].must_equal "Hello"
     end
 
     it "should contain the author" do
@@ -61,7 +61,7 @@ describe Nelumba::Bookmark do
 
     it "should contain the target_url" do
       Nelumba::Bookmark.new(:target_url => "Hello")
-                     .to_hash[:target_url].must_equal "Hello"
+                       .to_hash[:target_url].must_equal "Hello"
     end
 
     it "should contain the url" do
@@ -70,12 +70,12 @@ describe Nelumba::Bookmark do
 
     it "should contain the summary" do
       Nelumba::Bookmark.new(:summary=> "Hello")
-                 .to_hash[:summary].must_equal "Hello"
+                       .to_hash[:summary].must_equal "Hello"
     end
 
     it "should contain the display name" do
       Nelumba::Bookmark.new(:display_name => "Hello")
-                 .to_hash[:display_name].must_equal "Hello"
+                       .to_hash[:display_name].must_equal "Hello"
     end
 
     it "should contain the published date" do
@@ -91,24 +91,24 @@ describe Nelumba::Bookmark do
 
   describe "#to_json" do
     before do
-      author = Nelumba::Person.new :display_name => "wilkie"
+      author = Nelumba::Person.new  :display_name => "wilkie"
       @note = Nelumba::Bookmark.new :content      => "Hello",
-                                  :author       => author,
-                                  :uid          => "id",
-                                  :target_url   => "target",
-                                  :url          => "url",
-                                  :title        => "title",
-                                  :summary      => "foo",
-                                  :display_name => "meh",
-                                  :published    => Time.now,
-                                  :updated      => Time.now
+                                    :author       => author,
+                                    :uid          => "id",
+                                    :target_url   => "target",
+                                    :url          => "url",
+                                    :title        => "title",
+                                    :summary      => "foo",
+                                    :display_name => "meh",
+                                    :published    => Time.now,
+                                    :updated      => Time.now
 
       @json = @note.to_json
       @data = JSON.parse(@json)
     end
 
     it "should contain the embedded json for the author" do
-      @data["author"].must_equal JSON.parse(@note.author.to_json)
+      @data["authors"].first.must_equal JSON.parse(@note.authors.first.to_json)
     end
 
     it "should contain a 'bookmark' objectType" do
@@ -140,11 +140,11 @@ describe Nelumba::Bookmark do
     end
 
     it "should contain the published date as rfc3339" do
-      @data["published"].must_equal @note.published.to_date.rfc3339 + 'Z'
+      @data["published"].must_equal @note.published.utc.iso8601
     end
 
     it "should contain the updated date as rfc3339" do
-      @data["updated"].must_equal @note.updated.to_date.rfc3339 + 'Z'
+      @data["updated"].must_equal @note.updated.utc.iso8601
     end
   end
 end

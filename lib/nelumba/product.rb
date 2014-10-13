@@ -9,6 +9,9 @@ module Nelumba
     end
 
     def init(options = {}, &blk)
+      options ||= {}
+      options[:type] = :product
+
       super(options, &blk)
 
       @full_image = options[:full_image]
@@ -22,7 +25,6 @@ module Nelumba
 
     def to_json_hash
       {
-        :objectType => "product",
         :fullImage  => @full_image
       }.merge(super)
     end

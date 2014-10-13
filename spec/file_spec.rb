@@ -5,7 +5,13 @@ describe Nelumba::File do
   describe "#initialize" do
     it "should store an author" do
       author = mock('author')
-      Nelumba::File.new(:author => author).author.must_equal author
+      Nelumba::File.new(:author => author).authors.first.must_equal author
+    end
+
+    it "should store multiple authors" do
+      author  = mock('author')
+      author2 = mock('author')
+      Nelumba::File.new(:authors => [author, author2]).authors.must_equal [author, author2]
     end
 
     it "should store content" do
@@ -84,7 +90,13 @@ describe Nelumba::File do
 
     it "should contain the author" do
       author = mock('Nelumba::Person')
-      Nelumba::File.new(:author => author).to_hash[:author].must_equal author
+      Nelumba::File.new(:author => author).to_hash[:authors].first.must_equal author
+    end
+
+    it "should contain all authors" do
+      author  = mock('Nelumba::Person')
+      author2 = mock('Nelumba::Person')
+      Nelumba::File.new(:authors => [author, author2]).to_hash[:authors].must_equal [author, author2]
     end
 
     it "should contain the uid" do
@@ -97,12 +109,12 @@ describe Nelumba::File do
 
     it "should contain the summary" do
       Nelumba::File.new(:summary=> "Hello")
-                 .to_hash[:summary].must_equal "Hello"
+                   .to_hash[:summary].must_equal "Hello"
     end
 
     it "should contain the display name" do
       Nelumba::File.new(:display_name => "Hello")
-                 .to_hash[:display_name].must_equal "Hello"
+                   .to_hash[:display_name].must_equal "Hello"
     end
 
     it "should contain the published date" do
@@ -119,24 +131,24 @@ describe Nelumba::File do
   describe "#to_json" do
     before do
       author = Nelumba::Person.new :display_name => "wilkie"
-      @note = Nelumba::File.new :content     => "Hello",
-                                :author      => author,
-                                :length      => 125,
-                                :md5         => "hash",
-                                :file_url    => "file url",
-                                :mime_type   => "image/png",
-                                :uid         => "id",
-                                :url         => "url",
-                                :title       => "title",
-                                :published   => Time.now,
-                                :updated     => Time.now
+      @note = Nelumba::File.new    :content      => "Hello",
+                                   :author       => author,
+                                   :length       => 125,
+                                   :md5          => "hash",
+                                   :file_url     => "file url",
+                                   :mime_type    => "image/png",
+                                   :uid          => "id",
+                                   :url          => "url",
+                                   :title        => "title",
+                                   :published    => Time.now,
+                                   :updated      => Time.now
 
       @json = @note.to_json
       @data = JSON.parse(@json)
     end
 
     it "should contain the embedded json for the author" do
-      @data["author"].must_equal JSON.parse(@note.author.to_json)
+      @data["authors"].first.must_equal JSON.parse(@note.authors.first.to_json)
     end
 
     it "should contain the md5" do
@@ -180,11 +192,11 @@ describe Nelumba::File do
     end
 
     it "should contain the published date as rfc3339" do
-      @data["published"].must_equal @note.published.to_date.rfc3339 + 'Z'
+      @data["published"].must_equal @note.published.utc.iso8601
     end
 
     it "should contain the updated date as rfc3339" do
-      @data["updated"].must_equal @note.updated.to_date.rfc3339 + 'Z'
+      @data["updated"].must_equal @note.updated.utc.iso8601
     end
   end
 end
