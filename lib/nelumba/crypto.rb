@@ -106,9 +106,9 @@ module Nelumba
     def self.emsa_signature(text, key)
       modulus_byte_count = key.modulus.size
 
-      plaintext = Digest::SHA2.new(256).digest(text)
+      plaintext = Digest::SHA2.new(256).digest(text).force_encoding('binary')
 
-      prefix = "\x30\x31\x30\x0d\x06\x09\x60\x86\x48\x01\x65\x03\x04\x02\x01\x05\x00\x04\x20"
+      prefix = "\x30\x31\x30\x0d\x06\x09\x60\x86\x48\x01\x65\x03\x04\x02\x01\x05\x00\x04\x20".force_encoding('binary')
       padding_count = modulus_byte_count - prefix.bytes.count - plaintext.bytes.count - 3
 
       padding = ""
@@ -116,7 +116,7 @@ module Nelumba
         padding = padding + "\xff"
       end
 
-      "\x00\x01#{padding}\x00#{prefix}#{plaintext}".force_encoding('binary')
+      "\x00\x01#{padding.force_encoding('binary')}\x00#{prefix}#{plaintext}".force_encoding('binary')
     end
 
     # :nodoc:
