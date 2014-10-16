@@ -153,7 +153,7 @@ module Nelumba
       actors = nil
 
       if self.actors
-        actors = self.actors.map(&:preferred_display_name)
+        actors = self.actors.map(&:display_name)
       end
 
       person = nil
@@ -162,14 +162,30 @@ module Nelumba
         person = self.object.name
       end
 
-      Nelumba::I18n.sentence({
-        :actors        => actors,
+      meta_data = {
         :object        => object,
         :object_owners => object_owners,
         :person        => person,
         :verb          => self.verb,
-        :targets       => (self.targets and self.targets.any?) ? self.targets.first.preferred_display_name : nil
-      }.merge(options))
+      }
+
+      if actors.length == 1
+        meta_data[:actor] = actors.first
+      else
+        meta_data[:actors] = actors
+      end
+
+      if self.targets and self.targets.any?
+        if self.targets.length == 1
+          meta_data[:target] = self.targets.first.display_name
+        else
+          meta_data[:target] = self.targets.map(&:display_name)
+        end
+      end
+
+      meta_data.merge!(options)
+
+      Nelumba::I18n.sentence(meta_data)
     end
   end
 end
