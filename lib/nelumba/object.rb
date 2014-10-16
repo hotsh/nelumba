@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module Nelumba
   module Object
     require 'time-lord/units'

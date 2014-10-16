@@ -93,7 +93,7 @@ module Nelumba
     def to_atom
       require 'nelumba/atom/entry'
 
-      Nelumba::Atom::Entry.from_canonical(self).to_xml
+      Nelumba::Atom::Entry.from_canonical(self)
     end
 
     # Returns a hash of all relevant fields with JSON activity streams
