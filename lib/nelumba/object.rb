@@ -28,10 +28,6 @@ module Nelumba
     # Holds the source feed for this object
     attr_reader :source
 
-    def first_author
-      self.authors.first
-    end
-
     attr_reader :display_name
     attr_reader :uid
     attr_reader :url
@@ -269,7 +265,7 @@ module Nelumba
 
       {
         :source       => self.source,
-        :authors      => self.authors,
+        :authors      => self.authors.dup,
         :summary      => self.summary,
         :content      => self.content,
         :display_name => self.display_name,
@@ -283,7 +279,7 @@ module Nelumba
         :object_type  => self.type,
         :text         => self.text,
         :html         => self.html,
-        :in_reply_to  => self.in_reply_to.dup || [],
+        :in_reply_to  => (self.in_reply_to || []).dup,
         :replies      => self.replies.dup,
         :mentions     => self.mentions.dup,
         :likes        => self.likes.dup,
@@ -307,7 +303,7 @@ module Nelumba
 
       {
         :source      => self.source,
-        :authors     => self.authors,
+        :authors     => self.authors.dup,
         :content     => self.content,
         :summary     => self.summary,
         :displayName => self.display_name,

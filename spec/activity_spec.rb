@@ -16,7 +16,11 @@ describe Nelumba::Activity do
     end
 
     it "should store a target" do
-      Nelumba::Activity.new(:target => "target").target.must_equal "target"
+      Nelumba::Activity.new(:target => "target").targets.first.must_equal "target"
+    end
+
+    it "should store multiple targets" do
+      Nelumba::Activity.new(:targets => ["target", "target2"]).targets.must_equal ["target", "target2"]
     end
 
     it "should store an actor" do

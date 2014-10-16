@@ -14,8 +14,8 @@ module Nelumba
     #   :post, :save, :share, :tag, :update
     attr_reader :verb
 
-    # The target of the action.
-    attr_reader :target
+    # The targets of the action.
+    attr_reader :targets
 
     # Holds an Nelumba::Person.
     attr_reader :actors
@@ -24,10 +24,10 @@ module Nelumba
     #
     # options:
     #   :object       => The object of this activity.
-    #   :target       => The target of this activity.
+    #   :targets      => The targets of this activity.
     #   :verb         => The action of the activity.
     #
-    #   :actor        => An Nelumba::Person responsible for generating this entry.
+    #   :actors       => An array of Nelumba::Person's responsible for generating this entry.
     #   :source       => An Nelumba::Feed where this Entry originated. This
     #                    should be used when an Entry is copied into this feed
     #                    from another.
@@ -51,8 +51,17 @@ module Nelumba
 
       @object       = options[:object]
 
-      @target       = options[:target]
       @verb         = options[:verb]
+
+      if options.has_key? :target
+        if options[:target].is_a? Array
+          options[:targets] = options[:target]
+        else
+          options[:targets] = [options[:target]]
+        end
+        options.delete :target
+      end
+      @targets      = options[:targets]
 
       if options.has_key? :actor
         if options[:actor].is_a? Array
@@ -62,8 +71,8 @@ module Nelumba
         end
         options.delete :actor
       end
-
       @actors       = options[:actors] || []
+
       @published    = options[:published]
       @updated      = options[:updated]
       @url          = options[:url]
@@ -73,10 +82,10 @@ module Nelumba
     # Returns a hash of all relevant fields.
     def to_hash(scheme = 'https', domain = 'example.org', port = nil)
       {
-        :object => self.object,
-        :target => self.target,
-        :actors => self.actors,
-        :verb   => self.verb,
+        :object  => self.object,
+        :targets => (self.targets || []).dup,
+        :actors  => (self.actors  || []).dup,
+        :verb    => self.verb,
       }.merge(super(scheme, domain, port))
     end
 
@@ -93,7 +102,7 @@ module Nelumba
       {
         :object     => @object,
         :actors     => @actors,
-        :target     => @target,
+        :targets    => @targets,
         :verb       => @verb,
         :source     => self.source,
       }.merge(super(scheme, domain, port))
@@ -159,7 +168,7 @@ module Nelumba
         :object_owners => object_owners,
         :person        => person,
         :verb          => self.verb,
-        :target        => self.target ? self.target.preferred_display_name : nil
+        :targets       => (self.targets and self.targets.any?) ? self.targets.first.preferred_display_name : nil
       }.merge(options))
     end
   end
