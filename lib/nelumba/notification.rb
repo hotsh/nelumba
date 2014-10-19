@@ -19,7 +19,7 @@ module Nelumba
       @signature = signature
       @plaintext = plaintext
 
-      account = activity.actors.first.uri
+      account = activity.actors.first.url
 
       # XXX: Negotiate various weird uri schemes to find identity account
       @account = account

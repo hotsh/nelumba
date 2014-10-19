@@ -113,17 +113,17 @@ describe Nelumba::Video do
   describe "#to_json" do
     before do
       author = Nelumba::Person.new :display_name => "wilkie"
-      @note = Nelumba::Video.new :content      => "Hello",
-                               :author       => author,
-                               :embed_code   => "code",
-                               :stream       => "foo",
-                               :summary      => "foo",
-                               :display_name => "meh",
-                               :uid          => "id",
-                               :url          => "url",
-                               :title        => "title",
-                               :published    => Time.now,
-                               :updated      => Time.now
+      @note  = Nelumba::Video.new  :content      => "Hello",
+                                   :author       => author,
+                                   :embed_code   => "code",
+                                   :stream       => "foo",
+                                   :summary      => "foo",
+                                   :display_name => "meh",
+                                   :uid          => "id",
+                                   :url          => "url",
+                                   :title        => "title",
+                                   :published    => Time.now,
+                                   :updated      => Time.now
 
       @json = @note.to_json
       @data = JSON.parse(@json)

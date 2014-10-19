@@ -77,13 +77,13 @@ describe Nelumba::Notification do
 
   describe "account" do
     before do
-      @user   = Nelumba::Person.new(:name => "wilkie", :uri => "acct:wilkie@rstat.us")
+      @user   = Nelumba::Person.new(:name => "wilkie", :url => "acct:wilkie@rstat.us")
       @follow = Nelumba::Person.new(:name => "wilkie")
       @salmon = Nelumba::Notification.from_follow(@user, @follow)
     end
 
-    it "should provide the uri of the actor when the uri is an account" do
-      @salmon.account.must_equal @salmon.activity.actors.first.uri
+    it "should provide the url of the actor when the url is an account" do
+      @salmon.account.must_equal @salmon.activity.actors.first.url
     end
   end
 end

@@ -55,9 +55,12 @@ module Nelumba
             when "id"
               # Nelumba uses "id" key internally, external id uses "uid" key:
               hash[:uid] = node.content.strip
-            when "email", "name", "uri"
+            when "email", "name"
               # These tags have 1:1 relationship with Nelumba metadata keys
               hash[node.name.intern] = node.content.strip
+            when "uri"
+              # URI
+              hash[:url] = node.content.strip
             when "updated", "published"
               # Parse ISO8601 dates
               hash[node.name.intern] = Time.iso8601(node.content.strip)
@@ -176,8 +179,8 @@ module Nelumba
         end
 
         # Set <uri>
-        if activity.uri
-          root << XML::Node.new("uri", activity.uri.to_s)
+        if activity.url
+          root << XML::Node.new("uri", activity.url.to_s)
         end
 
         # Set <name>
@@ -359,11 +362,11 @@ module Nelumba
         end
 
         # Attach links
-        if activity.uri
+        if activity.url
           link = XML::Node.new("link")
           link['rel']  = 'self'
           link['type'] = 'application/atom+xml'
-          link['href'] = activity.uri
+          link['href'] = activity.url
           root << link
         end
 

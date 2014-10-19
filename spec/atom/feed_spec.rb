@@ -9,7 +9,7 @@ require_relative '../../lib/nelumba/atom/feed.rb'
 # Somehow, these are still really fast.
 describe Nelumba::Atom do
   before do
-    author = Nelumba::Person.new(:uri               => "http://example.com/users/1",
+    author = Nelumba::Person.new(:url               => "http://example.com/users/1",
                                  :email             => "user@example.com",
                                  :name              => "wilkie",
                                  :uid => "1",
@@ -303,7 +303,7 @@ describe Nelumba::Atom do
         describe "<uri>" do
           it "should list the author's uri" do
             @author.find_first('xmlns:uri',
-                               'xmlns:http://www.w3.org/2005/Atom').content.must_equal @master.authors.first.uri
+                               'xmlns:http://www.w3.org/2005/Atom').content.must_equal @master.authors.first.url
           end
         end
 

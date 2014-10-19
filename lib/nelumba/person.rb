@@ -22,8 +22,8 @@ module Nelumba
     #   :honorific_suffix  => "Suffix" in Western contexts. (e.g. "Esq.")
     attr_reader :extended_name
 
-    # The uri that uniquely identifies the author.
-    attr_reader :uri
+    # The url that uniquely identifies the author.
+    attr_reader :url
 
     # The email address of the author.
     attr_reader :email
@@ -131,7 +131,7 @@ module Nelumba
     #   account            => A Hash describing the authorative account for the
     #                         author.
     #   address            => A Hash describing the address of the contact.
-    #   uri                => The uri that uniquely identifies this author.
+    #   url                => The url that uniquely identifies this author.
     #   email              => The email of the author.
     def initialize(options = {})
       init(options)
@@ -142,7 +142,7 @@ module Nelumba
     end
 
     def init(options = {})
-      @uri                = options[:uri]
+      @url                = options[:url]
       @name               = options[:name] || "anonymous"
       @email              = options[:email]
 
@@ -168,7 +168,7 @@ module Nelumba
 
     def to_hash
       {
-        :uri                => self.uri,
+        :url                => self.url,
         :email              => self.email,
         :name               => self.name,
 
@@ -194,7 +194,7 @@ module Nelumba
 
     def to_json_hash
       {
-        :uri               => self.uri,
+        :url               => self.url,
         :email             => self.email,
         :name              => self.name,
         :objectType        => "person",

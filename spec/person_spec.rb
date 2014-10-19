@@ -3,8 +3,8 @@ require_relative '../lib/nelumba/person.rb'
 
 describe Nelumba::Person do
   describe "#initialize" do
-    it "should store an uri" do
-      Nelumba::Person.new(:uri => "http://example.com/1").uri.must_equal "http://example.com/1"
+    it "should store an url" do
+      Nelumba::Person.new(:url => "http://example.com/1").url.must_equal "http://example.com/1"
     end
 
     it "should store a name" do
